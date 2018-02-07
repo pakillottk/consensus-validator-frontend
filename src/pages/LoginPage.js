@@ -1,23 +1,25 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
 import './LoginPage.css'
 
 class LoginPage extends React.Component {
     render() {
         return(
-            <div class="login-page-container">
-                <div class="login-page-bg"></div>
-                <div class="login-page-wrapper">
-                    <div class="login-app-title">CONSENSUS</div>
-                    <div class="login-form-wrapper">
-                        <div class="title">INICIAR SESIÓN</div>
-                        <div class="login-form-fields">
+            <div className="login-page-container">
+                <div className="login-page-bg"></div>
+                <div className="login-page-wrapper">
+                    <div className="login-app-title">CONSENSUS</div>
+                    <form className="login-form-wrapper">
+                        <div className="title">INICIAR SESIÓN</div>
+                        <div className="login-form-fields">
                             <label>USUARIO</label>
                             <input type="text" />
                             <label>CONTRASEÑA</label>
                             <input type="password" />
                         </div>
                         <button type="submit">ENTRAR</button>
-                    </div>
+                    </form>
                 </div>
             </div>
         )
