@@ -1,19 +1,28 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+import { Route } from 'react-router'
+import { ConnectedRouter } from 'react-router-redux'
+import { Provider } from 'react-redux'
+import { store, history } from './redux/store'
+
+import ThemeStyles from './components/ui/ThemeStyles'
+import UIThemeProvider from './components/ui/UIThemeProvider'
+
+import LoginPage from './pages/LoginPage';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Provider store={store}>
+        <UIThemeProvider theme={ThemeStyles}>
+          <ConnectedRouter history={history}>
+            <div>
+              <Route exact path="/" component={LoginPage} />
+            </div>
+          </ConnectedRouter>
+        </UIThemeProvider>
+      </Provider>
     );
   }
 }
