@@ -29,31 +29,22 @@
     height: 100vh;
 }
 
-.login-app-title {
-    width: 100%;
-    background: #ff9e02;
-    font-style: bold;
-    font-size: 3rem;
-    text-align: center;
-    color: #aa6b06;
-    opacity: 0.7;
-}
-
 .login-form-wrapper {
     position: fixed;
-    top: 50%;
+    bottom: 27vh;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #ff9e02;
-    opacity: 0.8;
+    background: #333333;
+    padding: 1px;
+    border-radius: 10px 10px 0 0;
 }
 
 .login-form-wrapper > .title {
     width: 100%;
     text-align: center;
-    color: #aa6b06;
+    color: #999;
     margin: 0;
-    font-size: 2rem;
+    font-size: 1.7rem;
     padding: 5px;
 }
 

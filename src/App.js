@@ -9,29 +9,9 @@ import { store, history } from './redux/store'
 import ThemeStyles from './components/ui/ThemeStyles'
 import UIThemeProvider from './components/ui/UIThemeProvider'
 
+import LoginGuard from './components/loginGuard/LoginGuard';
 import LoginPage from './pages/LoginPage'
-
-import Connection from './communication/connections/Connection'
-import JSONHeaders from './communication/headers/StandardJsonHeaders'
-import AuthTokenRouter from './communication/routers/AuthTokenRouter'
-
-import { env } from './env'
-
-const APIConnection = new Connection( env.api.protocol, env.api.host, env.api.port, new JSONHeaders() );
-const AuthRouter = new AuthTokenRouter( APIConnection, {
-  login: '/login'
-});
-
-(async () => {
-  await AuthRouter.attemptLogin({
-    ...env.auth,
-    username: 'root',
-    password: 'root'
-  });
-  
-  const me = await APIConnection.get( '/me' );
-  console.log( me.data );
-})();
+import SessionsPage from './pages/SessionsPage'
 
 class App extends Component {
   render() {
@@ -40,8 +20,9 @@ class App extends Component {
         <UIThemeProvider theme={ThemeStyles}>
           <ConnectedRouter history={history}>
             <div>
-              <Route exact path="/" component={LoginPage} />
-              <Route path="/sessions" component={null} />
+                <Route path='/' component={LoginGuard} />
+                <Route exact path="/" component={LoginPage} />
+                <Route path="/sessions" component={SessionsPage} />
             </div>
           </ConnectedRouter>
         </UIThemeProvider>

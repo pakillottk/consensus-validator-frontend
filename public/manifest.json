@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Consensus Validator Manager",
+  "name": "Manager WebApp for Consensus Validator System",
   "icons": [
     {
       "src": "favicon.ico",

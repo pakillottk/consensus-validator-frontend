@@ -1,10 +1,19 @@
 import Headers from '../headers/StandardFormUrlEncodedHeaders'
 import Request from '../Request';
+import { env } from '../../env';
 
 class AuthTokenRouter {
     constructor( connection, authPaths ) {
         this.connection = connection;
         this.authPaths  = authPaths;
+    }
+
+    getClientParams( data ) {
+        return {
+            client_id: env.auth.client_id,
+            client_secret: env.auth.client_secret,
+            grant_type: env.auth.grant_type
+        };
     }
 
     ObjectToURLEnconded( obj ) {
@@ -18,16 +27,28 @@ class AuthTokenRouter {
         return params.join( '&' );
     }
 
-    async attemptLogin( data ) {        
+    async attemptLogin( data ) {   
+        data = {...this.getClientParams(), ...data};
         const request = new Request( this.ObjectToURLEnconded( data ), new Headers() );        
         const response = await this.connection.post( this.authPaths.login, request );
-        const accessToken  = response.data.access_token;
-        const refreshToken = response.data.refresh_token;
-        
-        //TODO: store the tokens to reuse on page refresh or to update the token
+        const tokens = {
+            token: response.data.access_token,
+            refreshToken: response.data.refresh_token
+        };
 
-        this.connection.updateHeaders( 'Authorization', 'Bearer ' + accessToken );
+        this.setAuthHeaders( tokens )
+
+        return tokens;
     }
+
+    setAuthHeaders( tokens ) {
+        this.connection.updateHeaders( 'Authorization', 'Bearer ' + tokens.token );
+    }
+
+    async getMe() {
+        return await this.connection.get( env.auth.mePath );
+    }
+
     /*
     async refresh() {
         const refreshToken = ''; //TODO: get the token from where is stored
