@@ -7,9 +7,12 @@ const reducer = ( state = {
     switch( action.type ) {
         case 'LOGIN_SUCCESS': {
             const { tokens, me } = action.payload;
-
+            
             const tokensStr = JSON.stringify( tokens );
-            window.localStorage.setItem( 'tokens', CryptoService.encrypt( tokensStr ) );
+            const cryptedTokens = CryptoService.encrypt( tokensStr );
+
+            window.localStorage.removeItem( 'tokens' );
+            window.localStorage.setItem( 'tokens', cryptedTokens );
 
             return {...state, me: me, tokens: tokens};
         }

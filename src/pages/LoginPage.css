@@ -33,10 +33,17 @@
     position: fixed;
     bottom: 27vh;
     left: 50%;
+    width: 250px;
     transform: translate(-50%, -50%);
     background: #333333;
     padding: 1px;
     border-radius: 10px 10px 0 0;
+}
+
+.login-form-errors {
+    color: red;
+    padding: 2px;
+    background: #ecc7c7;
 }
 
 .login-form-wrapper > .title {

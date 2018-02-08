@@ -20,7 +20,6 @@ class LoginGuard extends React.Component {
             const tokens = JSON.parse( 
                 CryptoService.decrypt( cryptedTokens ) 
             );
-
             AuthAPI.setAuthHeaders( tokens );
             const me = await AuthAPI.getMe();
 

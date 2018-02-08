@@ -48,6 +48,7 @@ class LoginPage extends React.Component {
             const me = await APIAuthRouter.getMe();
 
             this.props.loginSuccess( me, tokens );
+            this.props.history.push( '/sessions' );
         } catch( error ) {
             this.setState({ errors: 'No se pudo conectar. Compruebe la conexión y los credenciales.' })
         }
@@ -80,6 +81,10 @@ class LoginPage extends React.Component {
                     >
                         <div className="title">INICIAR SESIÓN</div>
                         <div className="login-form-fields">
+                            {this.state.errors !== "" && <div className="login-form-errors">
+                                {this.state.errors}
+                            </div>}
+
                             <label>USUARIO</label>
                             { this.renderStateBindedInput( 'text', 'username' ) }
                             <label>CONTRASEÑA</label>
