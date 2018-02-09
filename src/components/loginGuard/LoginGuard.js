@@ -23,7 +23,7 @@ class LoginGuard extends React.Component {
             AuthAPI.setAuthHeaders( tokens );
             const me = await AuthAPI.getMe();
 
-            this.props.loginSuccess( me, tokens );
+            this.props.loginSuccess( me.data, tokens );
         } else {
             //Can't login, go to Login page
             this.props.history.replace( '/' );

@@ -13,6 +13,8 @@ import LoginGuard from './components/loginGuard/LoginGuard';
 import LoginPage from './pages/LoginPage'
 import SessionsPage from './pages/SessionsPage'
 
+import { Any } from './components/auth/authLevels';
+
 class App extends Component {
   render() {
     return (
@@ -22,7 +24,7 @@ class App extends Component {
             <div>
                 <Route path='/' component={LoginGuard} />
                 <Route exact path="/" component={LoginPage} />
-                <Route path="/sessions" component={SessionsPage} />
+                <Route path="/sessions" component={Any(SessionsPage)} />
             </div>
           </ConnectedRouter>
         </UIThemeProvider>
