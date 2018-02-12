@@ -1,21 +1,19 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 
 import createHistory from 'history/createBrowserHistory'
-
 import { routerReducer, routerMiddleware } from 'react-router-redux'
+import PromiseMiddleware from 'redux-promise-middleware'
 
 import reducers from './reducers'
 
 const history = createHistory()
-
-const middleware = routerMiddleware( history )
 
 const store = createStore(
     combineReducers({
       ...reducers,
       router: routerReducer
     }),
-    applyMiddleware( middleware ),
+    applyMiddleware( routerMiddleware( history ), PromiseMiddleware ),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
