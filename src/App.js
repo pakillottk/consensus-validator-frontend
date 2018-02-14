@@ -13,6 +13,8 @@ import LoginGuard from './components/loginGuard/LoginGuard';
 import LoginPage from './pages/LoginPage'
 import SessionsPage from './pages/SessionsPage'
 
+import UISetup from './pages/UISetup'
+
 import { Any } from './components/auth/authLevels';
 
 class App extends Component {
@@ -23,7 +25,8 @@ class App extends Component {
           <ConnectedRouter history={history}>
             <div>
                 <Route path='/' component={LoginGuard} />
-                <Route exact path="/" component={LoginPage} />
+                {/*<Route exact path="/" component={LoginPage} /> */}
+                <Route exact path="/" component={UISetup} />
                 <Route path="/sessions" component={Any(SessionsPage)} />
             </div>
           </ConnectedRouter>

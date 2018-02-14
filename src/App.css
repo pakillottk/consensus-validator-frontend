@@ -1,3 +1,8 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 .App {
   text-align: center;
 }
@@ -37,4 +42,16 @@
 
 .right-aligned {
   text-align: right;
+}
+
+.transition-all-short {
+  transition: all 200ms ease-in-out;
+}
+
+.hovered-transparency:hover {
+  opacity: 0.5;
+}
+
+.circle {
+  border-radius: 100%;
 }

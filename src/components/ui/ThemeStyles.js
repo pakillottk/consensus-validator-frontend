@@ -5,12 +5,19 @@ const styles = {
     thirdColor: '#ccc',
     textColor: '#333',
     secondaryTextColor: '#666',
+    brightTextColor: '#ddd',
     possitive: 'green',
     negative: 'red',
     relevant: 'blue',
     borderColor: '#ccc',
     altBorderColor: '#bbb',
     padding: {
+        light: '2px',
+        medium: '5px',
+        hard: '10px',
+        extreme: '20px'
+    },
+    margin: {
         light: '2px',
         medium: '5px',
         hard: '10px',

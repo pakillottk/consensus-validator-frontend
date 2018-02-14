@@ -1,8 +1,10 @@
 import React from 'react';
 
+import Segment from '../ui/segment/Segment'
 import Form from '../ui/form/Form';
 import Input from '../ui/form/Input/Input';
 import Select from '../ui/form/Select/Select';
+import Button from '../ui/button/Button'
 import UIThemeable from '../ui/UIThemeable';
 
 class FormBuilder extends React.Component {
@@ -10,9 +12,11 @@ class FormBuilder extends React.Component {
         super( props );
 
         const labels = {};
-        props.fields.forEach( field => {
-            labels[ field.name ] = field.label;
-        })
+        if( props.fields ) {
+            props.fields.forEach( field => {
+                labels[ field.name ] = field.label;
+            })
+        }
 
         this.state = {
             fields: props.fields || [],
@@ -86,6 +90,10 @@ class FormBuilder extends React.Component {
     }
 
     renderFields( fields ) {
+        if( !fields ) {
+            return null;
+        }
+
         const output = [];
         fields.forEach( ( field, index ) => {
             output.push( <label key={fields.length + index}>{ field.label }</label> );
@@ -108,16 +116,25 @@ class FormBuilder extends React.Component {
 
     render() {
         const { labels, fields, errors } = this.state;
-        return(
-            <Form onSubmit={this.handleSubmit.bind(this)}>
-                <div style={{color:'red'}}>
-                    { Object.keys( errors ).map( ( key, index ) => <p key={index}>{labels[key]}: {errors[key]} </p> ) }
-                </div>
-                
-                {this.renderFields( fields )}
+        const { title, secondary, submitText, submitColor } = this.props;
 
-                <button type="submit">SUBMIT</button>
-            </Form>
+        return(
+            <div>
+                <Segment secondary={secondary}>
+                    {title && <Segment secondary={!secondary}>
+                        <h2 className="center-aligned">{title}</h2>
+                    </Segment>}
+                    <Form onSubmit={this.handleSubmit.bind(this)}>
+                        <div style={{color:'red'}}>
+                            { Object.keys( errors ).map( ( key, index ) => <p key={index}>{labels[key]}: {errors[key]} </p> ) }
+                        </div>
+                        
+                        {this.renderFields( fields )}
+
+                        <Button full type="submit" context={submitColor || 'possitive'}>{submitText || "Submit"}</Button>
+                    </Form>
+                </Segment>
+            </div>
         );
     }
 }

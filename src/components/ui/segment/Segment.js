@@ -26,11 +26,11 @@ class Segment extends React.Component {
     }
 
     render() {
-        const { theme, secondary } = this.props
+        const { theme, secondary, styles } = this.props
 
-        const styles = this.applyThemeStyles( secondary, theme, SegmentStyles )
+        const segmentStyles = this.applyThemeStyles( secondary, theme, SegmentStyles )
         return(
-            <div style={styles}>
+            <div style={{...segmentStyles, ...styles}}>
                 { this.props.children }
             </div>
         )
