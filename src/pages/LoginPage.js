@@ -1,9 +1,8 @@
 import React from 'react';
-import AuthAPI from '../API/APIAuthRouter';
 
 import './LoginPage.css'
-import APIAuthRouter from '../API/APIAuthRouter';
 
+import APIAuthRouter from '../API/APIAuthRouter';
 import { loginSuccess } from '../redux/actions/login';
 
 import { bindActionCreators } from 'redux';

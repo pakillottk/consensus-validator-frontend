@@ -1,13 +1,22 @@
 import React from 'react';
 
-import UIThemeable from '../UIThemeable';
+import Form from '../ui/form/Form';
+import Input from '../ui/form/Input/Input';
+import Select from '../ui/form/Select/Select';
+import UIThemeable from '../ui/UIThemeable';
 
 class FormBuilder extends React.Component {
     constructor( props ) {
         super( props );
 
+        const labels = {};
+        props.fields.forEach( field => {
+            labels[ field.name ] = field.label;
+        })
+
         this.state = {
             fields: props.fields || [],
+            labels,
             values: props.initialValues || {},
             errors: {}
         }
@@ -41,33 +50,45 @@ class FormBuilder extends React.Component {
     renderSelect( index, field ) {
         const { values } = this.state;
         return(
-            <select key={ index } name={ field.name } value={values[ field.name ]} onChange={this.handleFieldChange}>
-                { field.options.map( ( option, index ) => 
-                    <option key={index} value={ option.value }>
-                        {option.label}
-                    </option>
-                )}
-            </select>
-        );
-    }
-
-    renderInput( index, field ) {
-        const { values } = this.state;
-        return (
-            <input 
-                key={ index }
-                type={field.component} 
+            <Select 
+                key={index} 
                 name={ field.name } 
-                defaultValue={ values[ field.name ] } 
+                value={values[ field.name ]} 
+                options={ field.options }
                 onChange={this.handleFieldChange}
             />
         );
     }
 
+    renderInput( index, field ) {
+        const { values } = this.state;
+        return(
+            <Input
+                key={ index }
+                type={field.component} 
+                name={ field.name } 
+                value={ values[ field.name ] } 
+                onChange={this.handleFieldChange}
+            />
+        );
+    }
+
+    renderCustomField( index, field, Component ) {
+        const { values } = this.state;
+        return(
+            <Component
+                key={index}
+                name={field.name}
+                value={ values[ field.name ] } 
+                onChange={this.handleFieldChange}
+            />
+        )
+    }
+
     renderFields( fields ) {
         const output = [];
         fields.forEach( ( field, index ) => {
-            output.push( <label key={9999 - index}>{ field.label }</label> );
+            output.push( <label key={fields.length + index}>{ field.label }</label> );
 
             if( field.type === 'input' ) {
                 output.push(
@@ -78,7 +99,7 @@ class FormBuilder extends React.Component {
                     this.renderSelect( index, field )
                 )
             } else {
-                output.push( field.component );
+                output.push( this.renderCustomField( index, field, field.component ) );
             }
         });
 
@@ -86,13 +107,17 @@ class FormBuilder extends React.Component {
     }
 
     render() {
-        const { fields } = this.state;
+        const { labels, fields, errors } = this.state;
         return(
-            <form onSubmit={this.handleSubmit.bind(this)}>
-                { this.renderFields( fields ) }
+            <Form onSubmit={this.handleSubmit.bind(this)}>
+                <div style={{color:'red'}}>
+                    { Object.keys( errors ).map( ( key, index ) => <p key={index}>{labels[key]}: {errors[key]} </p> ) }
+                </div>
+                
+                {this.renderFields( fields )}
 
                 <button type="submit">SUBMIT</button>
-            </form>
+            </Form>
         );
     }
 }

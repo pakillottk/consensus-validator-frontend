@@ -10,17 +10,17 @@ export const onFetch = ( state, action ) => {
 }
 
 export const onCreation = ( state, action ) => {
-    let data = state.data.set( action.payload.id, action.payload );
+    let data = state.data.set( action.payload.data.id, action.payload.data );
     return {...state, data };
 }
 
 export const onUpdate = ( state, action ) => {
-    let data = state.data.set( action.payload.id, action.payload );
+    let data = state.data.set( action.payload.data.id, action.payload.data );
     return {...state, data };
 }
 
 export const onDelete = ( state, action ) => {
-    let data = state.data.delete( action.payload.deleted_id );
+    let data = state.data.delete( action.payload.data.deleted_id );
     return {...state, data };
 }
 

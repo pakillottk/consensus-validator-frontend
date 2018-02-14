@@ -15,8 +15,12 @@ export default class Validator {
                     errors.push( result );
                 }
             });
-
-            allErrors[ field ] = errors.join( '.' );
+            
+            if( errors.length === 0 ) {
+                delete allErrors[ field ];
+            } else {
+                allErrors[ field ] = errors.join( '. ' );
+            }
         });
 
         return allErrors;
