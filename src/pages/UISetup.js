@@ -6,6 +6,7 @@ import Divider from '../components/ui/divider/Divider'
 import Img from '../components/ui/img/Img'
 import FormBuilder from '../components/forms/FormBuilder'
 import List from '../components/ui/list/List'
+import Table from '../components/ui/table/Table'
 
 export default class UISetup extends React.Component {
     render() {
@@ -144,6 +145,34 @@ export default class UISetup extends React.Component {
                                 'asdf'
                             ]}
                             renderItem={ item => <p>{item}</p> }
+                        />
+                    </Segment>
+                </div>
+                <div>
+                    <Segment secondary>
+                        <h1>Table</h1>
+                    </Segment>
+                    <Segment>
+                        <Table 
+                            fields={[
+                                {label: 'foo', key:'foo'},
+                                {label: 'bar', key:'bar'},
+                                {label: 'x', key:'x'}
+                            ]}
+                            items={[
+                                {foo: 'bar', bar: 'foo', x: 'y'}
+                            ]}
+                        />
+                        <Table
+                            secondary 
+                            fields={[
+                                {label: 'foo', key:'foo'},
+                                {label: 'bar', key:'bar'},
+                                {label: 'x', key:'x'}
+                            ]}
+                            items={[
+                                {foo: 'bar', bar: 'foo', x: 'y'}
+                            ]}
                         />
                     </Segment>
                 </div>
