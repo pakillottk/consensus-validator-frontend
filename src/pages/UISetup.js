@@ -17,11 +17,11 @@ export default class UISetup extends React.Component {
                     
                     <Segment>
                         <h2>SIZES</h2>
-                        <Button size="tiny">TINY</Button>
-                        <Button size="small">SMALL</Button>
-                        <Button size="medium">MEDIUM</Button>
-                        <Button size="big">BIG</Button>
-                        <Button size="large">LARGE</Button>
+                        <Button inline size="tiny">TINY</Button>
+                        <Button inline size="small">SMALL</Button>
+                        <Button inline size="medium">MEDIUM</Button>
+                        <Button inline size="big">BIG</Button>
+                        <Button inline size="large">LARGE</Button>
                         <Button full>FULL</Button>
                     </Segment>
                     <Segment secondary>
@@ -76,6 +76,28 @@ export default class UISetup extends React.Component {
                     </Segment>
                     <Segment>
                         <FormBuilder
+                            title="My Form"
+                            fields={[
+                                {
+                                    type:"input",
+                                    component:'text',
+                                    label:'FOO',
+                                    name:'foo'
+                                },
+                                {
+                                    type:"select",
+                                    component:'select',
+                                    label:'BAR',
+                                    name:'bar',
+                                    options: [
+                                        {text:'A', value: 'a'},
+                                        {text:'B', value: 'b'},
+                                    ]
+                                },
+                            ]}
+                        />
+                        <FormBuilder
+                            secondary
                             title="My Form"
                             fields={[
                                 {

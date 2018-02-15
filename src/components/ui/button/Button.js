@@ -81,17 +81,19 @@ class Button extends React.Component {
     }
 
     render() {
-        const { onClick, size, type, context, full, theme, styles, disabled } = this.props
+        const { onClick, inline, size, type, context, full, theme, styles, disabled } = this.props
         const buttonStyles = this.applyThemeStyles( size, context, full, disabled, theme )
         return(
-            <button 
-                className="transition-all-short hovered-transparency" 
-                style={{...buttonStyles, styles}} 
-                type={type}
-                onClick={onClick}
-            >
-                {this.props.children}
-            </button>
+            <div style={{textAlign: 'center', display: inline ? 'inline-block' : 'block'}}>
+                <button 
+                    className="transition-all-short hovered-transparency" 
+                    style={{...buttonStyles, styles}} 
+                    type={type}
+                    onClick={onClick}
+                >
+                    {this.props.children}
+                </button>
+            </div>
         )
     }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 
 import Segment from '../ui/segment/Segment'
 import Form from '../ui/form/Form';
+import Label from '../ui/form/Label/Label'
 import Input from '../ui/form/Input/Input';
 import Select from '../ui/form/Select/Select';
 import Button from '../ui/button/Button'
@@ -73,6 +74,7 @@ class FormBuilder extends React.Component {
                 name={ field.name } 
                 value={ values[ field.name ] } 
                 onChange={this.handleFieldChange}
+                full
             />
         );
     }
@@ -96,7 +98,7 @@ class FormBuilder extends React.Component {
 
         const output = [];
         fields.forEach( ( field, index ) => {
-            output.push( <label key={fields.length + index}>{ field.label }</label> );
+            output.push( <Label key={fields.length + index}>{ field.label }</Label> );
 
             if( field.type === 'input' ) {
                 output.push(
@@ -116,22 +118,23 @@ class FormBuilder extends React.Component {
 
     render() {
         const { labels, fields, errors } = this.state;
-        const { title, secondary, submitText, submitColor } = this.props;
+        const { extErrors, title, secondary, submitText, submitColor, theme } = this.props;
+        const allErrors = {...errors, ...extErrors };
 
         return(
             <div>
-                <Segment secondary={secondary}>
-                    {title && <Segment secondary={!secondary}>
+                <Segment secondary={!secondary}>
+                    {title && <Segment secondary={secondary}>
                         <h2 className="center-aligned">{title}</h2>
                     </Segment>}
                     <Form onSubmit={this.handleSubmit.bind(this)}>
                         <div style={{color:'red'}}>
-                            { Object.keys( errors ).map( ( key, index ) => <p key={index}>{labels[key]}: {errors[key]} </p> ) }
+                            { Object.keys( allErrors ).map( ( key, index ) => <p key={index}>{labels[key] || ''}: {errors[key]} </p> ) }
                         </div>
                         
                         {this.renderFields( fields )}
 
-                        <Button full type="submit" context={submitColor || 'possitive'}>{submitText || "Submit"}</Button>
+                        <Button type="submit" context={submitColor || 'possitive'}>{submitText || "Submit"}</Button>
                     </Form>
                 </Segment>
             </div>
