@@ -8,7 +8,7 @@ class Divider extends React.Component {
         let sizeStyles = {
             width: size,
             height: '1px',
-            margin: theme.padding.medium + ' auto'
+            margin: theme.margin.medium + ' auto'
         }
         if( vertical ) {
             sizeStyles = {

@@ -5,6 +5,7 @@ import Segment from '../components/ui/segment/Segment'
 import Divider from '../components/ui/divider/Divider'
 import Img from '../components/ui/img/Img'
 import FormBuilder from '../components/forms/FormBuilder'
+import List from '../components/ui/list/List'
 
 export default class UISetup extends React.Component {
     render() {
@@ -117,6 +118,32 @@ export default class UISetup extends React.Component {
                                     ]
                                 },
                             ]}
+                        />
+                    </Segment>
+                </div>
+                <div>
+                    <Segment secondary>
+                        <h1>List</h1>
+                    </Segment>
+                    <Segment>
+                        <List
+                            header='List'
+                            items={[
+                                'asd',
+                                'feg',
+                                'asdf'
+                            ]}
+                            renderItem={ item => <p>{item}</p> }
+                        />
+                        <List
+                            secondary
+                            header='List'
+                            items={[
+                                'asd',
+                                'feg',
+                                'asdf'
+                            ]}
+                            renderItem={ item => <p>{item}</p> }
                         />
                     </Segment>
                 </div>
