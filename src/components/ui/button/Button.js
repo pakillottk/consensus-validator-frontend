@@ -87,7 +87,7 @@ class Button extends React.Component {
             <div style={{textAlign: 'center', display: inline ? 'inline-block' : 'block'}}>
                 <button 
                     className="transition-all-short hovered-transparency" 
-                    style={{...buttonStyles, styles}} 
+                    style={{...buttonStyles, ...styles}} 
                     type={type}
                     onClick={onClick}
                 >

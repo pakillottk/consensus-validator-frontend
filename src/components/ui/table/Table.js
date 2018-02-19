@@ -2,13 +2,14 @@ import React from 'react'
 import UIThemeable from '../UIThemeable'
 
 class Table extends React.Component {
-    applyThemeStyles( secondary, theme ) {
+    applyThemeStyles( secondary, full, theme ) {
         return {
             container: {
                 borderCollapse: 'collapse',
                 borderStyle: 'solid',
                 borderWidth: '1px',
-                borderColor: secondary ? theme.altBorderColor : theme.borderColor
+                borderColor: secondary ? theme.altBorderColor : theme.borderColor,
+                width: full ? '100%' : 'auto'
             },
             header: {
                 fontSize: '1rem',
@@ -23,32 +24,58 @@ class Table extends React.Component {
                 color: secondary ? theme.secondaryTextColor : theme.textColor
             },
             bodyCell: {
+                textAlign: 'center',
                 padding: theme.padding.medium
             }
         }
     }
 
+    renderFields( style, fields ) {
+        const ths = []
+        fields.forEach(
+            ( field, index ) => {
+                ths.push( <th key={index} style={style}>{field.label}</th> )
+            }
+        )
+
+        return ths
+    }
+
+    renderItem( style, fields, item ) {
+        const tds = []
+        fields.forEach(
+            ( field, index ) => {
+                tds.push(<td key={index} style={style}>{item[field.key]}</td>)
+            }
+        )
+
+        return tds
+    }
+
+    renderItems( cellStyle, fields, items ) {
+        const trs = []
+        items.forEach(
+            ( item, index ) => {
+                trs.push(<tr key={index}>{ this.renderItem( cellStyle, fields, item ) }</tr>)
+            }
+        )
+
+        return trs
+    }
+
     render() {
-        const { secondary, theme, items, fields } = this.props
-        const themeStyles = this.applyThemeStyles( secondary, theme )
+        const { secondary, theme, items, fields, full } = this.props
+        const themeStyles = this.applyThemeStyles( secondary, full, theme )
 
         return(
             <table style={{...themeStyles.container}}>
                 <thead style={{...themeStyles.header}}>
                     <tr>
-                        { fields.map( ( field, index ) => <th key={index} style={{...themeStyles.headerCell}}>{field.label}</th> ) }
+                        { this.renderFields( {...themeStyles.headerCell}, fields ) }
                     </tr>
                 </thead>
                 <tbody style={{...themeStyles.body}}>
-                    { items.map(
-                        ( item, index ) => {
-                            return(
-                                <tr key={index}>
-                                    {fields.map( ( field, index ) => <td key={index} style={{...themeStyles.bodyCell}}>{item[ field.key ]}</td> )}
-                                </tr>
-                            )
-                        }
-                    )}
+                    { this.renderItems( {...themeStyles.bodyCell}, fields, items ) }
                 </tbody>
             </table>
         );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import Segment from '../ui/segment/Segment'
 
 const Authorization = ( allowedRoles ) => ( WrappedComponent ) => {
     class WithAuth extends React.Component {
@@ -22,7 +23,9 @@ const Authorization = ( allowedRoles ) => ( WrappedComponent ) => {
                 return <WrappedComponent {...this.props} />
             }
 
-            return null;
+            return <Segment secondary styles={{position:'fixed', height:'100vh', width:'100vw'}}>
+                <p style={{fontSize:'1.25rem'}}>NO AUTORIZADO</p>
+            </Segment>;
         }
     }
 

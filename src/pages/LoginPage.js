@@ -47,7 +47,7 @@ class LoginPage extends React.Component {
             const me = await APIAuthRouter.getMe();
 
             this.props.loginSuccess( me.data, tokens );
-            this.props.history.push( '/sessions' );
+            this.props.history.push( '/sesiones' );
         } catch( error ) {
             this.setState({ errors: 'No se pudo conectar. Compruebe la conexión y los credenciales.' })
         }

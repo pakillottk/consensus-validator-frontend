@@ -48,6 +48,10 @@
   transition: all 200ms ease-in-out;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .hovered-transparency:hover {
   opacity: 0.5;
 }

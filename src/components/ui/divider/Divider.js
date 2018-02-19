@@ -8,13 +8,14 @@ class Divider extends React.Component {
         let sizeStyles = {
             width: size,
             height: '1px',
-            margin: theme.margin.medium + ' auto'
+            margin: '0 auto'            
         }
+        
         if( vertical ) {
             sizeStyles = {
                 width: '1px',
                 height: size,
-                margin:'auto ' + theme.padding.medium
+                margin: 'auto 0'                
             }
         }
 
@@ -26,7 +27,9 @@ class Divider extends React.Component {
 
     render() {
         const { vertical, full, secondary, theme, styles } = this.props
-        const wrapperStyle = vertical ? { height: '100%', width: '1px' } : { width: '100%', height:'1px' }
+        const wrapperStyle = vertical ? { 
+            textAlign: 'center', height: '100%', width: '1px', margin:'auto ' + theme.margin.medium
+        } : { textAlign: 'center', width: '100%', height:'1px', margin: theme.margin.medium + ' auto' }
         const dividerStyles = this.applyThemeStyles( vertical, full, secondary, theme  )
         return <div style={wrapperStyle}> <div style={{ ...dividerStyles, ...styles}}></div> </div>
     }
