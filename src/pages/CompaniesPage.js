@@ -7,7 +7,7 @@ export default class CompaniesPage extends React.Component {
     render()  {
         return(
             <div>
-                <Segment secondary>
+                <Segment secondary styles={{border:'none'}}>
                     <h1 className="center-aligned">COMPAÑÍAS</h1>
                 </Segment>
                 <Segment styles={{padding: 0}}>
