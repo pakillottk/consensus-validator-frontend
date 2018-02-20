@@ -21,6 +21,12 @@ class WindowRenderer extends React.Component {
     constructor( props ) {
         super( props )
 
+        this.state = {
+            clickX: 0,
+            clickY: 0,
+            clickWindowX: 0
+        }
+
         this.updatePosition = this.updatePosition.bind( this )
         this.disableMovement = this.disableMovement.bind( this ) 
     }
@@ -50,10 +56,15 @@ class WindowRenderer extends React.Component {
 
     updatePosition( e ) {
         e.preventDefault()
-
-        const [ x, y ] = [ e.pageX, e.pageY ]
         const { window, manager } = this.props
-        manager.updateWindow( window.id, { x, y } )
+
+        const [ offsetX, offsetY ] = [ 
+            this.state.clickX - this.windowElem.offsetLeft - this.state.clickWindowX, 
+            this.state.clickY - this.windowElem.offsetTop
+        ]
+        
+        const [ x, y ] = [ e.pageX, e.pageY ]
+        manager.updateWindow( window.id, { x: x - offsetX, y } )
     }
 
     closeWindow() {
@@ -71,8 +82,13 @@ class WindowRenderer extends React.Component {
         manager.updateWindow( window.id, { minimized: true } )
     }
 
-    enableMovement() {
+    enableMovement( e ) {
+        e.preventDefault()
+
         const { window, manager } = this.props
+        
+        this.setState({ clickX: e.pageX, clickY: e.pageY, clickWindowX: window.x  })
+
         manager.updateWindow( window.id, { moving: true } )
     }
 
@@ -88,12 +104,14 @@ class WindowRenderer extends React.Component {
 
         return(
             <div>
-                <div style={{
+                <div 
+                   ref={ windowElem => this.windowElem = windowElem }
+                   style={{
                     height: '10px', 
                     background: style.theme.dark,
                     cursor: 'move',
                    }}
-                   onClick={() => this.enableMovement()}                
+                   onClick={( e ) => this.enableMovement( e )}                
                 ></div>
                 <Segment secondary>
                     <h1>
