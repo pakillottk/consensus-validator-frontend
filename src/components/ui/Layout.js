@@ -4,6 +4,7 @@ import UIThemeable from './UIThemeable'
 import Drawer from './drawer/Drawer'
 import Divider from './divider/Divider'
 import UserInfo from '../userInfo/UserInfo'
+import WindowManager from './window/WindowManager'
 
 class Layout extends React.Component {
     render() {
@@ -16,6 +17,7 @@ class Layout extends React.Component {
         const { theme: { font }, Navigation } = this.props
         return(
             <div style={{ fontFamily: font }}>
+                <WindowManager />
                 <Drawer secondary width={navWidth+'px'} fullHeight >
                     <h1>CONSENSUS</h1>
                     <Divider full />

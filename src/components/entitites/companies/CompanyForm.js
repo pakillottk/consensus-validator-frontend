@@ -1,8 +1,8 @@
 import React from 'react';
-import FormBuilder from './FormBuilder';
-import CompanyValidator from './Validators/CompanyValidator';
+import FormBuilder from '../../forms/FormBuilder';
+import CompanyValidator from '../../forms/Validators/CompanyValidator';
 
-import { crud } from '../../redux/actions/companies';
+import { crud } from '../../../redux/actions/companies';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
