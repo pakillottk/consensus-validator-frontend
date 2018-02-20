@@ -15,16 +15,16 @@ const builder = ( Entity, connection, paths ) => {
                 payload: connection.post( paths.create, new Request( data, connection.headers.headers ) )
             }
         },
-        update: ( data ) => {
+        update: ( id, data ) => {
             return {
                 type: prefix + '_UPDATE',
-                payload: connection.put( paths.update + '/' + data.id, new Request( data, connection.headers.headers ) )
+                payload: connection.put( paths.update + '/' + id, new Request( data, connection.headers.headers ) )
             }
         },
-        delete: ( data ) => {
+        delete: ( id, data ) => {
             return {
                 type: prefix + '_DELETE',
-                payload: connection.delete( paths.delete + '/' + data.id, new Request( data, connection.headers.headers ) )
+                payload: connection.delete( paths.delete + '/' + id, new Request( data, connection.headers.headers ) )
             }
         }
     }

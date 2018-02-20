@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 
 import schema from './Schema'
 import EntityTable from '../EntityTable'
+import CompanyForm from './CompanyForm'
 
 class CompaniesTable extends React.Component {
     componentWillMount() {
@@ -17,7 +18,13 @@ class CompaniesTable extends React.Component {
     render() {
         const { companies } = this.props
         return(
-            <EntityTable schema={schema} items={companies} full />
+            <EntityTable 
+                schema={schema} 
+                items={companies} 
+                formTitle="EDITAR COMPAÑÍA"
+                Form={CompanyForm}
+                full 
+            />
         )
     }
 }

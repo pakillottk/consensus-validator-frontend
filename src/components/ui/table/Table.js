@@ -53,10 +53,21 @@ class Table extends React.Component {
     }
 
     renderItems( cellStyle, fields, items ) {
+        const { onItemClick } = this.props
+        const onClickCb = onItemClick || (() => {})
+
         const trs = []
         items.forEach(
             ( item, index ) => {
-                trs.push(<tr key={index}>{ this.renderItem( cellStyle, fields, item ) }</tr>)
+                trs.push(
+                    <tr 
+                        key={index} 
+                        className={onItemClick ? 'pointer hovered-transparency' : ''} 
+                        onClick={ () => onClickCb( item ) }
+                    >
+                        { this.renderItem( cellStyle, fields, item ) }
+                    </tr>
+                )
             }
         )
 

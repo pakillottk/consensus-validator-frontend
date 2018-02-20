@@ -7,12 +7,17 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 class CompanyForm extends React.Component {
-    submitCompany( data ) {        
-        this.props.create( data );
+    submitCompany( data ) {      
+        const { company } = this.props
+        if( !company ) {
+            this.props.create( data );
+        } else {
+            this.props.update( company.id, data )
+        }
     }
 
     render() {
-        const toEdit = this.props.company || {};
+        const toEdit = this.props.initialvalues || {};
         const fields = [
             {
                 type:'input',
@@ -48,20 +53,27 @@ class CompanyForm extends React.Component {
 
         return(
             <FormBuilder 
-                initialValues={toEdit}
+                title="COMPAÑÍA"
+                initialvalues={toEdit}
                 submit={this.submitCompany.bind(this)} 
                 fields={fields} 
                 validator={CompanyValidator} 
+                submitText={'GUARDAR'}
             />
         )
     }
 }
 
 export default connect(
-    ( store ) => { return {}; },
+    ( store, props ) => { 
+        return {
+            company: store.companies.data.get( props.initialvalues ? props.initialvalues.id : -1 )
+        }; 
+    },
     ( dispatch ) => {
         return {
-            create: bindActionCreators( crud.create, dispatch )
+            create: bindActionCreators( crud.create, dispatch ),
+            update: bindActionCreators( crud.update, dispatch )
         };
     }
 )(CompanyForm);

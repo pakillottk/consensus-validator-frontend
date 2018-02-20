@@ -22,10 +22,10 @@ class FormBuilder extends React.Component {
         this.state = {
             fields: props.fields || [],
             labels,
-            values: props.initialValues || {},
+            values: props.initialvalues || {},
             errors: {}
         }
-
+        
         this.handleFieldChange = this.handleFieldChange.bind( this );
     }
 

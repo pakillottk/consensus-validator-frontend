@@ -5,7 +5,7 @@ import Segment from '../segment/Segment'
 const styles = (theme) => {
     return {
         wrapper: {
-            borderColor: theme.altBorderColor,
+            borderColor: theme.dark,
             borderWidth: '2px',
             borderStyle: 'solid'
         },

@@ -12,6 +12,9 @@ export default ( state = { windows: Map() }, action ) => {
 
         case 'UPDATE_WINDOW': {
             const window = state.windows.get( action.payload.id )
+            if( !window ) {
+                return state
+            }
             const newWindow = window.update( action.payload.data )
 
             return {...state, windows: state.windows.set( newWindow.id, newWindow ) }
