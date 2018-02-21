@@ -1,36 +1,30 @@
 import React from 'react'
 
-import { crud } from '../../../redux/actions/companies'
+import { crud } from '../../../redux/actions/users'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import schema from './Schema'
 import EntityTable from '../EntityTable'
-import CompanyForm from './CompanyForm'
 
-class CompaniesTable extends React.Component {
+class UsersTable extends React.Component {
     componentWillMount() {
         this.props.fetch()
     }
 
     render() {
-        const { companies } = this.props
         return(
-            <EntityTable 
-                schema={schema} 
-                items={companies} 
-                formTitle="EDITAR COMPAÑÍA"
-                Form={CompanyForm}
-                full 
-            />
+            <div>
+                TABLE
+            </div>
         )
     }
-}
+} 
 
 export default connect(
     ( store ) => {
         return {
-            companies: store.companies.data
+            users: store.users.data
         }
     },
     ( dispatch ) => {
@@ -38,4 +32,4 @@ export default connect(
             fetch: bindActionCreators( crud.fetch, dispatch )
         }
     }
-)(CompaniesTable)
+)(UsersTable)

@@ -7,7 +7,9 @@ const reducer = ( state = {
     switch( action.type ) {
         case 'LOGIN_SUCCESS': {
             const { tokens, me } = action.payload;
-            
+            delete me.password
+            me.role = me.role.role
+
             const tokensStr = JSON.stringify( tokens );
             const cryptedTokens = CryptoService.encrypt( tokensStr );
 

@@ -79,16 +79,18 @@ class Table extends React.Component {
         const themeStyles = this.applyThemeStyles( secondary, full, theme )
 
         return(
-            <table style={{...themeStyles.container}}>
-                <thead style={{...themeStyles.header}}>
-                    <tr>
-                        { this.renderFields( {...themeStyles.headerCell}, fields ) }
-                    </tr>
-                </thead>
-                <tbody style={{...themeStyles.body}}>
-                    { this.renderItems( {...themeStyles.bodyCell}, fields, items ) }
-                </tbody>
-            </table>
+            <div style={{overflowX: 'auto'}}>
+                <table style={{...themeStyles.container}}>
+                    <thead style={{...themeStyles.header}}>
+                        <tr>
+                            { this.renderFields( {...themeStyles.headerCell}, fields ) }
+                        </tr>
+                    </thead>
+                    <tbody style={{...themeStyles.body}}>
+                        { this.renderItems( {...themeStyles.bodyCell}, fields, items ) }
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }

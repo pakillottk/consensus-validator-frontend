@@ -34,7 +34,7 @@ const Authorization = ( allowedRoles ) => ( WrappedComponent ) => {
             let role = null;
             const me = store.auth.me;
             if( me !== null ) {
-                role = me.role.role;
+                role = me.role;
             }
 
             return {

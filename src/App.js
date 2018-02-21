@@ -15,8 +15,9 @@ import LoginGuard from './components/loginGuard/LoginGuard';
 import LoginPage from './pages/LoginPage'
 import SessionsPage from './pages/SessionsPage'
 import CompaniesPage from './pages/CompaniesPage'
+import UsersPage from './pages/UsersPage'
 
-import { Any, Super } from './components/auth/authLevels';
+import { Any, Super, Admin } from './components/auth/authLevels';
 
 class App extends Component {
   render() {
@@ -30,6 +31,7 @@ class App extends Component {
                   <Route exact path="/" component={LoginPage} />
                   <Route path="/sesiones" component={Any(SessionsPage)} />
                   <Route path="/companias" component={Super(CompaniesPage)} />
+                  <Route path="/usuarios" component={Admin(UsersPage)} />
                 </Layout>
             </div>
           </ConnectedRouter>
