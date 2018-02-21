@@ -25,10 +25,10 @@ class CompanySelector extends React.Component {
     }
 
     render() {
-        const { companies, onChange, value } = this.props;
+        const { disabled, companies, onChange, value } = this.props;
 
         return(
-           <Select onChange={onChange} value={value} options={ this.getCompaniesAsOptions( companies ) } /> 
+           <Select disabled={disabled} onChange={onChange} value={value} options={ this.getCompaniesAsOptions( companies ) } /> 
         )
     }
 }

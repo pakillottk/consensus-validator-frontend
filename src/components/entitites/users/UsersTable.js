@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 
 import schema from './Schema'
 import EntityTable from '../EntityTable'
+import UserForm from './UserForm'
 
 class UsersTable extends React.Component {
     componentWillMount() {
@@ -13,10 +14,16 @@ class UsersTable extends React.Component {
     }
 
     render() {
+        const { users } = this.props
         return(
-            <div>
-                TABLE
-            </div>
+            <EntityTable
+                schema={schema}
+                items={users}
+                hidden={{password: true, company_id: true, role_id: true}}
+                formTitle="EDITAR USUARIO"
+                Form={UserForm}
+                full
+            />
         )
     }
 } 

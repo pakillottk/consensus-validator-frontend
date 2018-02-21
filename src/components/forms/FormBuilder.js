@@ -52,11 +52,12 @@ class FormBuilder extends React.Component {
         this.setState({ values });
     }
 
-    renderSelect( index, field ) {
+    renderSelect( index, field, disabled ) {
         const { values } = this.state;
         return(
             <Select 
                 key={index} 
+                disabled={disabled}
                 name={ field.name } 
                 value={values[ field.name ]} 
                 options={ field.options }
@@ -65,11 +66,12 @@ class FormBuilder extends React.Component {
         );
     }
 
-    renderInput( index, field ) {
+    renderInput( index, field, disabled ) {
         const { values } = this.state;
         return(
             <Input
                 key={ index }
+                disabled={disabled}
                 type={field.component} 
                 name={ field.name } 
                 value={ values[ field.name ] } 
@@ -79,11 +81,12 @@ class FormBuilder extends React.Component {
         );
     }
 
-    renderCustomField( index, field, Component ) {
+    renderCustomField( index, field, Component, disabled ) {
         const { values } = this.state;
         return(
             <Component
                 key={index}
+                disabled={disabled}
                 name={field.name}
                 value={ values[ field.name ] } 
                 onChange={this.handleFieldChange}
@@ -96,20 +99,22 @@ class FormBuilder extends React.Component {
             return null;
         }
 
+        const disabled = this.props.disabled || {}
+
         const output = [];
         fields.forEach( ( field, index ) => {
             output.push( <Label key={fields.length + index}>{ field.label }</Label> );
 
             if( field.type === 'input' ) {
                 output.push(
-                    this.renderInput( index, field )
+                    this.renderInput( index, field, disabled[ field.name ] )
                 );
             } else if( field.type === 'select' ) {
                 output.push(
-                    this.renderSelect( index, field )
+                    this.renderSelect( index, field, disabled[ field.name ] )
                 )
             } else {
-                output.push( this.renderCustomField( index, field, field.component ) );
+                output.push( this.renderCustomField( index, field, field.component, disabled[ field.name ] ) );
             }
         });
 

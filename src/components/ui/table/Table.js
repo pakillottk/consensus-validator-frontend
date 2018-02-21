@@ -45,7 +45,12 @@ class Table extends React.Component {
         const tds = []
         fields.forEach(
             ( field, index ) => {
-                tds.push(<td key={index} style={style}>{item[field.key]}</td>)
+                const itemData = item[field.name]
+                let tdContent = itemData
+                if( itemData === undefined  || itemData === null) {
+                    tdContent = 'SIN ASIGNAR'
+                }
+                tds.push(<td key={index} style={style}>{tdContent}</td>)
             }
         )
 

@@ -13,15 +13,30 @@ class EntityTable extends React.Component {
             return
         }
 
-        this.props.create( formTitle, (<div> <Form initialvalues={item} /> </div>)  )
+        this.props.create( formTitle, (<div> <Form id={item.id} /> </div>)  )
+    }
+
+    hideFields( fields, hidden ) {
+        if( !hidden ) {
+            return fields
+        }
+
+        const visibleFields = []
+        fields.forEach( field => {
+            if( !hidden[ field.name ] ) {
+                visibleFields.push( field )
+            }
+        });
+
+        return visibleFields
     }
 
     render() {
-        const { schema, items, full } = this.props
+        const { schema, items, hidden, full } = this.props
 
         return(
             <Table
-                fields={schema}
+                fields={this.hideFields( schema, hidden )}
                 items={items}
                 onItemClick={(item) => this.itemClicked( item )}
                 full

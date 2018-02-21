@@ -1,33 +1,33 @@
 const schema = [
     {
-        key: 'nif',
+        name: 'nif',
         label: 'NIF',
         defaultValue: '',
-        inputComponent: 'text'
+        type: 'input'
     },
     {
-        key: 'name',
+        name: 'name',
         label: 'NOMBRE',
         defaultValue: '',
-        inputComponent: 'text'
+        type: 'input'
     },
     {
-        key: 'address',
+        name: 'address',
         label: 'DIRECCIÓN',
         defaultValue: '',
-        inputComponent: 'text'
+        type: 'input'
     },
     {
-        key: 'phone',
+        name: 'phone',
         label: 'TELÉFONO',
         defaultValue: '',
-        inputComponent: 'text'
+        type: 'input'
     },
     {
-        key: 'email',
+        name: 'email',
         label: 'EMAIL',
         defaultValue: '',
-        inputComponent: 'text'
+        type: 'input'
     }
 
 ]

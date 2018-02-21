@@ -26,7 +26,7 @@ class UserInfo extends React.Component {
                     background: theme.relevant, 
                     color: theme.brightTextColor 
                 }}>
-                    {me.role.role}
+                    {me.role}
                 </Segment>
                 <Button context="negative" full styles={{margin: 0}}>SALIR</Button>
             </div>

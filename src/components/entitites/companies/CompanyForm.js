@@ -1,79 +1,14 @@
 import React from 'react';
-import FormBuilder from '../../forms/FormBuilder';
-import CompanyValidator from '../../forms/Validators/CompanyValidator';
 
-import { crud } from '../../../redux/actions/companies';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import Schema from './Schema'
+import EntityForm from '../EntityForm'
 
-class CompanyForm extends React.Component {
-    submitCompany( data ) {      
-        const { company } = this.props
-        if( !company ) {
-            this.props.create( data );
-        } else {
-            this.props.update( company.id, data )
-        }
-    }
+import { crud } from '../../../redux/actions/companies'
+import CompanyValidator from '../../forms/Validators/CompanyValidator'
 
-    render() {
-        const toEdit = this.props.initialvalues || {};
-        const fields = [
-            {
-                type:'input',
-                name:'nif',
-                label:'NIF',
-                component: 'text' 
-            },
-            {
-                type:'input',
-                name:'name',
-                label:'NOMBRE',
-                component: 'text' 
-            },
-            {
-                type:'input',
-                name:'address',
-                label:'DIRECCIÓN',
-                component: 'text' 
-            },
-            {
-                type:'input',
-                name:'phone',
-                label:'TELÉFONO',
-                component: 'text' 
-            },
-            {
-                type:'input',
-                name:'email',
-                label:'EMAIL',
-                component: 'text' 
-            },
-        ];
-
-        return(
-            <FormBuilder 
-                title="COMPAÑÍA"
-                initialvalues={toEdit}
-                submit={this.submitCompany.bind(this)} 
-                fields={fields} 
-                validator={CompanyValidator} 
-                submitText={'GUARDAR'}
-            />
-        )
+const Form = EntityForm( 'companies', crud, Schema, 'COMPAÑÍA', CompanyValidator )
+export default class CompanyForm extends React.Component {
+    render() {        
+        return <Form id={this.props.id} />
     }
 }
-
-export default connect(
-    ( store, props ) => { 
-        return {
-            company: store.companies.data.get( props.initialvalues ? props.initialvalues.id : -1 )
-        }; 
-    },
-    ( dispatch ) => {
-        return {
-            create: bindActionCreators( crud.create, dispatch ),
-            update: bindActionCreators( crud.update, dispatch )
-        };
-    }
-)(CompanyForm);
