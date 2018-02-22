@@ -21,10 +21,11 @@ const builder = ( Entity, connection, paths ) => {
                 payload: connection.put( paths.update + '/' + id, new Request( data, connection.headers.headers ) )
             }
         },
-        delete: ( id, data ) => {
+        delete: ( id ) => {
             return {
                 type: prefix + '_DELETE',
-                payload: connection.delete( paths.delete + '/' + id, new Request( data, connection.headers.headers ) )
+                payload: connection.delete( paths.delete + '/' + id, new Request( {}, connection.headers.headers ) ),
+                meta: { deleted_id: id }
             }
         }
     }

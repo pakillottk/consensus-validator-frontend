@@ -22,7 +22,7 @@ export const onUpdate = ( preprocessor ) => ( state, action ) => {
 }
 
 export const onDelete = ( state, action ) => {
-    let data = state.data.delete( action.payload.data.deleted_id );
+    let data = state.data.delete( action.meta.deleted_id );
     return {...state, data };
 }
 
