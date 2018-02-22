@@ -17,11 +17,11 @@ class Select extends React.Component {
     }
 
     render() {
-        const { disabled, options, styles, name, value, full, theme } = this.props;
+        const { disabled, onChange, options, styles, name, value, full, theme } = this.props;
         const selectStyles = this.applyThemeStyles( full, theme )
         return(
             <div className={ disabled ? 'disabled' : '' } style={{ width: full ? '100%' : 'auto', textAlign: 'center' }}>
-                <select name={name} value={value} style={{...selectStyles, ...styles}}>
+                <select name={name} onChange={onChange} value={value} style={{...selectStyles, ...styles}}>
                     { options.map( ( option, index ) => <option key={index} value={option.value}>{option.text}</option> ) }
                 </select>
             </div>

@@ -6,12 +6,12 @@ import { connect } from 'react-redux';
 
 export default ( reducer, actions, schema, title, validator  ) => {
     class Form extends React.Component {
-        submitForm( data ) {
+        submitForm( data, initial ) {
             const { entity } = this.props
             if( !entity ) {
-                this.props.create( data );
+                this.props.create( {...initial, ...data} );
             } else {
-                this.props.update( entity.id, entity )
+                this.props.update( entity.id, data )
             }
         }
 
@@ -30,9 +30,21 @@ export default ( reducer, actions, schema, title, validator  ) => {
             return visibleFields
         }
 
+        getDefaultValues( fields ) {
+            const defaultValues = {}
+            fields.forEach( field => {
+                if( field.defaultValue === undefined ) {
+                    return
+                }
+                defaultValues[field.name] = field.defaultValue
+            })
+
+            return defaultValues
+        }
+
         render() {
             const { hidden, disabled } = this.props
-            const toEdit = this.props.entity || {}
+            const toEdit = {...{}, ...this.getDefaultValues( schema ), ...this.props.entity }
             return(
                 <FormBuilder
                     title={title}

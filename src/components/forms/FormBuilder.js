@@ -23,6 +23,7 @@ class FormBuilder extends React.Component {
             fields: props.fields || [],
             labels,
             values: props.initialvalues || {},
+            changedValues: {},
             errors: {}
         }
         
@@ -41,7 +42,7 @@ class FormBuilder extends React.Component {
 
         //Submit only when no errors
         if( Object.keys( errors ).length === 0 ) {
-            this.props.submit( this.state.values );
+            this.props.submit( this.state.changedValues, this.state.values );
         }
     }
 
@@ -49,7 +50,10 @@ class FormBuilder extends React.Component {
         const values = {...this.state.values};
         values[ event.target.name ] = event.target.value;
 
-        this.setState({ values });
+        const changedValues = {...this.state.changedValues};
+        changedValues[ event.target.name ] = event.target.value;
+
+        this.setState({ values, changedValues });
     }
 
     renderSelect( index, field, disabled ) {

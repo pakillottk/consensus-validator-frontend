@@ -1,4 +1,5 @@
 import CompanySelector from '../../forms/Controls/CompanySelector/CompanySelector'
+import RoleSelector from '../../forms/Controls/RoleSelector/RoleSelector'
 
 const schema = [
     {
@@ -11,13 +12,15 @@ const schema = [
         name: 'password',
         label: 'CONTRASEÑA',
         defaultValue: '',
-        type: 'input'
+        type: 'input',
+        component: 'password'
     },
     {
         name: 'role_id',
         label: 'ROL',
         defaultValue: 1,
-        type: 'input'
+        type: 'custom',
+        component: RoleSelector
     },
     {
         name: 'company_id',
@@ -29,13 +32,11 @@ const schema = [
     {
         name: 'role',
         label: 'ROL',
-        defaultValue: '',
         type: 'input'
     },
     {
         name: 'company',
         label: 'COMPAÑÍA',
-        defaultValue: '',
         type: 'input'
     }
 ]
