@@ -1,2 +1,2 @@
-import EntityReducer from './generators/EntityReducer';
+import EntityReducer from './generators/EntityReducer'
 export default EntityReducer( 'Sessions', {} );

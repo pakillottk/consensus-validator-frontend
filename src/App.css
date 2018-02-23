@@ -3,6 +3,10 @@
   margin: 0;
 }
 
+body {
+  background: #eee;
+}
+
 .App {
   text-align: center;
 }

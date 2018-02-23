@@ -79,7 +79,7 @@ class Drawer extends React.Component {
             ...sizeStyle,
             ...paddingMargingStyle,
             ...borderStyles,
-            zIndex: 999
+            zIndex: 100
         }
     }
 

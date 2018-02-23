@@ -14,9 +14,9 @@ class Layout extends React.Component {
         const navWidth = 190
         const contentMargin = navWidth + 12
 
-        const { theme: { font }, Navigation } = this.props
+        const { theme, Navigation } = this.props
         return(
-            <div style={{ fontFamily: font }}>
+            <div style={{ fontFamily: theme.font }}>
                 <WindowManager />
                 <Drawer secondary width={navWidth+'px'} fullHeight >
                     <h1>CONSENSUS</h1>
