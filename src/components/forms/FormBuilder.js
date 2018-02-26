@@ -24,7 +24,8 @@ class FormBuilder extends React.Component {
             labels,
             values: props.initialvalues || {},
             changedValues: {},
-            errors: {}
+            errors: {},
+            editMode: props.initialvalues ? true : false
         }
         
         this.handleFieldChange = this.handleFieldChange.bind( this );
@@ -36,14 +37,26 @@ class FormBuilder extends React.Component {
         let { errors } = this.state;
         //Validate the form
         if( this.props.validator ) {
-            errors = this.props.validator.validate( this.state.values );
+            errors = this.props.validator.validate( this.state.values, this.state.editMode );
             this.setState({ errors });
         }
 
         //Submit only when no errors
         if( Object.keys( errors ).length === 0 ) {
             this.props.submit( this.state.changedValues, this.state.values );
+            if( this.props.resetOnSubmit ) {
+                this.setState({ values: this.props.initialvalues || {}, changedValues: {} })
+            }
         }
+    }
+
+    getValue( field ) {
+        let data = this.state.values[ field.name ]
+        if( field.inputFormat ) {
+            data = field.inputFormat( data )
+        }
+
+        return data
     }
 
     handleFieldChange( event ) {
@@ -63,7 +76,7 @@ class FormBuilder extends React.Component {
                 key={index} 
                 disabled={disabled}
                 name={ field.name } 
-                value={values[ field.name ]} 
+                value={this.getValue( field )} 
                 options={ field.options }
                 onChange={this.handleFieldChange}
             />
@@ -78,7 +91,7 @@ class FormBuilder extends React.Component {
                 disabled={disabled}
                 type={field.component} 
                 name={ field.name } 
-                value={ values[ field.name ] } 
+                value={ this.getValue( field ) } 
                 onChange={this.handleFieldChange}
                 full
             />
@@ -92,7 +105,7 @@ class FormBuilder extends React.Component {
                 key={index}
                 disabled={disabled}
                 name={field.name}
-                value={ values[ field.name ] } 
+                value={ this.getValue( field ) } 
                 onChange={this.handleFieldChange}
             />
         )

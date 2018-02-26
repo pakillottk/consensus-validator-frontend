@@ -32,13 +32,13 @@ class EntityTable extends React.Component {
     }
 
     render() {
-        const { schema, items, hidden, full } = this.props
+        const { schema, items, hidden, full, onItemClick } = this.props
 
         return(
             <Table
                 fields={this.hideFields( schema, hidden )}
                 items={items}
-                onItemClick={(item) => this.itemClicked( item )}
+                onItemClick={(item) => onItemClick ? onItemClick( item ) : this.itemClicked( item )}
                 full
             />
         )

@@ -2,11 +2,12 @@ import React from 'react';
 
 import Schema from './Schema'
 import EntityForm from '../EntityForm'
+import SessionValidator from '../../forms/Validators/SessionValidator'
 import RemoveSessionButton from './RemoveSessionButton'
 
 import { crud } from '../../../redux/actions/sessions'
 
-const Form = EntityForm( 'sessions', crud, Schema, 'SESIÓN' )
+const Form = EntityForm( 'sessions', crud, Schema, 'SESIÓN', SessionValidator )
 export default class SessionForm extends React.Component {
     render() {        
         return(

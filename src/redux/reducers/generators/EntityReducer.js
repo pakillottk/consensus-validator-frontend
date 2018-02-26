@@ -9,6 +9,13 @@ export const onFetch = ( preprocessor ) => ( state, action ) => {
     return {...state, data };
 }
 
+export const onSingleFetch = ( preprocessor ) => ( state, action ) => {
+    let data = state.data;
+    const item = action.payload.data;
+
+    return {...state, data: data.set( item.id, item ) };
+}
+
 export const onCreation = ( preprocessor ) => ( state, action ) => {
     const item = action.payload.data;
     let data = state.data.set( item.id, preprocessor( item ) );
@@ -30,10 +37,11 @@ const builder = ( entity, validActions, preprocessor ) => {
     preprocessor = preprocessor || ( ( item ) => { return item; } );
     const prefix = entity.toUpperCase();
     let validTypes = {};
-    validTypes[ prefix + '_' + 'FETCH_FULFILLED' ]  = onFetch( preprocessor );
-    validTypes[ prefix + '_' + 'CREATE_FULFILLED' ] = onCreation( preprocessor );
-    validTypes[ prefix + '_' + 'UPDATE_FULFILLED' ] = onUpdate( preprocessor );
-    validTypes[ prefix + '_' + 'DELETE_FULFILLED' ] = onDelete;
+    validTypes[ prefix + '_' + 'FETCH_FULFILLED' ]          = onFetch( preprocessor );
+    validTypes[ prefix + '_' + 'SINGLE_FETCH_FULFILLED' ]   = onSingleFetch( preprocessor )
+    validTypes[ prefix + '_' + 'CREATE_FULFILLED' ]         = onCreation( preprocessor );
+    validTypes[ prefix + '_' + 'UPDATE_FULFILLED' ]         = onUpdate( preprocessor );
+    validTypes[ prefix + '_' + 'DELETE_FULFILLED' ]         = onDelete;
 
     validTypes = {...validTypes, ...validActions};
 

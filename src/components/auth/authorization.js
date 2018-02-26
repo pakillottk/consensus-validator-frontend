@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Segment from '../ui/segment/Segment'
 
-const Authorization = ( allowedRoles ) => ( WrappedComponent ) => {
+const Authorization = ( allowedRoles ) => ( WrappedComponent, silent ) => {
     class WithAuth extends React.Component {
         checkRole( role ) {
             if( role ) {
@@ -21,6 +21,10 @@ const Authorization = ( allowedRoles ) => ( WrappedComponent ) => {
 
             if( this.checkRole( role ) ) {
                 return <WrappedComponent {...this.props} />
+            }
+
+            if( silent ) {
+                return null
             }
 
             return <Segment secondary styles={{position:'fixed', height:'100vh', width:'100vw'}}>

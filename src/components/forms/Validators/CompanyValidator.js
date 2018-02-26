@@ -7,22 +7,22 @@ import ValidEmail from './Rules/ValidEmail'
 
 export default new Validator({
     nif: [
-        new Required(),
-        new FixedLength( 9 )
+        new Required( true ),
+        new FixedLength( false, 9 )
     ],
     name: [
-        new Required()
+        new Required( true )
     ],
     address: [
-        new Required()
+        new Required( true )
     ],
     phone: [
-        new Required(),
-        new FixedLength( 9 ),
-        new MatchRegex( /[0-9]{9}/ )
+        new Required( true ),
+        new FixedLength( false, 9 ),
+        new MatchRegex( false, /[0-9]{9}/ )
     ],
     email: [
-        new Required(),
+        new Required( true ),
         new ValidEmail()
     ]
 });

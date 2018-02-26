@@ -1,13 +1,13 @@
 import BaseRule from './BaseRule';
 
 export default class FixedLength extends BaseRule {
-    constructor( length ) {
-        super();
+    constructor( ignoreOnEdit, length ) {
+        super( ignoreOnEdit );
 
         this.length = length;
     }
 
-    evaluate( value ) {
+    evaluation( value ) {
         if( !value ) {
             return 'Valor no válido';
         }

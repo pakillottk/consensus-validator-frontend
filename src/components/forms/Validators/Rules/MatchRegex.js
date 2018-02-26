@@ -1,13 +1,17 @@
 import BaseRule from './BaseRule';
 
 export default class MatchRegex extends BaseRule {
-    constructor( regex ) {
-        super();
+    constructor( ignoreOnEdit, regex ) {
+        super( ignoreOnEdit );
 
         this.regex = regex;
     }
 
-    evaluate( value ) {
+    evaluation( value ) {
+        if( value === undefined || value === null ) {
+            return null;
+        }
+        
         if( !this.regex.test( value ) ) {
             return 'Formato no válido';
         }

@@ -54,6 +54,7 @@ export default ( reducer, actions, schema, title, validator  ) => {
                     fields={this.hideFields( hidden, schema )} 
                     validator={validator} 
                     submitText={'GUARDAR'}
+                    resetOnSubmit={!this.props.entity}
                 />
             )
         }

@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 
 import schema from './Schema'
 import EntityTable from '../EntityTable'
-import SessionForm from './SessionForm'
 
 class SessionsTable extends React.Component {
     componentWillMount() {
@@ -14,14 +13,13 @@ class SessionsTable extends React.Component {
     }
 
     render() {
-        const { sessions } = this.props
+        const { sessions, onItemClick } = this.props
         return(
             <EntityTable 
                 schema={schema} 
                 items={sessions} 
-                formTitle="EDITAR SESIÓN"
-                Form={SessionForm}
                 full 
+                onItemClick={ onItemClick ? onItemClick : ( () => {} ) }
             />
         )
     }

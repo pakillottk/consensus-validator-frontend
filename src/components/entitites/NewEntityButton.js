@@ -6,6 +6,8 @@ import { create } from '../../redux/actions/windows'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
+import { Supervisor } from '../auth/authLevels'
+
 class NewEntityButton extends React.Component {
     createWindow() {
         const { title, Form } = this.props
@@ -25,6 +27,7 @@ class NewEntityButton extends React.Component {
     }
 }
 
+NewEntityButton = Supervisor( NewEntityButton, true )
 export default connect(
     () => { return {} },
     dispatch => {

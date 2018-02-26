@@ -9,6 +9,12 @@ const builder = ( Entity, connection, paths ) => {
                 payload: connection.get( paths.fetch )
             }
         },
+        fetchById: ( id ) => {
+            return {
+                type: prefix + '_SINGLE_FETCH',
+                payload: connection.get( paths.fetch + '/' + id )
+            }
+        },
         create: ( data ) => {
             return {
                 type: prefix + '_CREATE',

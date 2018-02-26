@@ -12,14 +12,14 @@ class Table extends React.Component {
                 width: full ? '100%' : 'auto'
             },
             header: {
-                fontSize: '1rem',
+                fontSize: '0.9rem',
                 backgroundColor: secondary ? theme.thirdColor : theme.secondaryColor
             },
             headerCell: {
                 padding: theme.padding.medium
             },
             body: {
-                fontSize: '1.15rem',
+                fontSize: '1.3rem',
                 backgroundColor: secondary ? theme.secondaryColor : theme.primaryColor,
                 color: secondary ? theme.secondaryTextColor : theme.textColor
             },
@@ -47,6 +47,9 @@ class Table extends React.Component {
             ( field, index ) => {
                 const itemData = item[field.name]
                 let tdContent = itemData
+                if( field.displayFormat ) {
+                    tdContent = field.displayFormat( itemData )
+                }
                 if( itemData === undefined  || itemData === null) {
                     tdContent = 'SIN ASIGNAR'
                 }
