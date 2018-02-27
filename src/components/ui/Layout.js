@@ -7,11 +7,19 @@ import UserInfo from '../userInfo/UserInfo'
 import WindowManager from './window/WindowManager'
 
 class Layout extends React.Component {
+    computeNavWidth() {
+        if( window.innerWidth <= 768 ) {
+            return 100;
+        }
+
+        return 190;
+    } 
+
     render() {
         if( window.location.pathname === '/' ){
             return this.props.children
         }
-        const navWidth = 190
+        const navWidth = this.computeNavWidth();
         const contentMargin = navWidth + 12
 
         const { theme, Navigation } = this.props
@@ -19,7 +27,7 @@ class Layout extends React.Component {
             <div style={{ fontFamily: theme.font }}>
                 <WindowManager />
                 <Drawer secondary width={navWidth+'px'} fullHeight >
-                    <h1>CONSENSUS</h1>
+                    <h1 style={{textAlign: 'center', fontSize: '1.5rem'}}>CONSENSUS</h1>
                     <Divider full />
                     <UserInfo />
                     <Divider full />

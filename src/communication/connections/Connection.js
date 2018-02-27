@@ -37,8 +37,12 @@ class Connection {
         return request ? request.headers : this.headers.headers;
     }
 
-    get( path, request ) {        
-        return axios.get( this.getFullPath( path ), { headers: this.getHeaders( request ) } );
+    getQuery( request ) {
+        return request ? request.query : '';
+    }
+
+    get( path, request ) {  
+        return axios.get( this.getFullPath( path ) + this.getQuery( request ), { headers: this.getHeaders( request ) } );
     }
 
     post( path, request ) {

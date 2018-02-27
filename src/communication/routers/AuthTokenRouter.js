@@ -63,14 +63,11 @@ class AuthTokenRouter {
     }
     */
 
-    /*
-    TODO
     async logout() {
-        const request  = new Request(); 
+        const request  = new Request( {}, this.connection.headers.headers ); 
         const response = await this.connection.post( this.authPaths.logout, request );
         this.connection.removeHeader( 'Authorization' );
     }
-    */
 }
 
 export default AuthTokenRouter;

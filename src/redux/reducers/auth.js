@@ -18,6 +18,11 @@ const reducer = ( state = {
 
             return {...state, me: me, tokens: tokens};
         }
+
+        case 'LOGOUT': {
+            window.localStorage.removeItem( 'tokens' );
+            return {...state, me: null, tokens: null };
+        }
     }
 
     return state;

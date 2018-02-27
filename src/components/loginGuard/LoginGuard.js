@@ -8,9 +8,9 @@ import CryptoService from '../../communication/crypto/CryptoService';
 import AuthAPI from '../../API/APIAuthRouter';
 
 class LoginGuard extends React.Component {
-    async componentWillMount() {
+    async attemptToLogin( tokens ) {
         //LOGGED, DO NOTHING
-        if( this.props.tokens !== null ) {
+        if( tokens !== null ) {
             return;
         }
 
@@ -28,6 +28,17 @@ class LoginGuard extends React.Component {
             //Can't login, go to Login page
             this.props.history.replace( '/' );
         }
+    }
+
+    componentWillMount() {
+        if( this.props.match.path !== '/' ) {
+            this.attemptToLogin( this.props.tokens )
+        }
+    }
+
+    componentWillReceiveProps( nextProps ) {
+        const { tokens } = nextProps
+        this.attemptToLogin( tokens )
     }
 
     render() {

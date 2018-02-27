@@ -7,3 +7,10 @@ export const loginSuccess = ( me, tokens ) => {
         }
     }
 } 
+
+export const logout = () => {
+    return {
+        type: 'LOGOUT',
+        payload: {}
+    }
+}

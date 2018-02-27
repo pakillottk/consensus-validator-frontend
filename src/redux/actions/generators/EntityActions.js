@@ -3,10 +3,10 @@ import Request from '../../../communication/Request';
 const builder = ( Entity, connection, paths ) => {
     const prefix = Entity.toUpperCase();
     return {
-        fetch: () => {
+        fetch: ( queryString ) => {
             return {
                 type: prefix + '_FETCH',
-                payload: connection.get( paths.fetch )
+                payload: connection.get( paths.fetch, new Request( {}, connection.headers.headers, queryString ) )
             }
         },
         fetchById: ( id ) => {

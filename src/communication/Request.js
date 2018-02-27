@@ -1,7 +1,8 @@
 class Request {
-    constructor( input, headers ) {
+    constructor( input, headers, query ) {
         this.input = input || {};
         this.headers = headers || {};
+        this.query = query || '';
     }
 
     getInput( key ) {

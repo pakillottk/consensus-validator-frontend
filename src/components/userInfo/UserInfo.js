@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import UIThemeable from '../ui/UIThemeable'
 import Segment from '../ui/segment/Segment'
-import Button from '../ui/button/Button'
+import Logout from '../logout/Logout'
 
 class UserInfo extends React.Component {
     render() {
@@ -28,7 +28,7 @@ class UserInfo extends React.Component {
                 }}>
                     {me.role}
                 </Segment>
-                <Button context="negative" full styles={{margin: 0}}>SALIR</Button>
+                <Logout />
             </div>
         )
     }

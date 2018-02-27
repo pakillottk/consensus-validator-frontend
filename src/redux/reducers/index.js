@@ -1,16 +1,18 @@
 import auth from './auth'
-import sessions from './sessions'
 import companies from './companies'
 import roles from './roles'
 import users from './users'
+import sessions from './sessions'
+import types from './types'
 import windows from './windows'
 
 const reducers = {
     auth,
-    sessions,
     companies,
     roles,
     users,
+    sessions,
+    types,
     windows
 }
 
