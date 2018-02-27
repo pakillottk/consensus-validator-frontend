@@ -9,6 +9,7 @@ import AuthAPI from '../../API/APIAuthRouter';
 
 class LoginGuard extends React.Component {
     async attemptToLogin( tokens ) {
+        console.log( 'hey' )
         //LOGGED, DO NOTHING
         if( tokens !== null ) {
             return;
@@ -16,22 +17,28 @@ class LoginGuard extends React.Component {
 
         //Attempt to rearm auth data
         const cryptedTokens = window.localStorage.getItem( 'tokens' );
-        if( cryptedTokens ) {
-            const tokens = JSON.parse( 
-                CryptoService.decrypt( cryptedTokens ) 
-            );
-            AuthAPI.setAuthHeaders( tokens );
-            const me = await AuthAPI.getMe();
-
-            this.props.loginSuccess( me.data, tokens );
-        } else {
-            //Can't login, go to Login page
+        try { 
+            if( cryptedTokens ) {
+                const tokens = JSON.parse( 
+                    CryptoService.decrypt( cryptedTokens ) 
+                );
+                AuthAPI.setAuthHeaders( tokens );
+                const me = await AuthAPI.getMe();
+    
+                this.props.loginSuccess( me.data, tokens );
+            } else {
+                //Can't login, go to Login page
+                this.props.history.replace( '/' );
+            }
+        } catch( exception ) {
+            //Login failed, redirect
             this.props.history.replace( '/' );
         }
+        
     }
 
     componentWillMount() {
-        if( this.props.match.path !== '/' ) {
+        if( this.props.location.pathname !== '/' ) {
             this.attemptToLogin( this.props.tokens )
         }
     }
