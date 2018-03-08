@@ -2,11 +2,12 @@ import React from 'react'
 
 import Schema from './Schema'
 import EntityForm from '../EntityForm'
+import DeliverValidator from '../../forms/Validators/DeliverValidator'
 
 import { crud } from '../../../redux/actions/deliveries'
 import RemoveDeliverButton from './RemoveDeliverButton'
 
-const Form = EntityForm( 'deliveries', crud, Schema, 'ENTREGA' )
+const Form = EntityForm( 'deliveries', crud, Schema, 'ENTREGA', DeliverValidator)
 export default class DeliverForm extends React.Component {
     render() {        
         return( 

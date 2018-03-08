@@ -26,6 +26,17 @@ class SessionPage extends React.Component {
     render() {
         const { session } = this.props
         const id = this.props.match.params.id
+
+        if( !session ) {
+            return(
+                <div>
+                    <Segment secondary>
+                        <h1>LA SESIÓN NO EXISTE O NO ESTÁ AUTORIZADO</h1>
+                    </Segment>
+                </div>
+            )
+        }
+
         return(
             <div>
             <Segment secondary styles={{border:'none'}}>

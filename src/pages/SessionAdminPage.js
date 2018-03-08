@@ -8,6 +8,9 @@ import NewTypeButton from '../components/entitites/types/NewTypeButton'
 import TypesTable from '../components/entitites/types/TypesTable'
 import NewDeliverButton from '../components/entitites/deliveries/NewDeliverButton'
 import DeliveriesTable from '../components/entitites/deliveries/DeliveriesTable'
+import NewScanGroupButton from '../components/entitites/scangroups/NewScanGroupButton'
+import ScanGroupsTable from '../components/entitites/scangroups/ScanGroupsTable'
+
 
 import { crud } from '../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
@@ -20,7 +23,17 @@ class SessionAdminPage extends React.Component {
     }
 
     render() {
+        const { session } = this.props
         const sessionId = parseInt( this.props.match.params.id );
+        if( !session ) {
+            return(
+                <div>
+                    <Segment secondary>
+                        <h1>LA SESIÓN NO EXISTE O NO ESTÁ AUTORIZADO</h1>
+                    </Segment>
+                </div>
+            )
+        }
         return(
             <div>
                 <Segment secondary styles={{border:'none'}}>
@@ -39,7 +52,12 @@ class SessionAdminPage extends React.Component {
                         <Segment>
                             <h2 style={{textAlign: 'center'}}>ENTREGAS</h2>
                             <NewDeliverButton />
-                            <DeliveriesTable />
+                            <DeliveriesTable sessionId={sessionId} />
+                        </Segment>
+                        <Segment>
+                            <h2 style={{textAlign: 'center'}}>GRUPOS DE ESCANEO</h2>
+                            <NewScanGroupButton sessionId={sessionId} />
+                            <ScanGroupsTable sessionId={sessionId} />
                         </Segment>
                     </div>
                 </Segment>
@@ -49,7 +67,11 @@ class SessionAdminPage extends React.Component {
 }
 
 export default connect(
-    () => { return {}; },
+    ( store, props ) => { 
+        return {
+            session: store.sessions.data.get( parseInt( props.match.params.id ) )
+        }; 
+    },
     ( dispatch ) => {
         return {
             fetch: bindActionCreators( crud.fetchById, dispatch )
