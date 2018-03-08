@@ -9,7 +9,6 @@ import AuthAPI from '../../API/APIAuthRouter';
 
 class LoginGuard extends React.Component {
     async attemptToLogin( tokens ) {
-        console.log( 'hey' )
         //LOGGED, DO NOTHING
         if( tokens !== null ) {
             return;

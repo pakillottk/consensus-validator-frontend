@@ -4,6 +4,7 @@ import roles from './roles'
 import users from './users'
 import sessions from './sessions'
 import types from './types'
+import deliveries from './deliveries'
 import windows from './windows'
 
 const reducers = {
@@ -13,6 +14,7 @@ const reducers = {
     users,
     sessions,
     types,
+    deliveries,
     windows
 }
 

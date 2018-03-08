@@ -25,6 +25,9 @@ export default ( removeAction ) => {
         removeEntity() {    
             this.props.remove( this.props.id )
             this.switchConfirmDialog( false )
+            if( this.props.onRemove ) {
+                this.props.onRemove()
+            }
         }
     
         render() {

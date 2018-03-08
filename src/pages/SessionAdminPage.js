@@ -6,7 +6,8 @@ import SessionForm from '../components/entitites/sessions/SessionForm'
 
 import NewTypeButton from '../components/entitites/types/NewTypeButton'
 import TypesTable from '../components/entitites/types/TypesTable'
-
+import NewDeliverButton from '../components/entitites/deliveries/NewDeliverButton'
+import DeliveriesTable from '../components/entitites/deliveries/DeliveriesTable'
 
 import { crud } from '../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
@@ -34,6 +35,11 @@ class SessionAdminPage extends React.Component {
                             <h2 style={{textAlign: 'center'}}>TIPOS</h2>
                             <NewTypeButton sessionId={sessionId} />
                             <TypesTable sessionId={ sessionId } />
+                        </Segment>
+                        <Segment>
+                            <h2 style={{textAlign: 'center'}}>ENTREGAS</h2>
+                            <NewDeliverButton />
+                            <DeliveriesTable />
                         </Segment>
                     </div>
                 </Segment>
