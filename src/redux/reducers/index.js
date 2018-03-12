@@ -6,6 +6,7 @@ import sessions from './sessions'
 import types from './types'
 import deliveries from './deliveries'
 import scangroups from './scangroups'
+import scantypes from './scantypes'
 import windows from './windows'
 
 const reducers = {
@@ -17,6 +18,7 @@ const reducers = {
     types,
     deliveries,
     scangroups,
+    scantypes,
     windows
 }
 

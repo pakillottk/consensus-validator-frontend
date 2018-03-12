@@ -19,9 +19,9 @@ class NewEntityButton extends React.Component {
     }
 
     render() {
-        const { styles, full, text } = this.props
+        const { disabled, styles, full, text } = this.props
         return(
-            <Button context='possitive' styles={styles} full onClick={() => this.createWindow()}>{text || 'NUEVO'}</Button>
+            <Button disabled={disabled} context='possitive' styles={styles} full onClick={() => this.createWindow()}>{text || 'NUEVO'}</Button>
         )
     }
 }

@@ -10,7 +10,7 @@ import NewDeliverButton from '../components/entitites/deliveries/NewDeliverButto
 import DeliveriesTable from '../components/entitites/deliveries/DeliveriesTable'
 import NewScanGroupButton from '../components/entitites/scangroups/NewScanGroupButton'
 import ScanGroupsTable from '../components/entitites/scangroups/ScanGroupsTable'
-
+import ScanTypesTable from '../components/entitites/scantypes/ScanTypesTable'
 
 import { crud } from '../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
@@ -58,6 +58,10 @@ class SessionAdminPage extends React.Component {
                             <h2 style={{textAlign: 'center'}}>GRUPOS DE ESCANEO</h2>
                             <NewScanGroupButton sessionId={sessionId} />
                             <ScanGroupsTable sessionId={sessionId} />
+                        </Segment>
+                        <Segment>
+                            <h2 style={{textAlign: 'center'}}>TIPOS ESCANEABLES</h2>
+                            <ScanTypesTable />
                         </Segment>
                     </div>
                 </Segment>
