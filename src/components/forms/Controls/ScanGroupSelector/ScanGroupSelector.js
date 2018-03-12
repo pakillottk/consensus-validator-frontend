@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 class ScanGroupSelector extends React.Component {
     getScanGroupsAsOptions( scangroups ) {
-        const options = [];
+        const options = [{value: 0, text: 'SELECCIONE'}];
         scangroups.forEach(
             scangroup => {
                 options.push({

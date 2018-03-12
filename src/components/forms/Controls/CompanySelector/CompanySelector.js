@@ -11,7 +11,7 @@ class CompanySelector extends React.Component {
     }
 
     getCompaniesAsOptions( companies ) {
-        const options = [];
+        const options = [{value: 0, text: 'SELECCIONE'}];
         companies.forEach(
             company => {
                 options.push({

@@ -11,7 +11,7 @@ class UserSelector extends React.Component {
     }
 
     getUsersAsOptions( users ) {
-        const options = [];
+        const options = [{value: 0, text: 'SELECCIONE'}];
         users.forEach(
             user => {
                 options.push({

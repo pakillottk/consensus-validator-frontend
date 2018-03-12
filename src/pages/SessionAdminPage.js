@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Segment from '../components/ui/segment/Segment'
+import Divider from '../components/ui/divider/Divider'
 import SessionsTable from '../components/entitites/sessions/SessionsTable'
 import SessionForm from '../components/entitites/sessions/SessionForm'
 
@@ -11,6 +12,10 @@ import DeliveriesTable from '../components/entitites/deliveries/DeliveriesTable'
 import NewScanGroupButton from '../components/entitites/scangroups/NewScanGroupButton'
 import ScanGroupsTable from '../components/entitites/scangroups/ScanGroupsTable'
 import ScanTypesTable from '../components/entitites/scantypes/ScanTypesTable'
+
+import CodesTable from '../components/entitites/codes/CodesTable'
+import CSVInput from '../components/forms/Controls/CSVInput/CSVInput'
+import CSVTable from '../components/CSVPreview/CSVPreview'
 
 import { crud } from '../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
@@ -40,30 +45,63 @@ class SessionAdminPage extends React.Component {
                     <h1 className="center-aligned">ADMINISTRAR SESIÓN</h1>
                 </Segment>
                 <Segment>
-                    <div style={{display: 'flex', flexWrap: 'wrap'}}>
-                        <Segment>
-                            <SessionForm id={ sessionId } />
-                        </Segment>
-                        <Segment>
+                    <SessionForm id={ sessionId } />
+                </Segment>
+                <Segment>
+                    <Segment secondary styles={{border:'none'}}>
+                        <h1 className="center-aligned">CONTROL CÓDIGOS</h1>
+                    </Segment>
+                    <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
+                        <div>
+                            <h2 style={{textAlign: 'center'}}>CARGAR CSV</h2>
+                            <div style={{display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap'}}>                                
+                                <div style={{display: 'flex', flexDirection: 'column'}}>
+                                    <CSVInput />
+                                </div>
+                                <CSVTable />
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 style={{textAlign: 'center'}}>CÓDIGOS</h2>
+                            <CodesTable sessionId={ sessionId } />                            
+                        </div>
+                    </div>
+
+                    <Divider full />
+                    
+                    <Segment secondary styles={{border:'none'}}>
+                        <h1 className="center-aligned">CONTROL ENTRADAS</h1>
+                    </Segment>                    
+                    <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>                        
+                        <div>
                             <h2 style={{textAlign: 'center'}}>TIPOS</h2>
                             <NewTypeButton sessionId={sessionId} />
                             <TypesTable sessionId={ sessionId } />
-                        </Segment>
-                        <Segment>
+                        </div>
+                        <div>
                             <h2 style={{textAlign: 'center'}}>ENTREGAS</h2>
                             <NewDeliverButton />
                             <DeliveriesTable sessionId={sessionId} />
-                        </Segment>
-                        <Segment>
+                        </div>
+                    </div>
+
+                    <Divider full />
+
+                    <Segment secondary styles={{border:'none'}}>
+                        <h1 className="center-aligned">CONTROL ESCÁNERES</h1>
+                    </Segment>
+                    <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
+                        <div>
                             <h2 style={{textAlign: 'center'}}>GRUPOS DE ESCANEO</h2>
                             <NewScanGroupButton sessionId={sessionId} />
                             <ScanGroupsTable sessionId={sessionId} />
-                        </Segment>
-                        <Segment>
+                        </div>
+                        <div>
                             <h2 style={{textAlign: 'center'}}>TIPOS ESCANEABLES</h2>
                             <ScanTypesTable />
-                        </Segment>
-                    </div>
+                        </div>
+                    </div>                    
                 </Segment>
             </div>
         );

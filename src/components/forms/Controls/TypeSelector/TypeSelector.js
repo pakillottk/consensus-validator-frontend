@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 class TypeSelector extends React.Component {
     getTypesAsOptions( types ) {
-        const options = [];
+        const options = [{value: 0, text: 'SELECCIONE'}];
         types.forEach(
             type => {
                 options.push({
