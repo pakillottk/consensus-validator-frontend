@@ -33,7 +33,7 @@ class ScanTypesTable extends React.Component {
         return(
             <div>
                 <ScanGroupSelector onChange={( e ) => { this.setState( { groupId: e.target.value } ) }}/>
-                <NewScanTypeButton groupId={this.state.groupId} />
+                <NewScanTypeButton disabled={groupId <= 0} groupId={this.state.groupId} />
                 <EntityTable
                     schema={schema}
                     items={scantypes}

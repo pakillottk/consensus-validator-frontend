@@ -18,14 +18,14 @@ const schema = [
     {
         name: 'role_id',
         label: 'ROL',
-        defaultValue: 1,
+        defaultValue: 0,
         type: 'custom',
         component: RoleSelector
     },
     {
         name: 'company_id',
         label: 'COMPAÑÍA',
-        defaultValue: 1,
+        defaultValue: 0,
         type: 'custom',
         component: CompanySelector
     },

@@ -11,7 +11,7 @@ class RoleSelector extends React.Component {
     }
 
     getRolesAsOptions( roles ) {
-        const options = [];
+        const options = [{value: 0, text: 'SELECCIONE'}];
         roles.forEach(
             role => {
                 options.push({

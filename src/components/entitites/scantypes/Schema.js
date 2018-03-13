@@ -19,6 +19,7 @@ const schema = [
     {
         name: 'type_id',
         label: 'TIPO',
+        defaultValue: 0,
         type: 'custom',
         component: TypeSelector
     },    
