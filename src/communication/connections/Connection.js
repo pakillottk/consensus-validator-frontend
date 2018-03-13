@@ -46,7 +46,7 @@ class Connection {
     }
 
     post( path, request ) {
-        return axios.post( this.getFullPath( path ), request.input, { headers: this.getHeaders( request ) } );
+        return axios.post( this.getFullPath( path ) + this.getQuery( request ), request.input, { headers: this.getHeaders( request ) } );
     }
 
     put( path, request ) {

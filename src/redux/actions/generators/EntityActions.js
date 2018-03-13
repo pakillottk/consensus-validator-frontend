@@ -15,10 +15,10 @@ const builder = ( Entity, connection, paths ) => {
                 payload: connection.get( paths.fetch + '/' + id )
             }
         },
-        create: ( data ) => {
+        create: ( data, queryString ) => {
             return {
                 type: prefix + '_CREATE',
-                payload: connection.post( paths.create, new Request( data, connection.headers.headers ) )
+                payload: connection.post( paths.create, new Request( data, connection.headers.headers, queryString ) )
             }
         },
         update: ( id, data ) => {

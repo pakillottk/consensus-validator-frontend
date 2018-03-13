@@ -16,6 +16,7 @@ class CompaniesTable extends React.Component {
         const { codes } = this.props
         return(
             <EntityTable 
+                scrollable
                 schema={schema} 
                 items={codes} 
                 full 

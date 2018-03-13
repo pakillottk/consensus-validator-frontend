@@ -34,7 +34,11 @@ class Table extends React.Component {
         const ths = []
         fields.forEach(
             ( field, index ) => {
-                ths.push( <th key={index} style={style}>{field.label}</th> )
+                ths.push( 
+                    <th key={index} style={style}>
+                        {field.label}
+                    </th>
+                )
             }
         )
 
@@ -83,11 +87,11 @@ class Table extends React.Component {
     }
 
     render() {
-        const { secondary, theme, items, fields, full } = this.props
+        const { secondary, scrollable, theme, items, fields, full } = this.props
         const themeStyles = this.applyThemeStyles( secondary, full, theme )
 
         return(
-            <div style={{overflowX: 'auto'}}>
+            <div style={{position: 'relative', overflowX: 'auto', maxHeight: scrollable ? '400px' : 'auto'}}>
                 <table style={{...themeStyles.container}}>
                     <thead style={{...themeStyles.header}}>
                         <tr>

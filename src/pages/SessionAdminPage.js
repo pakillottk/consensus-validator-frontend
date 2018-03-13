@@ -16,6 +16,7 @@ import ScanTypesTable from '../components/entitites/scantypes/ScanTypesTable'
 import CodesTable from '../components/entitites/codes/CodesTable'
 import CSVInput from '../components/forms/Controls/CSVInput/CSVInput'
 import CSVTable from '../components/CSVPreview/CSVPreview'
+import CSVUploadButton from '../components/CSVUploadButton/CSVUploadButton'
 
 import { crud } from '../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
@@ -57,6 +58,7 @@ class SessionAdminPage extends React.Component {
                             <div style={{display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap'}}>                                
                                 <div style={{display: 'flex', flexDirection: 'column'}}>
                                     <CSVInput />
+                                    <CSVUploadButton sessionId={ sessionId } />
                                 </div>
                                 <CSVTable />
                             </div>

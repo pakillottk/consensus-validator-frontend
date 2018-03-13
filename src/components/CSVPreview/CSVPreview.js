@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import Segment from '../ui/segment/Segment'
 import Table from '../ui/table/Table'
 
 class CSVPreview extends React.Component {
@@ -22,10 +23,16 @@ class CSVPreview extends React.Component {
 
         const fields = this.getFields( csvData )
         return(
-            <Table
-                fields={fields}
-                items={csvData}
-            />
+            <div>
+                <Segment secondary>
+                    <h4 style={{textAlign:'center'}}>TOTAL: {csvData.length} elementos</h4>
+                </Segment>
+                <Table
+                    scrollable
+                    fields={fields}
+                    items={csvData}
+                />
+            </div>
         )
     }
 }

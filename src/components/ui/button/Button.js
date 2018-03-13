@@ -73,7 +73,7 @@ class Button extends React.Component {
             padding: theme.padding.hard,
             margin: theme.margin.light,
             cursor: 'pointer',
-            opacity: disabled ? 0.35 : 'auto',
+            opacity: disabled ? 0.35 : '1.0',
             pointerEvents: disabled ? 'none' : 'all',
             ...fullStyle
         }

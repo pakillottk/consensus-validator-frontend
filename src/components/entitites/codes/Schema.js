@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 const schema = [
     {
         name: 'code',
@@ -39,7 +41,23 @@ const schema = [
         name: 'out',
         label: 'FUERA/DENTRO',
         defaultValue: '',
-        type: 'input'
+        type: 'input',
+        displayFormat: ( out ) => {
+            if( out ) {
+                return "FUERA"
+            } else {
+                return "DENTRO"
+            }
+        },
     },
+    {
+        name: 'updated_at',
+        label: 'ULT.ACTUALIZACIÓN',
+        defaultValue: '',
+        type: 'input',
+        displayFormat: ( date ) => {
+            return moment( date ).format( 'DD/MM/YYYY HH:mm' )
+        },
+    }
 ]
 export default schema
