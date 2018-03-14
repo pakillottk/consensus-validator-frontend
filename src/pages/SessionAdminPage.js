@@ -13,6 +13,7 @@ import NewScanGroupButton from '../components/entitites/scangroups/NewScanGroupB
 import ScanGroupsTable from '../components/entitites/scangroups/ScanGroupsTable'
 import ScanTypesTable from '../components/entitites/scantypes/ScanTypesTable'
 
+import CodesFilter from '../components/entitites/codes/CodesFilters'
 import CodesTable from '../components/entitites/codes/CodesTable'
 import CSVInput from '../components/forms/Controls/CSVInput/CSVInput'
 import CSVTable from '../components/CSVPreview/CSVPreview'
@@ -66,6 +67,7 @@ class SessionAdminPage extends React.Component {
 
                         <div>
                             <h2 style={{textAlign: 'center'}}>CÓDIGOS</h2>
+                            <CodesFilter sessionId={ sessionId } whidden={{type: true, updated_at: true}}/>
                             <CodesTable sessionId={ sessionId } />                            
                         </div>
                     </div>

@@ -18,7 +18,7 @@ class CSVPreview extends React.Component {
     render() {
         const { csvData } = this.props
         if( csvData.length === 0 ) {
-            return <p style={{margin: '0 5px'}}>No hay datos que mostrar</p>
+            return null
         }
 
         const fields = this.getFields( csvData )

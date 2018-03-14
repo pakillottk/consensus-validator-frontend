@@ -18,8 +18,9 @@ import SessionPage from './pages/SessionPage'
 import SessionAdminPage from './pages/SessionAdminPage'
 import CompaniesPage from './pages/CompaniesPage'
 import UsersPage from './pages/UsersPage'
+import TicketOfficePage from './pages/TicketOfficePage'
 
-import { Any, Super, Admin } from './components/auth/authLevels';
+import { Any, Seller, Super, Admin } from './components/auth/authLevels';
 
 class App extends Component {
   render() {
@@ -34,6 +35,7 @@ class App extends Component {
                   <Route exact path="/sesiones" component={Any(SessionsPage)} />
                   <Route exact path="/sesiones/:id" component={Any(SessionPage)} />
                   <Route exact path="/sesiones/:id/administrar" component={Admin(SessionAdminPage)} />
+                  <Route exact path="/sesiones/:id/taquilla" component={Seller(TicketOfficePage)} />
                   <Route path="/companias" component={Super(CompaniesPage)} />
                   <Route path="/usuarios" component={Admin(UsersPage)} />
                 </Layout>

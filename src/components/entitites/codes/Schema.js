@@ -1,11 +1,21 @@
 import moment from 'moment'
 
+import TypeSelector from '../../forms/Controls/TypeSelector/TypeSelector'
+import OutSelector from './OutSelector'
+
 const schema = [
     {
         name: 'code',
         label: 'CÓDIGO',
         defaultValue: '',
         type: 'input'
+    },
+    {
+        name: 'type_id',
+        label: "TIPO",
+        defaultValue: 0,
+        type: 'custom',
+        component: TypeSelector
     },
     {
         name: 'type',
@@ -28,20 +38,29 @@ const schema = [
     {
         name: 'maxValidations',
         label: 'VALIDACIONES PERMITIDAS',
-        defaultValue: '',
-        type: 'input'
+        defaultValue: 1,
+        type: 'input',
+        component: 'number',
+        displayFormat: ( maxValidations ) => {
+            if( parseInt(maxValidations) === -1 ) {
+                return "DESACTIVADO"
+            }
+            return maxValidations
+        },
     },
     {
         name: 'validations',
         label: 'VALIDACIONES',
-        defaultValue: '',
-        type: 'input'
+        defaultValue: 0,
+        type: 'input',
+        component: 'number'
     },
     {
         name: 'out',
         label: 'FUERA/DENTRO',
-        defaultValue: '',
-        type: 'input',
+        defaultValue: '0',
+        type: 'custom',
+        component: OutSelector,
         displayFormat: ( out ) => {
             if( out ) {
                 return "FUERA"
@@ -55,9 +74,13 @@ const schema = [
         label: 'ULT.ACTUALIZACIÓN',
         defaultValue: '',
         type: 'input',
+        component: 'datetime-local',
         displayFormat: ( date ) => {
             return moment( date ).format( 'DD/MM/YYYY HH:mm' )
         },
+        inputFormat: ( date ) => {
+            return moment( date ).format( 'YYYY-MM-DDThh:mm' )
+        }
     }
 ]
 export default schema

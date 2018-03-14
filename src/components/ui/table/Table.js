@@ -2,6 +2,14 @@ import React from 'react'
 import UIThemeable from '../UIThemeable'
 
 class Table extends React.Component {
+    constructor( props ) {
+        super( props )
+
+        this.state = {
+            selected: {}
+        }
+    }
+
     applyThemeStyles( secondary, full, theme ) {
         return {
             container: {
@@ -65,18 +73,26 @@ class Table extends React.Component {
     }
 
     renderItems( cellStyle, fields, items ) {
-        const { onItemClick } = this.props
-        const onClickCb = onItemClick || (() => {})
+        const { selected } = this.state
+        const { multiselect, onItemClick } = this.props
+        const onClickCb = onItemClick || (() => {})       
 
         const trs = []
         items.forEach(
             ( item, index ) => {
+                if( multiselect ) {
+                    trs.push(
+                        
+                    )
+                }
+
                 trs.push(
                     <tr 
                         key={index} 
-                        className={onItemClick ? 'pointer hovered-transparency' : ''} 
+                        className={( onItemClick && !multiselect ) ? 'pointer hovered-transparency' : ''} 
                         onClick={ () => onClickCb( item ) }
                     >
+                        { multiselect && <td><input checked={selected[item.id]} type="checkbox" onChange={(e) => this.handleMultiselect(e, item)}/> </td> }
                         { this.renderItem( cellStyle, fields, item ) }
                     </tr>
                 )
@@ -86,8 +102,46 @@ class Table extends React.Component {
         return trs
     }
 
+    selectAll( items ) {
+        const { onSelection } = this.props
+        const selected = {}
+        //Already selected, reset
+        if( Object.keys(this.state.selected).length === items.size ) {
+            if( onSelection ) {
+                onSelection( selected )
+            }
+            this.setState({selected})
+
+            return
+        }
+
+        items.forEach( item => {
+            selected[ item.id ] = item
+        })
+
+        if( onSelection ) {
+            onSelection( selected )
+        }
+        this.setState({selected})
+    }
+
+    handleMultiselect( event, item ) {
+        const { onSelection } = this.props 
+        const selected = {...this.state.selected}
+        if( selected[ item.id ] ) {
+            delete selected[ item.id ]
+        } else {
+            selected[ item.id ] = item
+        }
+        
+        if( onSelection ) {
+            onSelection( selected )
+        }
+        this.setState({selected})
+    }
+
     render() {
-        const { secondary, scrollable, theme, items, fields, full } = this.props
+        const { multiselect, secondary, scrollable, theme, items, fields, full } = this.props
         const themeStyles = this.applyThemeStyles( secondary, full, theme )
 
         return(
@@ -95,6 +149,7 @@ class Table extends React.Component {
                 <table style={{...themeStyles.container}}>
                     <thead style={{...themeStyles.header}}>
                         <tr>
+                            { multiselect && <th> <input type="checkbox" onClick={() => this.selectAll(items)}/></th> }
                             { this.renderFields( {...themeStyles.headerCell}, fields ) }
                         </tr>
                     </thead>
