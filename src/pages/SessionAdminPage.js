@@ -67,7 +67,7 @@ class SessionAdminPage extends React.Component {
 
                         <div>
                             <h2 style={{textAlign: 'center'}}>CÓDIGOS</h2>
-                            <CodesFilter sessionId={ sessionId } whidden={{type: true, updated_at: true}}/>
+                            <CodesFilter sessionId={ sessionId } hidden={{type: true, updated_at: true}}/>
                             <CodesTable sessionId={ sessionId } />                            
                         </div>
                     </div>

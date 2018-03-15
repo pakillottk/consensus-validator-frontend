@@ -17,15 +17,17 @@ class Input extends React.Component {
     }
 
     render() {
-        const { disabled, type, name, value, onChange, full, theme, styles } = this.props
+        const { disabled, onClick, checked, type, name, value, onChange, full, theme, styles } = this.props
         const inputStyle = this.applyThemeStyles( full, theme )
-
+        const checkboxStyle = type === 'checkbox' ? {transform: 'scale(2.0)'} : {}
         return(
             <div className={disabled ? 'disabled' : ''} style={{ textAlign: 'center', width: full ? '100%' : 'auto' }}>
                 <input  
+                    onClick={onClick}
+                    checked={checked}
                     type={type} 
                     name={name} 
-                    style={{...inputStyle, ...styles}} 
+                    style={{...inputStyle, ...styles, ...checkboxStyle }} 
                     value={value} onChange={onChange} 
                 />
             </div>

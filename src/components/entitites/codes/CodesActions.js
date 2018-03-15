@@ -24,6 +24,8 @@ class CodesActions extends React.Component {
                 update( code.id, { maxValidations: 1 } )
             }
         })
+
+        this.deselectCodes()
     }
 
     deleteCodes() {
@@ -34,10 +36,18 @@ class CodesActions extends React.Component {
         })
 
         this.switchConfirmDialog( false )
+        this.deselectCodes()
     }
 
     switchConfirmDialog( open ) {
         this.setState({openConfirm: open})
+    }
+
+    deselectCodes() {
+        const { onDeselect } = this.props
+        if( onDeselect ) {
+            onDeselect()
+        }
     }
 
     render() {   
@@ -50,20 +60,22 @@ class CodesActions extends React.Component {
             <div>
                 <Segment secondary style={{padding: 0}}>
                     <div style={{textAlign: 'center'}}>SELECCIONADOS: {Object.keys(codes).length}</div>
-                    <Button context="relevant" onClick={() => this.enableCodes()}> ACTIVAR </Button>                    
-                    <ConfirmModal 
-                        open={this.state.openConfirm}
-                        title="Confirmar eliminación"
-                        message="¿Seguro que desea eliminar? Esta acción no podra deshacerse."
-                        onConfirm={() => this.deleteCodes()}
-                        onCancel={() => this.switchConfirmDialog( false )}
-                    />
-                    <Button 
-                        context='negative' 
-                        onClick={() => this.switchConfirmDialog( true )}
-                    >
-                    ELIMINAR
-                    </Button>                    
+                    <div style={{display:'flex', justifyContent:'center'}}>
+                        <Button context="relevant" onClick={() => this.enableCodes()}> ACTIVAR </Button>                    
+                        <ConfirmModal 
+                            open={this.state.openConfirm}
+                            title="Confirmar eliminación"
+                            message="¿Seguro que desea eliminar? Esta acción no podra deshacerse."
+                            onConfirm={() => this.deleteCodes()}
+                            onCancel={() => this.switchConfirmDialog( false )}
+                        />
+                        <Button 
+                            context='negative' 
+                            onClick={() => this.switchConfirmDialog( true )}
+                        >
+                        ELIMINAR
+                        </Button>             
+                    </div>       
                 </Segment>                
             </div>
         )

@@ -1,5 +1,6 @@
 import React from 'react'
 import UIThemeable from '../UIThemeable'
+import Input from '../form/Input/Input'
 
 class Table extends React.Component {
     constructor( props ) {
@@ -53,10 +54,11 @@ class Table extends React.Component {
         return ths
     }
 
-    renderItem( style, fields, item ) {
+    renderItem( style, fields, item, isSelected ) {
         const tds = []
         fields.forEach(
             ( field, index ) => {
+                const selectedStyle = isSelected ? { fontWeight: 'bold' } : {}
                 const itemData = item[field.name]
                 let tdContent = itemData
                 if( field.displayFormat ) {
@@ -65,7 +67,7 @@ class Table extends React.Component {
                 if( itemData === undefined  || itemData === null) {
                     tdContent = 'SIN ASIGNAR'
                 }
-                tds.push(<td key={index} style={style}>{tdContent}</td>)
+                tds.push(<td key={index} style={{...style, ...selectedStyle}}>{tdContent}</td>)
             }
         )
 
@@ -92,8 +94,8 @@ class Table extends React.Component {
                         className={( onItemClick && !multiselect ) ? 'pointer hovered-transparency' : ''} 
                         onClick={ () => onClickCb( item ) }
                     >
-                        { multiselect && <td><input checked={selected[item.id]} type="checkbox" onChange={(e) => this.handleMultiselect(e, item)}/> </td> }
-                        { this.renderItem( cellStyle, fields, item ) }
+                        { multiselect && <td><Input checked={selected[item.id]} type="checkbox" onChange={(e) => this.handleMultiselect(e, item)}/> </td> }
+                        { this.renderItem( cellStyle, fields, item, selected[ item.id ] ) }
                     </tr>
                 )
             }
@@ -103,6 +105,7 @@ class Table extends React.Component {
     }
 
     selectAll( items ) {
+        console.log( 'hola' )
         const { onSelection } = this.props
         const selected = {}
         //Already selected, reset
@@ -145,11 +148,11 @@ class Table extends React.Component {
         const themeStyles = this.applyThemeStyles( secondary, full, theme )
 
         return(
-            <div style={{position: 'relative', overflowX: 'auto', maxHeight: scrollable ? '400px' : 'auto'}}>
+            <div style={{position: 'relative', overflowX: 'auto', maxHeight: scrollable ? '400px' : 'auto'}}>               
                 <table style={{...themeStyles.container}}>
                     <thead style={{...themeStyles.header}}>
                         <tr>
-                            { multiselect && <th> <input type="checkbox" onClick={() => this.selectAll(items)}/></th> }
+                            { multiselect && <th style={{padding: '10px'}}> <Input type="checkbox" onClick={() => this.selectAll(items)}/></th> }
                             { this.renderFields( {...themeStyles.headerCell}, fields ) }
                         </tr>
                     </thead>

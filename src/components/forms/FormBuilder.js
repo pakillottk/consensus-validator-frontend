@@ -83,7 +83,7 @@ class FormBuilder extends React.Component {
         );
     }
 
-    renderInput( index, field, disabled ) {
+    renderInput( index, field, disabled, vertical ) {
         const { values } = this.state;
         return(
             <Input
@@ -93,7 +93,7 @@ class FormBuilder extends React.Component {
                 name={ field.name } 
                 value={ this.getValue( field ) } 
                 onChange={this.handleFieldChange}
-                full
+                full={!vertical}
             />
         );
     }
@@ -111,7 +111,7 @@ class FormBuilder extends React.Component {
         )
     }
 
-    renderFields( fields ) {
+    renderFields( fields, vertical ) {
         if( !fields ) {
             return null;
         }
@@ -124,7 +124,7 @@ class FormBuilder extends React.Component {
 
             if( field.type === 'input' ) {
                 output.push(
-                    this.renderInput( index, field, disabled[ field.name ] )
+                    this.renderInput( index, field, disabled[ field.name ], vertical )
                 );
             } else if( field.type === 'select' ) {
                 output.push(
@@ -135,12 +135,29 @@ class FormBuilder extends React.Component {
             }
         });
 
+        if( vertical ) {
+            const verticalOutput = []
+            for( let i = 0; i < output.length; i=i+10 ) {
+                const currentFields = []
+                for( let j = i; j < (i + 10); j++ ) {
+                    currentFields.push( output[j] )
+                }
+                verticalOutput.push(
+                    <div key={verticalOutput.length+1} style={{marginBottom:'5px', display: 'flex', justifyContent: 'center'}}>
+                        {currentFields}
+                    </div>
+                ) 
+            }
+
+            return verticalOutput
+        }
+
         return output;
     }
 
     render() {
         const { labels, fields, errors } = this.state;
-        const { extErrors, title, secondary, submitText, submitColor, theme } = this.props;
+        const { vertical, extErrors, title, secondary, submitText, submitColor, theme } = this.props;
         const allErrors = {...errors, ...extErrors };
 
         return(
@@ -154,11 +171,11 @@ class FormBuilder extends React.Component {
                             { Object.keys( allErrors ).map( ( key, index ) => <p key={index}>{labels[key] || ''}: {errors[key]} </p> ) }
                         </div>
                         
-                        {this.renderFields( fields )}
+                        {this.renderFields( fields, vertical )}
 
                         <Button type="submit" context={submitColor || 'possitive'}>{submitText || "Submit"}</Button>
                     </Form>
-                </Segment>
+               </Segment>
             </div>
         );
     }

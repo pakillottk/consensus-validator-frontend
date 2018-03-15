@@ -84,10 +84,10 @@ class CodeFilters extends React.Component {
 
     render() {
         const { hidden } = this.props
-        console.log( hidden )
         return(
             <div>
                 <FormBuilder
+                    vertical
                     title="BUSCAR CÓDIGOS"
                     initialvalues={this.getDefaultValues( schema )}
                     submit={this.handleSubmit.bind(this)} 
