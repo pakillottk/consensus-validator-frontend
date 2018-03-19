@@ -9,7 +9,6 @@ import { connect } from 'react-redux'
 
 class Logout extends React.Component {
     async logout() {
-        console.log( AuthAPI )
         await AuthAPI.logout();
         this.props.logout();
     }

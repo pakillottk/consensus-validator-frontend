@@ -53,10 +53,10 @@ class SessionAdminPage extends React.Component {
                     <Segment secondary styles={{border:'none'}}>
                         <h1 className="center-aligned">CONTROL CÓDIGOS</h1>
                     </Segment>
-                    <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'space-evenly'}}>
+                    <div>
                         <div>
                             <h2 style={{textAlign: 'center'}}>CARGAR CSV</h2>
-                            <div style={{display: 'flex', justifyContent: 'flex-start', flexWrap: 'wrap'}}>                                
+                            <div style={{display: 'flex', justifyContent: 'center', flexWrap: 'wrap'}}>                                
                                 <div style={{display: 'flex', flexDirection: 'column'}}>
                                     <CSVInput />
                                     <CSVUploadButton sessionId={ sessionId } />

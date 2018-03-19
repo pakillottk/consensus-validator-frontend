@@ -16,12 +16,47 @@ class CodesActions extends React.Component {
             openConfirm: false
         }
     }
+
     enableCodes() {
         const { codes, update } = this.props
         Object.keys(codes).forEach( codeId => {
             const code = codes[ codeId ]
             if( parseInt(code.maxValidations) === -1 ) {
                 update( code.id, { maxValidations: 1 } )
+            }
+        })
+
+        this.deselectCodes()
+    }
+
+    enableCodesLimitless() {
+        const { codes, update } = this.props
+        Object.keys(codes).forEach( codeId => {
+            const code = codes[ codeId ]
+            if( parseInt(code.maxValidations) !== 0 ) {
+                update( code.id, { maxValidations: 0 } )
+            }
+        })
+
+        this.deselectCodes()
+    }
+
+    switchCodesOut() {
+        const { codes, update } = this.props
+        Object.keys(codes).forEach( codeId => {
+            const code = codes[ codeId ]
+            update( code.id, { out: !code.out } )            
+        })
+
+        this.deselectCodes()
+    }
+
+    disableCodes() {
+        const { codes, update } = this.props
+        Object.keys(codes).forEach( codeId => {
+            const code = codes[ codeId ]
+            if( parseInt(code.maxValidations) !== -1 ) {
+                update( code.id, { maxValidations: -1 } )            
             }
         })
 
@@ -51,17 +86,21 @@ class CodesActions extends React.Component {
     }
 
     render() {   
-        const { codes } = this.props  
+        const { codes } = this.props
+        const codesCount = Object.keys( codes ).length  
         if( !codes ) {
             return null
         }
 
         return(
-            <div>
+            <div className={codesCount === 0 ? "disabled": ""}>
                 <Segment secondary style={{padding: 0}}>
                     <div style={{textAlign: 'center'}}>SELECCIONADOS: {Object.keys(codes).length}</div>
                     <div style={{display:'flex', justifyContent:'center'}}>
-                        <Button context="relevant" onClick={() => this.enableCodes()}> ACTIVAR </Button>                    
+                        <Button disabled={codesCount === 0} context="relevant" onClick={() => this.enableCodes()}> ACTIVAR </Button>                    
+                        <Button disabled={codesCount === 0} context="possitive" onClick={() => this.enableCodesLimitless()}> ACTIVAR (SIN LÍMITE) </Button>                    
+                        <Button disabled={codesCount === 0} context="dark" onClick={() => this.switchCodesOut()}> CAMBIAR FUERA/DENTRO </Button>                    
+                        <Button disabled={codesCount === 0} context="negative" onClick={() => this.disableCodes()}> DESACTIVAR </Button>
                         <ConfirmModal 
                             open={this.state.openConfirm}
                             title="Confirmar eliminación"
@@ -70,6 +109,7 @@ class CodesActions extends React.Component {
                             onCancel={() => this.switchConfirmDialog( false )}
                         />
                         <Button 
+                            disabled={codesCount === 0}
                             context='negative' 
                             onClick={() => this.switchConfirmDialog( true )}
                         >

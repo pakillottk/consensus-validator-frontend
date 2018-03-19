@@ -1,47 +1,74 @@
 import { Map } from 'immutable';
 
-export const onFetch = ( preprocessor ) => ( state, action ) => {
+export const onFetch = ( preprocessor, postprocessor ) => ( state, action ) => {
     let data = Map();
     action.payload.data.forEach( item => {
         data = data.set( item.id, preprocessor( item ) );
     });
 
-    return {...state, data };
+    let newState = {...state, data };
+    if( postprocessor ) {
+        newState = postprocessor( 'fetch', newState, state, action, action.payload.data )
+    }
+
+    return newState;
 }
 
-export const onSingleFetch = ( preprocessor ) => ( state, action ) => {
+export const onSingleFetch = ( preprocessor, postprocessor ) => ( state, action ) => {
     let data = state.data;
     const item = action.payload.data;
 
-    return {...state, data: data.set( item.id, item ) };
+    let newState = {...state, data: data.set( item.id, item ) };
+    if( postprocessor ) {
+        newState = postprocessor( 'fetch_single', newState, state, action, item )
+    }
+
+    return newState;
 }
 
-export const onCreation = ( preprocessor ) => ( state, action ) => {
+export const onCreation = ( preprocessor, postprocessor ) => ( state, action ) => {
     const item = action.payload.data;
     let data = state.data.set( item.id, preprocessor( item ) );
-    return {...state, data };
+
+    let newState = {...state, data };
+    if( postprocessor ) {
+        newState = postprocessor( 'create', newState, state, action, item )
+    }
+
+    return newState;
 }
 
-export const onUpdate = ( preprocessor ) => ( state, action ) => {
+export const onUpdate = ( preprocessor, postprocessor ) => ( state, action ) => {
     const item = action.payload.data;
     let data = state.data.set( item.id, preprocessor( item ) );
-    return {...state, data };
+
+    let newState = {...state, data };
+    if( postprocessor ) {
+        newState = postprocessor( 'update', newState, state, action, item )
+    }
+
+    return newState;
 }
 
 export const onDelete = ( state, action ) => {
-    let data = state.data.delete( action.meta.deleted_id );
+    let data = state.data.delete( parseInt(action.meta.deleted_id) );
     return {...state, data };
 }
 
-const builder = ( entity, validActions, preprocessor ) => {
+export const flushData = ( state, action ) => {
+    return {...state, data: Map()};
+}
+
+const builder = ( entity, validActions, preprocessor, postprocessor ) => {
     preprocessor = preprocessor || ( ( item ) => { return item; } );
     const prefix = entity.toUpperCase();
     let validTypes = {};
-    validTypes[ prefix + '_' + 'FETCH_FULFILLED' ]          = onFetch( preprocessor );
-    validTypes[ prefix + '_' + 'SINGLE_FETCH_FULFILLED' ]   = onSingleFetch( preprocessor )
-    validTypes[ prefix + '_' + 'CREATE_FULFILLED' ]         = onCreation( preprocessor );
-    validTypes[ prefix + '_' + 'UPDATE_FULFILLED' ]         = onUpdate( preprocessor );
+    validTypes[ prefix + '_' + 'FETCH_FULFILLED' ]          = onFetch( preprocessor, postprocessor );
+    validTypes[ prefix + '_' + 'SINGLE_FETCH_FULFILLED' ]   = onSingleFetch( preprocessor, postprocessor )
+    validTypes[ prefix + '_' + 'CREATE_FULFILLED' ]         = onCreation( preprocessor, postprocessor );
+    validTypes[ prefix + '_' + 'UPDATE_FULFILLED' ]         = onUpdate( preprocessor, postprocessor );
     validTypes[ prefix + '_' + 'DELETE_FULFILLED' ]         = onDelete;
+    validTypes[ 'LOGOUT' ]                                  = flushData;
 
     validTypes = {...validTypes, ...validActions};
 

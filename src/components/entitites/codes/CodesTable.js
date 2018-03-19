@@ -30,11 +30,12 @@ class CompaniesTable extends React.Component {
         const { codes } = this.props
         return(
             <div style={{position:'relative'}}>
-                { Object.keys( selected ).length > 0 && <CodesActions codes={selected} onDeselect={() => this.handleSelection({})}/> }
+                <CodesActions codes={selected} onDeselect={() => this.handleSelection({})}/>
                 <Segment secondary> <h3 style={{textAlign:'center'}}>TOTAL CÓDIGOS: { codes.size }</h3> </Segment>
                 <EntityTable 
                     scrollable
                     multiselect
+                    selected={selected}
                     onSelection={this.handleSelection.bind(this)}
                     hidden={{type_id: true}}
                     schema={schema} 

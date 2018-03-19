@@ -53,6 +53,13 @@ class Button extends React.Component {
             case 'relevant': {
                 backgroundColor = theme.relevant
                 color = theme.brightTextColor
+                break;
+            }
+
+            case 'dark': {
+                backgroundColor = theme.dark
+                color = theme.brightTextColor
+                break;
             }
         }
 

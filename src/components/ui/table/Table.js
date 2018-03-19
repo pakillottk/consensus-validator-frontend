@@ -21,14 +21,14 @@ class Table extends React.Component {
                 width: full ? '100%' : 'auto'
             },
             header: {
-                fontSize: '0.9rem',
+                fontSize: '0.8rem',
                 backgroundColor: secondary ? theme.thirdColor : theme.secondaryColor
             },
             headerCell: {
                 padding: theme.padding.medium
             },
             body: {
-                fontSize: '1.3rem',
+                fontSize: '1.15rem',
                 backgroundColor: secondary ? theme.secondaryColor : theme.primaryColor,
                 color: secondary ? theme.secondaryTextColor : theme.textColor
             },
@@ -75,19 +75,13 @@ class Table extends React.Component {
     }
 
     renderItems( cellStyle, fields, items ) {
-        const { selected } = this.state
+        const selected = this.props.selected || {}
         const { multiselect, onItemClick } = this.props
         const onClickCb = onItemClick || (() => {})       
 
         const trs = []
         items.forEach(
             ( item, index ) => {
-                if( multiselect ) {
-                    trs.push(
-                        
-                    )
-                }
-
                 trs.push(
                     <tr 
                         key={index} 
@@ -105,11 +99,11 @@ class Table extends React.Component {
     }
 
     selectAll( items ) {
-        console.log( 'hola' )
         const { onSelection } = this.props
         const selected = {}
         //Already selected, reset
-        if( Object.keys(this.state.selected).length === items.size ) {
+        const itemsAmmount = items.size !== undefined ? items.size : items.length 
+        if( Object.keys(this.props.selected).length === itemsAmmount ) {
             if( onSelection ) {
                 onSelection( selected )
             }
@@ -130,36 +124,37 @@ class Table extends React.Component {
 
     handleMultiselect( event, item ) {
         const { onSelection } = this.props 
-        const selected = {...this.state.selected}
+        const selected = {...this.props.selected}
         if( selected[ item.id ] ) {
             delete selected[ item.id ]
         } else {
             selected[ item.id ] = item
         }
-        
         if( onSelection ) {
             onSelection( selected )
         }
-        this.setState({selected})
     }
 
     render() {
         const { multiselect, secondary, scrollable, theme, items, fields, full } = this.props
         const themeStyles = this.applyThemeStyles( secondary, full, theme )
+        const itemCount = items.size !== undefined ? items.size : items.length
 
         return(
-            <div style={{position: 'relative', overflowX: 'auto', maxHeight: scrollable ? '400px' : 'auto'}}>               
-                <table style={{...themeStyles.container}}>
-                    <thead style={{...themeStyles.header}}>
-                        <tr>
-                            { multiselect && <th style={{padding: '10px'}}> <Input type="checkbox" onClick={() => this.selectAll(items)}/></th> }
-                            { this.renderFields( {...themeStyles.headerCell}, fields ) }
-                        </tr>
-                    </thead>
-                    <tbody style={{...themeStyles.body}}>
-                        { this.renderItems( {...themeStyles.bodyCell}, fields, items ) }
-                    </tbody>
-                </table>
+            <div style={{position: 'relative', overflowX: 'auto'}}> 
+                <div style={{maxHeight: scrollable ? '400px' : 'auto', position: 'relative', zIndex: 10}}>              
+                    <table style={{...themeStyles.container}}>
+                        <thead style={{...themeStyles.header}}>
+                            <tr>
+                                { multiselect && <th className={itemCount === 0 ? 'disabled': ''} style={{padding: '10px'}}> <Input type="checkbox" onClick={() => this.selectAll(items)}/></th> }
+                                { this.renderFields( {...themeStyles.headerCell}, fields ) }
+                            </tr>
+                        </thead>
+                        <tbody style={{...themeStyles.body}}>
+                            { this.renderItems( {...themeStyles.bodyCell}, fields, items ) }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }
