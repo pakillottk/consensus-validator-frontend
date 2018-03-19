@@ -20,7 +20,7 @@ import CompaniesPage from './pages/CompaniesPage'
 import UsersPage from './pages/UsersPage'
 import TicketOfficePage from './pages/TicketOfficePage'
 
-import { Any, Seller, Super, Admin } from './components/auth/authLevels';
+import { Any, Seller, Super, Admin } from './components/auth/authLevels'
 
 class App extends Component {
   render() {

@@ -23,6 +23,7 @@ class DeliveriesTable extends React.Component {
                 formTitle="EDITAR ENTREGA"
                 Form={DeliverForm}
                 hidden={{type_id: true, user_id: true}}
+                scrollable
                 full
             />
         )
@@ -33,6 +34,11 @@ export default connect(
     ( store ) => {
         return {
             deliveries: store.deliveries.data
+                        .sort( (a,b) => {
+                            if( a.created_at < b.created_at ) { return 1; }
+                            if( a.created_at > b.created_at ) { return -1; }
+                            if( a.created_at === b.created_at ) { return 0; }
+                        })
         }
     },
     ( dispatch ) => {

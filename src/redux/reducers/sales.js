@@ -19,7 +19,7 @@ const postprocessor = ( mode, newState, oldState, action, item ) => {
         if( received === 1 ) {
             newState.toPrint = Map()
         }
-        if( received === target ) {
+        if( received === target && received > 0 ) {
             return {...newState, toPrint: newState.toPrint.set( item.id, item ), printRequest: true, salesReceived: 0}
         }
 
@@ -35,7 +35,7 @@ const printTickets = ( state, action ) => {
         toPrint = toPrint.set( ticket.id, ticket )
     })
 
-    return {...state, toPrint: toPrint, printRequest: true}
+    return {...state, toPrint: toPrint, printRequest: true, salesReceived: 0}
 }
 
 export default EntityReducer( 'Sales', {'PRINT_TICKETS': printTickets}, preproccessor, postprocessor );

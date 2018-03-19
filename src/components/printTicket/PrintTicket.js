@@ -22,7 +22,6 @@ class PrintTicket extends React.Component {
       const qrcodes = document.getElementsByClassName("qrcode");
       for( let i = 0; i < qrcodes.length; i++ ) {
         const _code = this.props.tickets.get( parseInt( qrcodes[ i ].id ) ).code.code;
-        console.log( _code )
         const qr = qrgenerator( 4, 'L' );
         qr.addData(_code);
         qr.make();
@@ -33,6 +32,10 @@ class PrintTicket extends React.Component {
   }
 
   renderPdf( forcePrint ) {
+    if( !this.props.company ) {
+      return;
+    }
+    
     const wrapper = document.getElementById("tickets-wrapper");
     const printWindow = this.iframe;
     const printDocument = printWindow.contentDocument;
