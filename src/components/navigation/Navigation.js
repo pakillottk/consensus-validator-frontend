@@ -6,14 +6,15 @@ import List from '../ui/list/List'
 
 export default class Navigation extends React.Component {
     renderLink( pathData ) {
+        const AuthLink = pathData.Auth( Link, true )
         return( 
-            <Link 
+            <AuthLink 
                 style={{ color: 'black', textDecoration: 'none' }}
                 className='pointer hovered-transparency' 
                 to={pathData.path}
             >
                 {pathData.label}
-            </Link>
+            </AuthLink>
         )
     }
 

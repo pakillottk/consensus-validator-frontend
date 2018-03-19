@@ -5,6 +5,7 @@ const schema = [
     {
         name: 'user_id',
         label: 'USUARIO',
+        defaultValue: 0,
         type: 'custom',
         component: UserSelector
     },

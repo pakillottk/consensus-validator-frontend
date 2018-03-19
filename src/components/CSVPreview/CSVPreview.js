@@ -28,6 +28,7 @@ class CSVPreview extends React.Component {
                     <h4 style={{textAlign:'center'}}>TOTAL: {csvData.length} elementos</h4>
                 </Segment>
                 <Table
+                    full
                     scrollable
                     fields={fields}
                     items={csvData}

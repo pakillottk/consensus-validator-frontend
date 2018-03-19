@@ -66,7 +66,7 @@ class PrintTicket extends React.Component {
           overflow: 'hidden'
         }}
       >
-        <div className="page-row" style={{display: 'flex', justifyContent: 'space-between'}}>
+        <div className="page-row" style={{display: 'flex', justifyContent: 'space-between', textAlign: 'center', alignItems:'stretch'}}>
           <div className="page-column ticket-logo">
             {/*TODO: ADD LOGO*/}
             <p className="ticket-compname">{company.name}</p>
@@ -80,13 +80,14 @@ class PrintTicket extends React.Component {
         </div>
 
         <div className="bordered centered" style={{border:'2px solid black', textAlign: 'center'}}>
-          <div className="bordered session-title" style={{borderBottom: '2px solid black', fontWeight: 'bold', fontSize:'32px'}}>
+          <div className="bordered session-title" style={{borderBottom: '2px solid black', fontWeight: 'bold', fontSize:'46px'}}>
             <div className="session-title-darkener"></div>
             <div className="session-title-text">{session.name}</div>
           </div>
           <div className="page-row" style={{borderBottom: '2px solid black', display: 'flex', justifyContent: 'space-evenly', alignItems: 'stretch', fontSize: '20px'}}>
             <div className="page-column">
-              <h2> { session.location } { session.recint } </h2>
+              <h2>{ session.recint } </h2>
+              <h3>{ session.location }</h3>
               <p className="ticket-date">
                 { moment(session.date).format( 'DD MMMM YYYY' ) }
               </p>
@@ -100,7 +101,7 @@ class PrintTicket extends React.Component {
               </div>
             </div>
           </div>
-          <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '36px', margin: 0}}> {price } € </p>
+          <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '42px', margin: 0}}> {price } € </p>
           <p className="ticket-price-info" style={{margin: 0}}>(Imp. incluidos + Gastos de distribución)</p>
         </div>
 
@@ -131,6 +132,9 @@ class PrintTicket extends React.Component {
             </p>
             <p>
               - En ningún caso esta misma entrada permitirá la salida y posterior entrada al recinto.
+            </p>
+            <p>
+              - Toda persona (independientemente de su edad) debe ser poseedora de una entrada para acceder al recinto.
             </p>
           </div>
         </div>

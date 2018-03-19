@@ -49,13 +49,16 @@ class SalesTable extends React.Component {
 }
 export default connect( store => {
     const salesMap = store.sales.data
-    const sales = []
+    let sales = []
     salesMap.forEach( sale => {
         const type = store.types.data.get( parseInt( sale.type_id ) )
         if( !type ) {
             return
         }
         sales.push({...sale, codeStr: sale.code.code, type: type.type, price: type.price+'€', name: sale.code.name, email: sale.code.email })
+    })
+    sales = sales.sort( (sale, otherSale) =>  {
+        return sale.created_at < otherSale.created_at
     })
     return {
         sales

@@ -1,7 +1,8 @@
+import { Super, Admin, Any } from '../auth/authLevels'
 const paths = [
-    { path: '/companias', label: 'COMPAÑÍAS' },
-    { path: '/usuarios', label: 'USUARIOS' },
-    { path: '/sesiones', label: 'SESIONES' }
+    { path: '/companias', label: 'COMPAÑÍAS', Auth: Super },
+    { path: '/usuarios', label: 'USUARIOS', Auth: Admin },
+    { path: '/sesiones', label: 'SESIONES', Auth: Any }
 ];
 
 export default paths

@@ -167,6 +167,14 @@ class TicketOfficeController extends React.Component {
         const { sessionId, salesByType, deliverByType } = this.props
         const typeId = values.type_id
         
+        if( Object.keys( deliverByType ).length === 0 ) {
+            return(
+                <Segment secondary styles={{position: 'relative', fontSize: '2rem', overflow: 'hidden', height: '93vh', textAlign:'center'}}>
+                    <h1 style={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'red'}}> NO TIENE ENTRADAS DE ESTA SESIÓN. </h1>
+                </Segment>
+            )
+        }
+
         return(
             <div>
                 <PrintTicket sessionId={sessionId} />

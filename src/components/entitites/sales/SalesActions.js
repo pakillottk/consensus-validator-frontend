@@ -9,7 +9,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Admin } from '../../auth/authLevels'
 
-const AdminButton = Admin(Button)
+const AdminButton = Admin(Button, true)
 
 class SalesActions extends React.Component {
     constructor( props ) {

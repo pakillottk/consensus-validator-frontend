@@ -61,8 +61,8 @@ class SessionAdminPage extends React.Component {
                                     <CSVInput />
                                     <CSVUploadButton sessionId={ sessionId } />
                                 </div>
-                                <CSVTable />
                             </div>
+                            <CSVTable />
                         </div>
 
                         <div>
