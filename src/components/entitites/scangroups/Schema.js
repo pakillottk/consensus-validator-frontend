@@ -2,6 +2,7 @@ const schema = [
     {
         name: 'group',
         label: 'GRUPO',
+        defaultValue: '',
         type: 'input',
     },
     {

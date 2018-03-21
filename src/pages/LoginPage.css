@@ -4,11 +4,21 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-image: url('/img/login-bg-logo.jpeg');  
+    background: radial-gradient( circle, #ddd, #aaa, #333 );
+    /*background-image: url('/img/login-bg-logo.jpeg');  
     background-position: center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: cover;*/
     z-index: 1;
+}
+
+.app-name {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 4rem;
+    text-decoration: underline;
 }
 
 .login-page-bg {

@@ -38,4 +38,8 @@ const printTickets = ( state, action ) => {
     return {...state, toPrint: toPrint, printRequest: true, salesReceived: 0}
 }
 
-export default EntityReducer( 'Sales', {'PRINT_TICKETS': printTickets}, preproccessor, postprocessor );
+const endPrint = ( state, action ) => {
+    return {...state, toPrint: Map(), printRequest: false, salesReceived: 0}
+}
+
+export default EntityReducer( 'Sales', {'PRINT_TICKETS': printTickets, 'PRINT_DONE': endPrint}, preproccessor, postprocessor );

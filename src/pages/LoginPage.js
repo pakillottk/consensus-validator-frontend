@@ -71,6 +71,7 @@ class LoginPage extends React.Component {
         return(
             <div className="login-page-container">
                 <div className="login-page-wrapper">
+                    <h1 className="app-name">CONSENSUS VALIDATOR</h1>
                     <form 
                         onSubmit={( e ) => { 
                             e.preventDefault(); 

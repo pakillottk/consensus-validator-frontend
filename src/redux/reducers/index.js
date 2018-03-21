@@ -9,6 +9,7 @@ import deliveries from './deliveries'
 import sales from './sales'
 import scangroups from './scangroups'
 import scantypes from './scantypes'
+import userscangroups from './userscangroups'
 import windows from './windows'
 import csv from './csv'
 
@@ -24,6 +25,7 @@ const reducers = {
     sales,
     scangroups,
     scantypes,
+    userscangroups,
     windows,
     csv
 }

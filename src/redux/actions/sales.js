@@ -14,3 +14,10 @@ export const print = ( tickets ) => {
         payload: tickets
     }
 }
+
+export const endPrint = () => {
+    return {
+        type: 'PRINT_DONE',
+        payload: {}
+    }
+}

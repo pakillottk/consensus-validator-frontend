@@ -12,6 +12,7 @@ import DeliveriesTable from '../components/entitites/deliveries/DeliveriesTable'
 import NewScanGroupButton from '../components/entitites/scangroups/NewScanGroupButton'
 import ScanGroupsTable from '../components/entitites/scangroups/ScanGroupsTable'
 import ScanTypesTable from '../components/entitites/scantypes/ScanTypesTable'
+import UserScanGroupTable from '../components/entitites/userscangroups/UserScanGroupsTable'
 
 import CodesFilter from '../components/entitites/codes/CodesFilters'
 import CodesTable from '../components/entitites/codes/CodesTable'
@@ -104,6 +105,10 @@ class SessionAdminPage extends React.Component {
                         <div>
                             <h2 style={{textAlign: 'center'}}>TIPOS ESCANEABLES</h2>
                             <ScanTypesTable />
+                        </div>
+                        <div>
+                            <h2 style={{textAlign: 'center'}}>GRUPOS ASIGNADOS</h2>
+                            <UserScanGroupTable sessionId={sessionId} />
                         </div>
                     </div>                    
                 </Segment>

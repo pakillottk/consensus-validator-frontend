@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { endPrint } from '../../redux/actions/sales';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import jsbarcode from 'jsbarcode';
@@ -51,7 +53,10 @@ class PrintTicket extends React.Component {
   }
 
   print() {
-    this.iframe.contentWindow.print();
+    const onPrint = ( printed ) => {
+      this.props.endPrint();
+    }
+    onPrint(this.iframe.contentWindow.print());
   }
 
   renderTicket( ticketData ) {
@@ -77,7 +82,7 @@ class PrintTicket extends React.Component {
           </div>
           <div className="page-column ticket-user-data">
             <h3> DATOS DE VENTA </h3>
-            <p> { ticketData.name } </p>
+            <p> { ticketData.code.name } </p>
             <p> { moment(ticketData.created_at).format( 'DD/MM/YYYY HH:mm' ) } </p>            
           </div>
         </div>
@@ -99,7 +104,7 @@ class PrintTicket extends React.Component {
               </p>
             </div>
             <div className="page-column">
-              <h2>{ ticketData.type } </h2>
+              <h2>{ type.type } </h2>
               <div id={ ticketData.id } className="qrcode">
               </div>
             </div>
@@ -188,6 +193,11 @@ PrintTicket = connect(
       tickets: store.sales.toPrint,
       print: store.sales.printRequest
     };
+  },
+  ( dispatch ) => {
+    return {
+      endPrint: bindActionCreators( endPrint, dispatch )
+    }
   }
 )(PrintTicket);
 
