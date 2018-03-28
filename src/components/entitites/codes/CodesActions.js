@@ -41,6 +41,18 @@ class CodesActions extends React.Component {
         this.deselectCodes()
     }
 
+    resetCodes() {
+        const { codes, update } = this.props
+        Object.keys(codes).forEach( codeId => {
+            const code = codes[ codeId ]
+            if( parseInt(code.validations) !== 0 ) {
+                update( code.id, { validations: 0 } )
+            }
+        })
+
+        this.deselectCodes()
+    }
+
     switchCodesOut() {
         const { codes, update } = this.props
         Object.keys(codes).forEach( codeId => {
@@ -99,6 +111,7 @@ class CodesActions extends React.Component {
                     <div style={{display:'flex', justifyContent:'center'}}>
                         <Button disabled={codesCount === 0} context="relevant" onClick={() => this.enableCodes()}> ACTIVAR </Button>                    
                         <Button disabled={codesCount === 0} context="possitive" onClick={() => this.enableCodesLimitless()}> ACTIVAR (SIN LÍMITE) </Button>                    
+                        <Button disabled={codesCount === 0} context="dark" onClick={() => this.resetCodes()}> REINICIAR </Button>  
                         <Button disabled={codesCount === 0} context="dark" onClick={() => this.switchCodesOut()}> CAMBIAR FUERA/DENTRO </Button>                    
                         <Button disabled={codesCount === 0} context="negative" onClick={() => this.disableCodes()}> DESACTIVAR </Button>
                         <ConfirmModal 
