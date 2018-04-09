@@ -2,6 +2,7 @@ import React from 'react'
 
 import Schema from './Schema'
 import EntityForm from '../EntityForm'
+import RemoveUserScanGroupButton from './RemoveUserScanGroupButton'
 
 import { crud } from '../../../redux/actions/userscangroups'
 
@@ -12,6 +13,7 @@ export default class ScanTypeForm extends React.Component {
         return(
             <div>
                 <Form defaultvalues={defaultvalues} id={id} hidden={{username: true, groupname: true}} />
+                { this.props.id && <RemoveUserScanGroupButton id={this.props.id} />}
             </div>
         );
     }

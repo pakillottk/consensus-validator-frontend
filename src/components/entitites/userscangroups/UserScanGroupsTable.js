@@ -16,7 +16,7 @@ class UserScanGroupsTable extends React.Component {
 
     componentWillMount() {
         const { sessionId } = this.props
-        this.props.fetch( '?sessionId=' + sessionId )
+        this.props.fetch( '?session=' + sessionId )
     }
 
     render() {

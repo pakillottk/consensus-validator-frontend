@@ -1,10 +1,10 @@
-import React from 'react';
+import React from 'react'
 
-import { Admin, Supervisor, Seller } from '../components/auth/authLevels'
 import Button from '../components/ui/button/Button'
 import Divider from '../components/ui/divider/Divider'
 import Segment from '../components/ui/segment/Segment'
-import SessionForm from '../components/entitites/sessions/SessionForm'
+
+import LogEntriesTable from '../components/entitites/logentries/LogEntriesTable'
 
 import { crud } from '../redux/actions/sessions'
 
@@ -14,18 +14,14 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/es'
 
-const AdminButton = Admin( Button, true )
-const SupervisorButton = Supervisor( Button, true )
-const SellerButton = Seller( Button, true )
-
-class SessionPage extends React.Component {
+class MonitorPage extends React.Component {
     componentWillMount() {
         this.props.fetchById( this.props.match.params.id )
     }
 
     render() {
         const { session } = this.props
-        const id = this.props.match.params.id
+        const sessionId = parseInt( this.props.match.params.id )
 
         if( !session ) {
             return(
@@ -40,7 +36,7 @@ class SessionPage extends React.Component {
         return(
             <div>
                 <Segment secondary styles={{border:'none'}}>
-                    <h1 className="center-aligned">SESIONES</h1>                
+                    <h1 className="center-aligned">MONITOR</h1>                
                 </Segment>
                 <Segment>
                     { session && <h1 style={{textAlign: 'center'}}> { session.name } </h1> }
@@ -48,16 +44,16 @@ class SessionPage extends React.Component {
                     { session && <h3 style={{textAlign: 'center'}}> { session.location }, {session.recint} </h3> }
 
                     <Divider full/>
-
-                    <AdminButton full onClick={() => this.props.history.push('/sesiones/' + id + '/administrar')}> ADMINISTRAR </AdminButton>
-                    <SupervisorButton onClick={() => this.props.history.push('/sesiones/' + id + '/monitor')} context="relevant" full> MONITOR </SupervisorButton>
-                    <SellerButton onClick={() => this.props.history.push('/sesiones/' + id + '/taquilla')} context="possitive" full> TAQUILLA </SellerButton> 
+                    
+                    <Segment secondary styles={{border:'none'}}>
+                        <h2 style={{textAlign: 'center'}}>HISTORIA</h2>
+                    </Segment>
+                    <LogEntriesTable sessionId={sessionId} />
                 </Segment>
             </div>
-        );
+        )
     }
 }
-
 export default connect(
     ( store, props ) => {
         return {
@@ -69,4 +65,4 @@ export default connect(
             fetchById: bindActionCreators( crud.fetchById, dispatch )
         }
     }
-)(SessionPage)
+)(MonitorPage)

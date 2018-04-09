@@ -46,7 +46,7 @@ class CodesActions extends React.Component {
         Object.keys(codes).forEach( codeId => {
             const code = codes[ codeId ]
             if( parseInt(code.validations) !== 0 ) {
-                update( code.id, { validations: 0 } )
+                update( code.id, { validations: 0, out: true } )
             }
         })
 

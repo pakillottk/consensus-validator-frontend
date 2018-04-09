@@ -10,6 +10,7 @@ import sales from './sales'
 import scangroups from './scangroups'
 import scantypes from './scantypes'
 import userscangroups from './userscangroups'
+import logentries from './logentries'
 import windows from './windows'
 import csv from './csv'
 
@@ -26,6 +27,7 @@ const reducers = {
     scangroups,
     scantypes,
     userscangroups,
+    logentries,
     windows,
     csv
 }
