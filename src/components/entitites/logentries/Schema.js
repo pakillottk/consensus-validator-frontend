@@ -10,7 +10,7 @@ const schema = [
     },
     {
         name: 'level',
-        label: 'TIPO',
+        label: 'RESULTADO',
         defaultValue: 'info',
         type: 'input',
         displayFormat: ( level ) => {
@@ -43,12 +43,12 @@ const schema = [
     },
     {
         name: 'username',
-        label: 'USUARIO',
+        label: 'INICIADO POR',
         type: 'input',
     },
     {
         name: 'msg',
-        label: 'MENSAJE',
+        label: 'SUCESO',
         type: 'input',
     },
     {

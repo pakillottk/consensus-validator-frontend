@@ -7,7 +7,7 @@ const preprocess = ( entry ) => {
         entry.username = entry.user.username
     }
     if( entry.date ) {
-        entry.date = moment( entry.date ).format( 'HH:mm DD/MM/YYYY' );
+        entry.date = moment( entry.date ).format( 'HH:mm:ss DD/MM/YYYY' );
     }
 
     return entry
