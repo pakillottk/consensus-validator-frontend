@@ -34,6 +34,9 @@ class SalesTable extends React.Component {
         return(
             <div>
                 <SalesActions sales={selected} onDeselect={() => this.onSelection({})}/>
+                <Segment secondary>
+                    <h3 style={{textAlign:'center'}}> TOTAL VENTAS: {sales.length} </h3>
+                </Segment>
                 <Table
                     scrollable
                     multiselect

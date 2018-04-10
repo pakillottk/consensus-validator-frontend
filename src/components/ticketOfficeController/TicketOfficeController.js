@@ -10,6 +10,7 @@ import TypeSelector from '../forms/Controls/TypeSelector/TypeSelector'
 import Button from '../ui/button/Button'
 import ConfirmModal from '../confirmModal/ConfirmModal'
 
+import SalesFilters from '../entitites/sales/SalesFilters'
 import SalesTable from '../entitites/sales/SalesTable'
 
 import PrintTicket from '../printTicket/PrintTicket'
@@ -19,6 +20,9 @@ import { crud as deliverActions } from '../../redux/actions/deliveries'
 import { crud as sessionActions } from '../../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+
+import { Admin } from '../auth/authLevels'
+const AuthSalesFilters = Admin( SalesFilters )
 
 class TicketOfficeController extends React.Component {
     constructor( props ) {
@@ -220,6 +224,7 @@ class TicketOfficeController extends React.Component {
                 <Segment secondary>
                     <h2 style={{textAlign: 'center'}}>VENTAS</h2>
                 </Segment>
+                <AuthSalesFilters sessionId={sessionId} />
                 <SalesTable />
             </div>
         )
