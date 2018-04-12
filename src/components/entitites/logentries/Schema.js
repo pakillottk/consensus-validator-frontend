@@ -1,4 +1,6 @@
 import React from 'react';
+import UserSelector from '../../forms/Controls/UserSelector/UserSelector'
+import LevelSelector from './LevelSelector'
 
 const schema = [
     {
@@ -6,13 +8,14 @@ const schema = [
         label: 'USUARIO',
         defaultValue: 0,
         type: 'custom',
-        component: null
+        component: UserSelector
     },
     {
         name: 'level',
         label: 'RESULTADO',
-        defaultValue: 'info',
-        type: 'input',
+        defaultValue: 0,        
+        type: 'custom',
+        component: LevelSelector,
         displayFormat: ( level ) => {
             let translation;
             let color;

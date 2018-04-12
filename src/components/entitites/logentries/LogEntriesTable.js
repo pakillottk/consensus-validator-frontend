@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 
 import schema from './Schema'
 import EntityTable from '../EntityTable'
+import LogEntriesFilters from './LogEntriesFilters'
 
 class LogEntriesTable extends React.Component {
     componentWillMount() {
@@ -16,9 +17,10 @@ class LogEntriesTable extends React.Component {
     }
 
     render() {
-        const { logentries, ammount, success, failures, info } = this.props
+        const { logentries, ammount, success, failures, info, sessionId } = this.props
         return(
             <div>
+                <LogEntriesFilters sessionId={sessionId} />
                 <Segment secondary>
                     <div style={{display: 'flex', fontSize: '1.12rem',flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center'}}>
                         <div style={{marginRight: '10px'}}>
