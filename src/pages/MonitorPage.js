@@ -4,6 +4,8 @@ import Button from '../components/ui/button/Button'
 import Divider from '../components/ui/divider/Divider'
 import Segment from '../components/ui/segment/Segment'
 
+import ScanSummary from '../components/scanSummary/ScanSummary'
+import SalesSummary from '../components/salesSummary/SalesSummary'
 import LogEntriesTable from '../components/entitites/logentries/LogEntriesTable'
 
 import { crud } from '../redux/actions/sessions'
@@ -44,7 +46,17 @@ class MonitorPage extends React.Component {
                     { session && <h3 style={{textAlign: 'center'}}> { session.location }, {session.recint} </h3> }
 
                     <Divider full/>
-                    
+
+                    <Segment secondary styles={{border:'none'}}>
+                        <h2 style={{textAlign: 'center'}}>SEGUIMIENTO ACCESOS</h2>
+                    </Segment>
+                    <ScanSummary sessionId={sessionId} />
+
+                    <Segment secondary styles={{border:'none'}}>
+                        <h2 style={{textAlign: 'center'}}>SEGUIMIENTO VENTAS</h2>
+                    </Segment>
+                    <SalesSummary sessionId={sessionId} />
+
                     <Segment secondary styles={{border:'none'}}>
                         <h2 style={{textAlign: 'center'}}>HISTORIA</h2>
                     </Segment>
