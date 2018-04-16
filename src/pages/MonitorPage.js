@@ -16,9 +16,37 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/es'
 
+import io from 'socket.io-client'
+import SocketConnection from '../API/SocketConnection'
+
 class MonitorPage extends React.Component {
     componentWillMount() {
-        this.props.fetchById( this.props.match.params.id )
+        const sessionId = this.props.match.params.id
+
+        this.io = io( SocketConnection.basePath() )
+        this.io.emit( 'join', {room: sessionId + '-session'} )
+
+        this.io.on( 'sale_added', ( data ) => {
+            this.props.createSale( data )
+        })
+
+        this.io.on( 'log_entry_added', ( data ) => {
+            this.props.createLogEntry( data )
+        })
+
+        this.io.on( 'code_added', ( data ) => {
+            this.props.createCode( data )
+        })
+
+        this.io.on( 'code_updated', ( data ) => {
+            this.props.updateCode( data )
+        })
+        
+        this.props.fetchById( sessionId )
+    }
+
+    componentWillUnmount() {
+        this.io.disconnect()
     }
 
     render() {
@@ -74,7 +102,31 @@ export default connect(
     },
     ( dispatch ) => {
         return {
-            fetchById: bindActionCreators( crud.fetchById, dispatch )
+            fetchById: bindActionCreators( crud.fetchById, dispatch ),
+            createSale: bindActionCreators( ( data ) => {
+                return {
+                    type: 'SALES_CREATE_FULFILLED',
+                    payload: {data: data}
+                }
+            }, dispatch ),
+            createLogEntry: bindActionCreators( ( data ) => {
+                return {
+                    type: 'LOGENTRIES_CREATE_FULFILLED',
+                    payload: { data: data }
+                }
+            }, dispatch ),
+            createCode: bindActionCreators( ( data ) => {
+                return {
+                    type: 'CODES_CREATE_FULFILLED',
+                    payload: { data: data }
+                }
+            }, dispatch),
+            updateCode: bindActionCreators( ( data ) => {
+                return {
+                    type: 'CODES_UPDATE_FULFILLED',
+                    payload: {data: data}
+                }
+            }, dispatch)
         }
     }
 )(MonitorPage)

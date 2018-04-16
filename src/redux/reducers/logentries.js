@@ -6,10 +6,7 @@ const preprocess = ( entry ) => {
         delete entry.user.password
         entry.username = entry.user.username
     }
-    if( entry.date ) {
-        entry.date = moment( entry.date ).format( 'HH:mm:ss DD/MM/YYYY' );
-    }
-
+    
     return entry
 }
 export default EntityReducer( 'LogEntries', {}, preprocess );

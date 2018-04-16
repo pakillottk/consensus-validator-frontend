@@ -10,6 +10,8 @@ import schema from './Schema'
 import EntityTable from '../EntityTable'
 import LogEntriesFilters from './LogEntriesFilters'
 
+import moment from 'moment'
+
 class LogEntriesTable extends React.Component {
     componentWillMount() {
         const { sessionId } = this.props
@@ -54,14 +56,23 @@ export default connect(
     ( store ) => {
         const logentries = store.logentries.data
                             .sort( (a,b) => {
-                                if( a.date < b.date ) { return 1; }
-                                if( a.date > b.date ) { return -1; }
-                                if( a.date === b.date ) { return 0; }
+                                const aDate = moment( a.date );
+                                const bDate = moment( b.date );
+                                
+                                if( aDate.isBefore( bDate ) ) { return 1; }
+                                if( aDate.isAfter( bDate ) ) { return -1; }
+                                
+                                return 0;
                             })
+
         let success = 0;
         let failures = 0;
         let info = 0;
         logentries.forEach( entry =>  {
+            if( entry.date ) {
+                entry.date = moment( entry.date ).format( 'HH:mm:ss DD/MM/YYYY' )
+            }
+
             switch( entry.level ) {
                 case 'success': {
                     success++

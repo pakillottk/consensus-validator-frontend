@@ -13,7 +13,7 @@ const preproccessor = ( sale ) => {
 }
 
 const postprocessor = ( mode, newState, oldState, action, item ) => {
-    if( mode === "create" ) {
+    if( mode === "create" && action.meta ) {
         const target = parseInt(action.meta.total)
         const received = newState.salesReceived + 1
         if( received === 1 ) {
