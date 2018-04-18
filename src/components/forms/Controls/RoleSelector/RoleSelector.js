@@ -5,6 +5,8 @@ import { crud } from '../../../../redux/actions/roles'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
+import RoleTranslator from '../../../../entities/roles/RoleTranslator'
+
 class RoleSelector extends React.Component {
     componentWillMount() {
         this.props.fetch()
@@ -16,7 +18,7 @@ class RoleSelector extends React.Component {
             role => {
                 options.push({
                     value: role.id,
-                    text: role.role
+                    text: RoleTranslator(role.role)
                 })
             }
         );

@@ -6,6 +6,8 @@ import Segment from '../ui/segment/Segment'
 import Divider from '../ui/divider/Divider'
 import Logout from '../logout/Logout'
 
+import RoleTranslator from '../../entities/roles/RoleTranslator'
+
 class UserInfo extends React.Component {
     render() {
         const { me, theme } = this.props
@@ -36,7 +38,7 @@ class UserInfo extends React.Component {
                         color: theme.dark,
                         borderRadius: '0 0 10px 10px' 
                     }}>
-                        {me.role}
+                        {RoleTranslator(me.role)}
                     </Segment>
                 </Segment>
                 
