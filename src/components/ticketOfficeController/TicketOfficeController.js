@@ -22,7 +22,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import { Admin } from '../auth/authLevels'
-const AuthSalesFilters = Admin( SalesFilters )
+const AuthSalesFilters = Admin( SalesFilters, true )
 
 class TicketOfficeController extends React.Component {
     constructor( props ) {
