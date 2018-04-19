@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Segment from '../components/ui/segment/Segment'
+import UserFilters from '../components/entitites/users/UserFilters'
 import UsersTable from '../components/entitites/users/UsersTable'
 import NewUserButton from '../components/entitites/users/NewUserButton'
 
@@ -12,6 +13,7 @@ export default class UsersPage extends React.Component {
                     <h1 className="center-aligned">USUARIOS</h1>
                 </Segment>
                 <Segment styles={{padding: 0}}>
+                    <UserFilters />
                     <NewUserButton styles={{margin: 'none'}} full />
                     <UsersTable />
                 </Segment>
