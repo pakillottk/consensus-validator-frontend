@@ -21,8 +21,8 @@ import { crud as sessionActions } from '../../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import { Admin } from '../auth/authLevels'
-const AuthSalesFilters = Admin( SalesFilters, true )
+import { Supervisor } from '../auth/authLevels'
+const AuthSalesFilters = Supervisor( SalesFilters, true )
 
 class TicketOfficeController extends React.Component {
     constructor( props ) {

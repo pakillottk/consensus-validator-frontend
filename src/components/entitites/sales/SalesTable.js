@@ -61,7 +61,12 @@ export default connect( store => {
         sales.push({...sale, codeStr: sale.code.code, type: type.type, price: type.price+'€', name: sale.code.name, email: sale.code.email })
     })
     sales = sales.sort( (sale, otherSale) =>  {
-        return sale.created_at < otherSale.created_at
+        const saleDate = moment( sale.created_at );
+        const otherDate = moment( otherSale.created_at );
+        if( saleDate.isBefore( otherDate ) ) { return 1; }
+        if( saleDate.isAfter( otherDate ) ) { return -1; }
+        
+        return 0;
     })
     return {
         sales
