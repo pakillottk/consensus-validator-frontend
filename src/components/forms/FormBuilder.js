@@ -6,6 +6,7 @@ import Label from '../ui/form/Label/Label'
 import Input from '../ui/form/Input/Input';
 import Select from '../ui/form/Select/Select';
 import Button from '../ui/button/Button'
+import Tooltip from '../ui/tooltip/Tooltip'
 import UIThemeable from '../ui/UIThemeable';
 
 class FormBuilder extends React.Component {
@@ -120,7 +121,12 @@ class FormBuilder extends React.Component {
 
         const output = [];
         fields.forEach( ( field, index ) => {
-            output.push( <Label key={fields.length + index}>{ field.label }</Label> );
+            output.push( 
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Label key={fields.length + index}>{ field.label }</Label> 
+                    {field.tooltip && <Tooltip>{field.tooltip}</Tooltip>}
+                </div>
+            );
 
             if( field.type === 'input' ) {
                 output.push(
