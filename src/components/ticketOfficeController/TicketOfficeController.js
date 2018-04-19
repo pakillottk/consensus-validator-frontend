@@ -21,9 +21,6 @@ import { crud as sessionActions } from '../../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import { Supervisor } from '../auth/authLevels'
-const AuthSalesFilters = Supervisor( SalesFilters, true )
-
 class TicketOfficeController extends React.Component {
     constructor( props ) {
         super( props )
@@ -224,7 +221,7 @@ class TicketOfficeController extends React.Component {
                 <Segment secondary>
                     <h2 style={{textAlign: 'center'}}>VENTAS</h2>
                 </Segment>
-                <AuthSalesFilters sessionId={sessionId} />
+                <SalesFilters sessionId={sessionId} />
                 <SalesTable />
             </div>
         )
