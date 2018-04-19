@@ -1,3 +1,4 @@
+import React from 'react'
 import moment from 'moment'
 
 import TypeSelector from '../../forms/Controls/TypeSelector/TypeSelector'
@@ -47,6 +48,13 @@ const schema = [
             }
             return maxValidations
         },
+        tooltip: (
+            <div>
+                <p>Valores especiales:</p>
+                <p><b>-1</b> - No escaneable. Nunca es válido.</p>
+                <p><b>0</b> - Escaneos ilimitados. Siempre es válido.</p>
+            </div>
+        )
     },
     {
         name: 'validations',
