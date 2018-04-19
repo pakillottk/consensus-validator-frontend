@@ -18,6 +18,7 @@ class SessionsTable extends React.Component {
             <EntityTable 
                 schema={schema} 
                 items={sessions} 
+                hidden={{company_id: true}}
                 full 
                 onItemClick={ onItemClick ? onItemClick : ( () => {} ) }
             />

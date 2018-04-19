@@ -1,4 +1,5 @@
 import moment from 'moment'
+import CompanySelector from '../../forms/Controls/CompanySelector/CompanySelector'
 
 const schema = [
     {
@@ -28,5 +29,12 @@ const schema = [
             return moment( date ).format( 'YYYY-MM-DDThh:mm' )
         }
     },
+    {
+        name: 'company_id',
+        label: 'COMPAÑÍA',
+        defaultValue: 0,
+        type:'custom',
+        component: CompanySelector
+    }
 ]
 export default schema
