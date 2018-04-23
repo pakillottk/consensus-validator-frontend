@@ -48,6 +48,17 @@ const schema = [
                     <Img src={API.getFullPath(logoPath)} size={'tiny'} />
                 </div>
             )
+        },
+        filePreview: ( logoPath ) => {
+            if( !logoPath ) {
+                return null
+            }
+            
+            return(
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Img src={API.getFullPath(logoPath)} size={'tiny'} />
+                </div>
+            )
         }
     }
 ]

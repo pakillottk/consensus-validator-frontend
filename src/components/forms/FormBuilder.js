@@ -109,13 +109,15 @@ class FormBuilder extends React.Component {
     renderCustomField( index, field, Component, disabled ) {
         const { values } = this.state;
         return(
-            <Component
-                key={index}
-                disabled={disabled}
-                name={field.name}
-                value={ this.getValue( field ) } 
-                onChange={this.handleFieldChange}
-            />
+            <div key={index}>
+                {field.type === "file" && field.filePreview( this.props.initialvalues[ field.name ] )}
+                <Component                    
+                    disabled={disabled}
+                    name={field.name}
+                    value={ this.getValue( field ) } 
+                    onChange={this.handleFieldChange}
+                />
+            </div>
         )
     }
 
