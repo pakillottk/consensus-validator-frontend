@@ -1,9 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import API from '../../API/API'
 
 import UIThemeable from '../ui/UIThemeable'
 import Segment from '../ui/segment/Segment'
 import Divider from '../ui/divider/Divider'
+import Img from '../ui/img/Img'
 import Logout from '../logout/Logout'
 
 import RoleTranslator from '../../entities/roles/RoleTranslator'
@@ -21,6 +23,14 @@ class UserInfo extends React.Component {
                     <h3 style={{textAlign: 'center'}}>USUARIO</h3>
                     
                     <Divider full />
+
+                    {me.company && <div>
+                       <h3 style={{textAlign:'center'}}>{me.company.name}</h3> 
+                        <div style={{display:'flex', justifyContent:'center'}}>
+                            <Img src={API.getFullPath( me.company.logo_url )} size={'tiny'}/>
+                        </div>
+                        <Divider full />
+                    </div>}
 
                     <Segment styles={{ 
                         textAlign: 'center', 

@@ -43,7 +43,11 @@ const schema = [
             if( !logoPath ) {
                 return logoPath
             }
-            return <Img src={API.getFullPath(logoPath)} size={'tiny'} />
+            return(
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Img src={API.getFullPath(logoPath)} size={'tiny'} />
+                </div>
+            )
         }
     }
 ]
