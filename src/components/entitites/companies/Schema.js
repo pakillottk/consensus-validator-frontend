@@ -1,3 +1,8 @@
+import React from 'react'
+import Img from '../../ui/img/Img'
+import ImgUploader from '../../forms/Controls/ImgUploader/ImgUploader'
+import API from '../../../API/API'
+
 const schema = [
     {
         name: 'nif',
@@ -28,7 +33,18 @@ const schema = [
         label: 'EMAIL',
         defaultValue: '',
         type: 'input'
+    },
+    {
+        name: 'logo_url',
+        label: 'LOGO',
+        type: 'file',
+        component: ImgUploader,
+        displayFormat: ( logoPath ) => {
+            if( !logoPath ) {
+                return logoPath
+            }
+            return <Img src={API.getFullPath(logoPath)} size={'tiny'} />
+        }
     }
-
 ]
 export default schema

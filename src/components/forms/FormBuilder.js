@@ -62,11 +62,18 @@ class FormBuilder extends React.Component {
 
     handleFieldChange( event ) {
         const values = {...this.state.values};
-        values[ event.target.name ] = event.target.value;
+        if( event.target.files ) {
+            values[ event.target.name ] = event.target.files[0];
+        } else {
+            values[ event.target.name ] = event.target.value;
+        }
 
         const changedValues = {...this.state.changedValues};
-        changedValues[ event.target.name ] = event.target.value;
-
+        if( event.target.files ) {
+            changedValues[ event.target.name ] = event.target.files[0];
+        } else {
+            changedValues[ event.target.name ] = event.target.value;
+        }
         this.setState({ values, changedValues });
     }
 
@@ -122,8 +129,8 @@ class FormBuilder extends React.Component {
         const output = [];
         fields.forEach( ( field, index ) => {
             output.push( 
-                <div style={{display:'flex', justifyContent:'center'}}>
-                    <Label key={fields.length + index}>{ field.label }</Label> 
+                <div key={fields.length + index} style={{display:'flex', justifyContent:'center'}}>
+                    <Label>{ field.label }</Label> 
                     {field.tooltip && <Tooltip>{field.tooltip}</Tooltip>}
                 </div>
             );
@@ -163,7 +170,7 @@ class FormBuilder extends React.Component {
 
     render() {
         const { labels, fields, errors } = this.state;
-        const { vertical, extErrors, title, secondary, submitText, submitColor, theme } = this.props;
+        const { vertical, extErrors, title, secondary, submitText, submitColor, theme, multipart } = this.props;
         const allErrors = {...errors, ...extErrors };
 
         return(
@@ -172,7 +179,7 @@ class FormBuilder extends React.Component {
                     {title && <Segment secondary={secondary}>
                         <h2 className="center-aligned">{title}</h2>
                     </Segment>}
-                    <Form onSubmit={this.handleSubmit.bind(this)}>
+                    <Form multipart={multipart} onSubmit={this.handleSubmit.bind(this)}>
                         <div style={{color:'red'}}>
                             { Object.keys( allErrors ).map( ( key, index ) => <p key={index}>{labels[key] || ''}: {errors[key]} </p> ) }
                         </div>

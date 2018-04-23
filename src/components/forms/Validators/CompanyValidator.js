@@ -24,5 +24,8 @@ export default new Validator({
     email: [
         new Required( true ),
         new ValidEmail()
+    ],
+    logo_url: [
+        new Required( true )
     ]
 });

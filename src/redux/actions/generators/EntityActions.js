@@ -17,16 +17,26 @@ const builder = ( Entity, connection, paths ) => {
             }
         },
         create: ( data, queryString, meta ) => {
+            const formData = new FormData();
+            Object.keys( data ).forEach( fieldName  => {
+                formData.append( fieldName, data[ fieldName ] );
+            });
+
             return {
                 type: prefix + '_CREATE',
-                payload: connection.post( paths.create, new Request( data, connection.headers.headers, queryString ) ),
+                payload: connection.post( paths.create, new Request( formData, connection.headers.headers, queryString ) ),
                 meta
             }
         },
         update: ( id, data, meta ) => {
+            const formData = new FormData();
+            Object.keys( data ).forEach( fieldName  => {
+                formData.append( fieldName, data[ fieldName ] );
+            });
+
             return {
                 type: prefix + '_UPDATE',
-                payload: connection.put( paths.update + '/' + id, new Request( data, connection.headers.headers ) ),
+                payload: connection.put( paths.update + '/' + id, new Request( formData, connection.headers.headers ) ),
                 meta
             }
         },

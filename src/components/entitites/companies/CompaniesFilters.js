@@ -23,7 +23,7 @@ class CompaniesFilters extends React.Component {
                 <CompaniesFiltersComponent
                     title="BUSCAR COMPAÑÍA"
                     fetchBaseQuery={''}
-                    hidden={{}}
+                    hidden={{logo_url: true}}
                     selectors={{}}
                 />
             </div>

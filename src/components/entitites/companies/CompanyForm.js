@@ -12,7 +12,7 @@ export default class CompanyForm extends React.Component {
     render() {        
         return(
             <div>
-                <Form id={this.props.id} />  
+                <Form id={this.props.id} multipart={true} />  
                 { this.props.id && <RemoveCompanyButton id={this.props.id} /> }
             </div>
         ) 
