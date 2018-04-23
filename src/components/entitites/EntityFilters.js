@@ -94,7 +94,7 @@ export default ( schema, fetch ) => {
                         submitText={submitText || 'BUSCAR'}
                         resetOnSubmit={false}
                     />
-                    <Button context="relevant" onClick={() => this.fetchNoFilters()} full>VER TODOS</Button>
+                    <Button styles={{margin: 0}} context="relevant" onClick={() => this.fetchNoFilters()} full>VER TODOS</Button>
                 </div>
             )
         }

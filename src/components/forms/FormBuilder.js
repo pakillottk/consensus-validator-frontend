@@ -156,7 +156,7 @@ class FormBuilder extends React.Component {
                     currentFields.push( output[j] )
                 }
                 verticalOutput.push(
-                    <div key={verticalOutput.length+1} style={{marginBottom:'5px', display: 'flex', justifyContent: 'center'}}>
+                    <div key={verticalOutput.length+1} style={{marginBottom:'5px', display: 'flex', flexWrap:'wrap', justifyContent: 'center'}}>
                         {currentFields}
                     </div>
                 ) 
