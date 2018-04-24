@@ -20,17 +20,17 @@ class UserInfo extends React.Component {
         return(
             <div>
                 <Segment styles={{padding: '10px'}}>
-                    <h3 style={{textAlign: 'center'}}>USUARIO</h3>
-                    
-                    <Divider full />
-
                     {me.company && <div>
-                       <h3 style={{textAlign:'center'}}>{me.company.name}</h3> 
+                       <h4 style={{textAlign:'center'}}>{me.company.name}</h4> 
+
                         <div style={{display:'flex', justifyContent:'center'}}>
                             <Img src={API.getFullPath( me.company.logo_url )} size={'tiny'}/>
                         </div>
+
                         <Divider full />
                     </div>}
+
+                    <h3 style={{textAlign: 'center'}}>USUARIO</h3>
 
                     <Segment styles={{ 
                         textAlign: 'center', 
