@@ -30,10 +30,10 @@ class SalesTable extends React.Component {
 
     render() {
         const { selected } = this.state
-        const { sales } = this.props
+        const { sales, hideActions } = this.props
         return(
             <div>
-                <SalesActions sales={selected} onDeselect={() => this.onSelection({})}/>
+                {!hideActions && <SalesActions sales={selected} onDeselect={() => this.onSelection({})}/>}
                 <Segment secondary>
                     <h3 style={{textAlign:'center'}}> TOTAL VENTAS: {sales.length} </h3>
                 </Segment>
@@ -68,6 +68,7 @@ export default connect( store => {
         
         return 0;
     })
+    
     return {
         sales
     }

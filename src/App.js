@@ -20,6 +20,7 @@ import CompaniesPage from './pages/CompaniesPage'
 import UsersPage from './pages/UsersPage'
 import TicketOfficePage from './pages/TicketOfficePage'
 import MonitorPage from './pages/MonitorPage'
+import SummaryPage from './pages/SummaryPage'
 
 import { Any, Seller, Supervisor, Super, Admin } from './components/auth/authLevels'
 
@@ -38,8 +39,9 @@ class App extends Component {
                   <Route exact path="/sesiones/:id/administrar" component={Admin(SessionAdminPage)} />
                   <Route exact path="/sesiones/:id/taquilla" component={Seller(TicketOfficePage)} />
                   <Route exact path="/sesiones/:id/monitor" component={Supervisor(MonitorPage)} />
-                  <Route path="/companias" component={Super(CompaniesPage)} />
-                  <Route path="/usuarios" component={Admin(UsersPage)} />
+                  <Route exact path="/resumen" component={Seller(SummaryPage)} />
+                  <Route exact path="/companias" component={Super(CompaniesPage)} />
+                  <Route exact path="/usuarios" component={Admin(UsersPage)} />
                 </Layout>
             </div>
           </ConnectedRouter>

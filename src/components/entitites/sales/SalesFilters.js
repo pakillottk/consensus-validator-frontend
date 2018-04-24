@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 
 import EntityFilters from '../EntityFilters'
 import UserSelector from '../../forms/Controls/UserSelector/UserSelector'
+import SessionSelector from '../../forms/Controls/SessionSelector/SessionSelector'
 import moment from 'moment'
 
 const filterSchema = [
@@ -34,11 +35,22 @@ const filterSchema = [
     }
 ]
 
+const sessionField =  {
+    name: 'session',
+    label: 'SESIÓN',
+    type: 'custom',
+    component: SessionSelector
+}
+
 class SaleFilters extends React.Component {
     constructor( props ) {
         super( props )
 
-        this.filterComponent = EntityFilters( filterSchema, props.fetch )
+        if( props.showSessionSelector ) {
+            this.filterComponent = EntityFilters( [...filterSchema, sessionField], props.fetch )
+        } else {
+            this.filterComponent = EntityFilters( filterSchema, props.fetch )
+        }
     }
 
     render() {
@@ -49,7 +61,7 @@ class SaleFilters extends React.Component {
             <div>
                 <SaleFiltersComponent
                     title="FILTRAR"
-                    fetchBaseQuery={'session=' + sessionId}
+                    fetchBaseQuery={sessionId ? 'session=' + sessionId : ''}
                     hidden={{}}
                     selectors={{
                         user_id: true

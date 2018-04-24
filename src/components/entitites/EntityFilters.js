@@ -72,7 +72,7 @@ export default ( schema, fetch ) => {
                 queryParams.push( field + '=' + data[ field ] )
             })
 
-            const queryString = '?' + fetchBaseQuery + '&' + queryParams.join( '&' )
+            const queryString = '?' + (fetchBaseQuery ? fetchBaseQuery + '&' : '') + queryParams.join( '&' )
             fetch( queryString )
         }
     

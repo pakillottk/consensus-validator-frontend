@@ -44,7 +44,7 @@ class SalesSummary extends React.Component {
         sales.forEach( sale => {
             if( !data[ sale.type_id ] ) {
                 data[ sale.type_id ] = {
-                    type: sale.code.type.type,
+                    type: sale.code.type.type + ' ' + sale.code.type.price + '€',
                     sold: 1,
                     revenue: sale.code.type.price
                 }
@@ -73,6 +73,7 @@ class SalesSummary extends React.Component {
             <div>
                 <Table
                     full
+                    scrollable
                     items={summaryData.summary}
                     fields={tableFields}
                 />
