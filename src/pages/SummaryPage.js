@@ -22,7 +22,7 @@ class SummaryPage extends React.Component {
         return(
             <div>
                 <Segment secondary styles={{border:'none'}}>
-                    <h1 className="center-aligned">RESÚMEN DE VENTAS</h1>
+                    <h1 className="center-aligned">RESUMEN DE VENTAS</h1>
                 </Segment>
                 <Segment styles={{padding: 0}}>
                     <SalesFilters showSessionSelector />

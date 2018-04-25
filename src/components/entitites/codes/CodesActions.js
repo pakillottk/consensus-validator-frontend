@@ -7,6 +7,7 @@ import ConfirmModal from '../../confirmModal/ConfirmModal'
 import { crud } from '../../../redux/actions/codes'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { Admin } from '../../auth/authLevels'
 
 class CodesActions extends React.Component {
     constructor( props ) {
@@ -139,4 +140,4 @@ export default connect(() => { return {} }, dispatch => {
         update: bindActionCreators( crud.update, dispatch ),
         remove: bindActionCreators( crud.delete, dispatch )
     }
-})(CodesActions)
+})(Admin(CodesActions, true))

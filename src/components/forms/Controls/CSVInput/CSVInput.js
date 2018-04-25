@@ -5,6 +5,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import { CSVLoaded } from '../../../../redux/actions/csv'
+import { Admin } from '../../../auth/authLevels'
 
 class CSVInput extends React.Component {
     constructor( props ) {
@@ -42,4 +43,4 @@ export default connect(
             CSVLoaded: bindActionCreators( CSVLoaded, dispatch )
         }
     }
-)(CSVInput)
+)(Admin(CSVInput, true))

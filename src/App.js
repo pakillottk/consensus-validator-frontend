@@ -36,7 +36,7 @@ class App extends Component {
                   <Route exact path="/" component={LoginPage} />
                   <Route exact path="/sesiones" component={Any(SessionsPage)} />
                   <Route exact path="/sesiones/:id" component={Any(SessionPage)} />
-                  <Route exact path="/sesiones/:id/administrar" component={Admin(SessionAdminPage)} />
+                  <Route exact path="/sesiones/:id/administrar" component={Supervisor(SessionAdminPage)} />
                   <Route exact path="/sesiones/:id/taquilla" component={Seller(TicketOfficePage)} />
                   <Route exact path="/sesiones/:id/monitor" component={Supervisor(MonitorPage)} />
                   <Route exact path="/resumen" component={Seller(SummaryPage)} />

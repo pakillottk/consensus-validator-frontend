@@ -5,6 +5,7 @@ import { crud } from '../../redux/actions/codes'
 import { CSVLoaded } from '../../redux/actions/csv'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { Admin } from '../auth/authLevels'
 
 class CSVUploadButton extends React.Component {
     uploadCodes() {
@@ -39,4 +40,4 @@ export default connect(
             CSVLoaded: bindActionCreators( CSVLoaded, dispatch )
         }
     }
-)(CSVUploadButton)
+)(Admin(CSVUploadButton, true))

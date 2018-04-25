@@ -79,9 +79,9 @@ class PrintTicket extends React.Component {
           <div className="page-column ticket-logo">
             <p className="ticket-compname">{company.name}</p>
             <div style={{display:'flex', justifyContent:'center'}}>
-              <img style={{width: '15mm', height:'15mm'}} src={API.getFullPath(company.logo_url)} />
+              <img style={{width: '25mm', height:'20mm'}} src={API.getFullPath(company.logo_url)} />
             </div> 
-            <p className="ticket-cif">CIF: {company.nif}</p>
+            <p className="ticket-cif">NIF: {company.nif}</p>
           </div>
           <div className="page-column ticket-user-data">
             <h3> DATOS DE VENTA </h3>

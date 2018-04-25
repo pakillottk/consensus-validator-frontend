@@ -49,7 +49,7 @@ class SessionPage extends React.Component {
 
                     <Divider full/>
 
-                    <AdminButton full onClick={() => this.props.history.push('/sesiones/' + id + '/administrar')}> ADMINISTRAR </AdminButton>
+                    <SupervisorButton full onClick={() => this.props.history.push('/sesiones/' + id + '/administrar')}> ADMINISTRAR </SupervisorButton>
                     <SupervisorButton onClick={() => this.props.history.push('/sesiones/' + id + '/monitor')} context="relevant" full> MONITOR </SupervisorButton>
                     <SellerButton onClick={() => this.props.history.push('/sesiones/' + id + '/taquilla')} context="possitive" full> TAQUILLA </SellerButton> 
                 </Segment>
