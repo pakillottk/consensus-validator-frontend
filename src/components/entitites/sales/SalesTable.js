@@ -39,7 +39,7 @@ class SalesTable extends React.Component {
                 </Segment>
                 <Table
                     scrollable
-                    multiselect
+                    multiselect={!hideActions}
                     fields={fields}
                     items={sales}
                     onSelection={this.onSelection.bind(this)}
