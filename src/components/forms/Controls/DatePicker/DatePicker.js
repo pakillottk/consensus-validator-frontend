@@ -8,7 +8,7 @@ export default class DatePicker extends React.Component {
     render() {
         const { onChange, value, name, disabled } = this.props
         return(
-            <div style={{zIndex: 15}} className={disabled ? 'disabled' : ''}>
+            <div style={{zIndex: 15, textAlign:'center'}} className={disabled ? 'disabled' : ''}>
                 <ReactDatePicker
                     selected={value}
                     onChange={( date ) => { if( onChange ) { onChange( { target: {name: name, value: date} } ) } }}
