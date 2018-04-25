@@ -4,12 +4,8 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: radial-gradient( circle, #ddd, #aaa, #333 );
-    /*background-image: url('/img/login-bg-logo.jpeg');  
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;*/
     z-index: 1;
+    background: #ddd;
 }
 
 .app-name {
@@ -17,8 +13,9 @@
     top: 40%;
     left: 50%;
     transform: translate(-50%,-50%);
-    font-size: 4rem;
-    text-decoration: underline;
+    font-size: 2.5rem;
+    text-align: center;
+    color: #777;
 }
 
 .login-page-bg {
@@ -27,7 +24,6 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #210b35;
     opacity: 0.4;
 }
 
@@ -41,7 +37,7 @@
 
 .login-form-wrapper {
     position: fixed;
-    bottom: 27vh;
+    top: calc( 40% + 100px );
     left: 50%;
     width: 250px;
     transform: translate(-50%, -50%);
@@ -61,7 +57,7 @@
     text-align: center;
     color: #999;
     margin: 0;
-    font-size: 1.7rem;
+    font-size: 1rem;
     padding: 5px;
 }
 
