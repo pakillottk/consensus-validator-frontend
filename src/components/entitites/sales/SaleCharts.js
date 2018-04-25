@@ -3,16 +3,21 @@ import Segment from '../../ui/segment/Segment'
 import { connect } from 'react-redux'
 
 import moment from 'moment'
-import { Line } from 'react-chartjs-2'
+import { Bar } from 'react-chartjs-2'
 
 class SaleCharts extends React.Component {
     render() {
         const { sales } = this.props
 
         return(
-            <Line
-                data={sales}
-            />
+            <div style={{height:'200px'}}>
+                <Bar
+                    data={sales}
+                    options={{
+                        maintainAspectRatio: false
+                    }}
+                />
+            </div>
         )
     }
 }
@@ -42,9 +47,8 @@ export default connect( store => {
             datasets: [{
                 label: 'VENTAS',
                 data: data,
-                fill: false,
-                borderColor: 'lightgreen',
-                lineTension: 0.25
+                borderColor: 'darkgreen',
+                backgroundColor: 'lightgreen'
             }],
         },
     }

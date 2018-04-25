@@ -14,5 +14,11 @@ export default new Validator({
     ],
     date: [
         new Required( true )
+    ],
+    sellers_locked_at: [
+        new Required( true )
+    ],
+    ticketoffice_closed_at: [
+        new Required( true )
     ]
 });

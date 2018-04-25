@@ -7,6 +7,10 @@ export default ( role ) => {
             return 'vendedor'
         }
 
+        case 'ticketoffice-manager': {
+            return 'taquillero'
+        }
+
         case 'scanner': {
             return 'escáner'
         }

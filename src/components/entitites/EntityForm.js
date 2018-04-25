@@ -7,11 +7,19 @@ import { connect } from 'react-redux';
 export default ( reducer, actions, schema, title, validator  ) => {
     class Form extends React.Component {
         submitForm( data, initial ) {
-            const { entity } = this.props
+            const { entity, dataTransformer } = this.props
             if( !entity ) {
-                this.props.create( {...initial, ...data} );
+                let submitData = {...initial, ...data}
+                if( dataTransformer ) {
+                    submitData = dataTransformer( submitData, false );
+                }
+                this.props.create( submitData );
             } else {
-                this.props.update( entity.id, data )
+                let submitData = data
+                if( dataTransformer ) {
+                    submitData = dataTransformer( submitData, true );
+                }
+                this.props.update( entity.id, submitData )
             }
         }
 

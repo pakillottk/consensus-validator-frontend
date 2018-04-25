@@ -2,6 +2,7 @@ import React from 'react'
 
 import Button from '../ui/button/Button'
 import FormBuilder from '../forms/FormBuilder'
+import moment from 'moment'
 
 export default ( schema, fetch ) => {
     return class EntityFilters extends React.Component {
@@ -65,6 +66,8 @@ export default ( schema, fetch ) => {
             Object.keys( data ).forEach( field => {
                 if( selectors[ field ] ) {
                     data = this.validateSelector( data, field, selectors[ field ].toBoolean )
+                } else if( moment.isMoment( data[ field ] ) ) {
+                    data[ field ] = data[field].toISOString()
                 } else {
                     data = this.validateString( data, field )
                 }

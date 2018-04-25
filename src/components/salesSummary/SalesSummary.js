@@ -29,7 +29,7 @@ const tableFields = [
 
 class SalesSummary extends React.Component {
     componentWillMount() {
-        this.props.fetch( '?session=' + this.props.sessionId )
+        this.props.fetch( this.props.sessionId ? '?session=' + this.props.sessionId : '' )
     }
 
     getSummaryData( sales ) {

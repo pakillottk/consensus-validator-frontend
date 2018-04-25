@@ -9,6 +9,7 @@ import EntityFilters from '../EntityFilters'
 import UserSelector from '../../forms/Controls/UserSelector/UserSelector'
 import SessionSelector from '../../forms/Controls/SessionSelector/SessionSelector'
 import moment from 'moment'
+import DatePicker from '../../forms/Controls/DatePicker/DatePicker'
 
 const filterSchema = [
     {
@@ -20,17 +21,20 @@ const filterSchema = [
     {
         name: 'from_sale_date',
         label: 'DESDE',
-        type:'input',
-        component:'datetime-local'
+        type:'custom',
+        component: DatePicker,
+        inputFormat: ( date ) => {
+            return moment( date )
+        }
     },
     {
         name: 'to_sale_date',
         label: 'HASTA',
         defaultValue: new Date(),
-        type:'input',
-        component:'datetime-local',
+        type:'custom',
+        component: DatePicker,
         inputFormat: ( date ) => {
-            return moment( date ).format( 'YYYY-MM-DDThh:mm' )
+            return moment( date )
         }
     }
 ]
@@ -38,6 +42,7 @@ const filterSchema = [
 const sessionField =  {
     name: 'session',
     label: 'SESIÓN',
+    defaultValue: 0,
     type: 'custom',
     component: SessionSelector
 }

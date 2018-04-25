@@ -141,7 +141,7 @@ class Table extends React.Component {
         const itemCount = items.size !== undefined ? items.size : items.length
 
         return(
-            <div style={{position: 'relative', overflowX: 'auto'}}> 
+            <div style={{position: 'relative', overflowX: 'auto', zIndex: 0}}> 
                 <div style={{maxHeight: scrollable ? '400px' : 'auto', position: 'relative', zIndex: 10}}>              
                     <table style={{...themeStyles.container}}>
                         <thead style={{...themeStyles.header}}>

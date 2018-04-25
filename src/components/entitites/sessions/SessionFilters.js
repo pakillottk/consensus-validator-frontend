@@ -8,23 +8,27 @@ import { connect } from 'react-redux'
 import schema from './Schema'
 import EntityFilters from '../EntityFilters'
 import moment from 'moment'
+import DatePicker from '../../forms/Controls/DatePicker/DatePicker'
 
 const modifiedSchema = [
     ...schema,
     {
         name: 'from_date',
         label: 'DESDE',
-        type:'input',
-        component:'datetime-local'
+        type:'custom',
+        component: DatePicker,
+        inputFormat: ( date ) => {
+            return moment( date )
+        }
     },
     {
         name: 'to_date',
         label: 'HASTA',
         defaultValue: new Date(),
-        type:'input',
-        component:'datetime-local',
+        type:'custom',
+        component: DatePicker,
         inputFormat: ( date ) => {
-            return moment( date ).format( 'YYYY-MM-DDThh:mm' )
+            return moment( date )
         }
     }
 ]
@@ -43,7 +47,7 @@ class SessionFilters extends React.Component {
                 <SessionFilterComponent
                     title="BUSCAR SESIÓN"
                     fetchBaseQuery={''}
-                    hidden={{date: true}}
+                    hidden={{date: true, sellers_locked_at: true, ticketoffice_closed_at: true}}
                     selectors={{}}
                 />
             </div>

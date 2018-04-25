@@ -6,4 +6,5 @@ export const Any = Auth( '*' );
 export const Super = Auth([ 'superadmin' ]);
 export const Admin = Auth([ 'superadmin', 'admin' ]);
 export const Supervisor = Auth([ 'superadmin', 'admin', 'supervisor' ]);
-export const Seller = Auth([ 'superadmin', 'admin', 'supervisor', 'seller' ]);
+export const TOManager = Auth([ 'superadmin', 'admin', 'supervisor', 'ticketoffice-manager' ]);
+export const Seller = Auth([ 'superadmin', 'admin', 'supervisor', 'ticketoffice-manager', 'seller' ]);

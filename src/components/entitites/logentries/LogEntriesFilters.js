@@ -8,16 +8,17 @@ import { connect } from 'react-redux'
 import schema from './Schema'
 import EntityFilters from '../EntityFilters'
 import moment from 'moment'
+import DatePicker from '../../forms/Controls/DatePicker/DatePicker'
 
 const filterFormSchema = [
     ...schema,
     {
         name: 'from_date',
         label: 'DESDE',
-        type: 'input',
-        component: 'datetime-local',
+        type:'custom',
+        component: DatePicker,
         inputFormat: ( date ) => {
-            return moment( date ).format( 'YYYY-MM-DDThh:mm' )
+            return moment( date )
         }
     },
     {
@@ -25,9 +26,10 @@ const filterFormSchema = [
         label: 'HASTA',
         type: 'input',
         defaulValue: new Date(),
-        component: 'datetime-local',
+        type:'custom',
+        component: DatePicker,
         inputFormat: ( date ) => {
-            return moment( date ).format( 'YYYY-MM-DDThh:mm' )
+            return moment( date )
         }
     }
 ]
