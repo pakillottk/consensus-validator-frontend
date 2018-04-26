@@ -51,7 +51,7 @@ export default ( reducer, actions, schema, title, validator  ) => {
         }
 
         render() {
-            const { defaultvalues, hidden, disabled, multipart } = this.props
+            const { defaultvalues, hidden, disabled, multipart, dataTransformer } = this.props
             const toEdit = {...defaultvalues, ...this.getDefaultValues( schema ), ...this.props.entity }
             return(
                 <FormBuilder

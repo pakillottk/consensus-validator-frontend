@@ -10,12 +10,12 @@ import { Supervisor } from '../auth/authLevels'
 
 class NewEntityButton extends React.Component {
     createWindow() {
-        const { title, Form, defaultvalues } = this.props
+        const { title, Form, defaultvalues, dataTransformer } = this.props
         if( !Form ) {
             console.error( 'New entity button has not a Form component assigned' )
             return
         }
-        this.props.create( title || 'NUEVO', (<div> <Form defaultvalues={defaultvalues} /> </div>) )
+        this.props.create( title || 'NUEVO', (<div> <Form dataTransformer={dataTransformer} defaultvalues={defaultvalues} /> </div>) )
     }
 
     render() {
