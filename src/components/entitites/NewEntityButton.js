@@ -9,24 +9,32 @@ import { connect } from 'react-redux'
 import { Supervisor } from '../auth/authLevels'
 
 class NewEntityButton extends React.Component {
+    constructor( props ) {
+        super( props )
+
+        const { AuthLevel } = props
+        this.guardedButton = AuthLevel ? AuthLevel(Button, true) : Supervisor(Button, true)
+    }
+
     createWindow() {
         const { title, Form, defaultvalues, dataTransformer } = this.props
         if( !Form ) {
             console.error( 'New entity button has not a Form component assigned' )
             return
         }
+        
         this.props.create( title || 'NUEVO', (<div> <Form dataTransformer={dataTransformer} defaultvalues={defaultvalues} /> </div>) )
     }
 
     render() {
         const { disabled, styles, full, text } = this.props
+        const GuardedButton = this.guardedButton
         return(
-            <Button disabled={disabled} context='possitive' styles={styles} full onClick={() => this.createWindow()}>{text || 'NUEVO'}</Button>
+            <GuardedButton disabled={disabled} context='possitive' styles={styles} full onClick={() => this.createWindow()}>{text || 'NUEVO'}</GuardedButton>
         )
     }
 }
 
-NewEntityButton = Supervisor( NewEntityButton, true )
 export default connect(
     () => { return {} },
     dispatch => {

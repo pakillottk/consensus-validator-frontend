@@ -6,6 +6,11 @@ import moment from 'moment'
 
 const schema = [
     {
+        name:'username',
+        label:'REALIZADO POR',
+        type:'input'
+    },
+    {
         name: 'ammount',
         label: 'CANTIDAD',
         defaultValue: 0,
