@@ -6,6 +6,7 @@ import TicketOfficeController from '../components/ticketOfficeController/TicketO
 import { connect } from 'react-redux'
 import moment from 'moment'
 
+import PaymentFilters from '../components/entitites/payments/PaymentFilters'
 import NewPaymentButton from '../components/entitites/payments/NewPaymentButton'
 import PaymentsTable from '../components/entitites/payments/PaymentsTable'
 
@@ -55,6 +56,7 @@ class TicketOfficePage extends React.Component {
 
                     <TicketOfficeController sessionId={sessionId} />
 
+                    <PaymentFilters sessionId={sessionId} />
                     <NewPaymentButton sessionId={sessionId} />
                     <PaymentsTable sessionId={sessionId} />
                 </Segment>

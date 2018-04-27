@@ -12,7 +12,7 @@ export default class CompanyForm extends React.Component {
         const { dataTransformer } = this.props
         return(
             <div>
-                <Form id={this.props.id} dataTransformer={dataTransformer} hidden={{username: true, created_at: true}} multipart={true} />  
+                <Form id={this.props.id} dataTransformer={dataTransformer} hidden={{user_id: true, username: true, created_at: true}} multipart={true} />  
                 { this.props.id && <RemovePaymentButton id={this.props.id} /> }
             </div>
         ) 

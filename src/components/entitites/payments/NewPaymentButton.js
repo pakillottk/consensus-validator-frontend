@@ -13,7 +13,7 @@ export default class NewPaymentButton extends React.Component {
     render() {
         return(
             <NewEntityButton 
-                AuthLevel={Auth(['seller', 'ticketoffice-manager'])}
+                AuthLevel={Auth([ 'admin', 'superadmin', 'seller', 'ticketoffice-manager'])}
                 title="NUEVO PAGO" 
                 dataTransformer={this.attachSessionId.bind(this)} 
                 Form={PaymentForm} 

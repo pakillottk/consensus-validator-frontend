@@ -22,7 +22,8 @@ class PaymentsTable extends React.Component {
                     <h3 style={{textAlign:'center'}}> TOTAL PAGOS: {payments.size} </h3>
                 </Segment>
                 <EntityTable 
-                    schema={schema} 
+                    schema={schema}
+                    hidden={{user_id: true}} 
                     items={payments} 
                     formTitle="EDITAR PAGO"
                     Form={PaymentForm}

@@ -1,4 +1,5 @@
 import React from 'react'
+import UserSelector from '../../forms/Controls/UserSelector/UserSelector'
 import PayFormSelector from '../../forms/Controls/PayFormSelector/PayFormSelector'
 import PayFormTranslator from '../../../entities/Payments/PayformTranslator'
 import Currency from 'react-currency-formatter'
@@ -9,6 +10,12 @@ const schema = [
         name:'username',
         label:'REALIZADO POR',
         type:'input'
+    },
+    {
+        name:'user_id',
+        label:'REALIZADO POR',
+        type:'custom',
+        component: UserSelector
     },
     {
         name: 'ammount',
