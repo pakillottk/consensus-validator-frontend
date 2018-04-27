@@ -35,6 +35,13 @@ class Table extends React.Component {
             bodyCell: {
                 textAlign: 'center',
                 padding: theme.padding.medium
+            },
+            totalCell: {
+                textAlign: 'center',
+                fontSize: '1.2rem',
+                color: theme.secondaryTextColor,
+                backgroundColor: theme.thirdColor,
+                padding: theme.padding.medium
             }
         }
     }
@@ -98,6 +105,28 @@ class Table extends React.Component {
         return trs
     }
 
+    renderTotals( cellStyle, fields, items ) {
+        const { calculateTotals } = this.props
+        if( !calculateTotals ) {
+            return null
+        }
+        const tds = []
+        const totals = calculateTotals( items )
+        fields.forEach( ( field, index ) => {
+            if( totals[ field.name ] ) {
+                tds.push(<td key={index} style={{...cellStyle}}>{totals[ field.name ]}</td>)
+            } else {
+                tds.push(<td key={index} style={{...cellStyle}}> - </td>)
+            }
+        })
+
+        return(
+            <tr>
+                {tds}
+            </tr>
+        )
+    }
+
     selectAll( items ) {
         const { onSelection } = this.props
         const selected = {}
@@ -152,6 +181,7 @@ class Table extends React.Component {
                         </thead>
                         <tbody style={{...themeStyles.body}}>
                             { this.renderItems( {...themeStyles.bodyCell}, fields, items ) }
+                            { this.renderTotals( {...themeStyles.totalCell}, fields, items ) }
                         </tbody>
                     </table>
                 </div>

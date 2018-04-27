@@ -22,7 +22,7 @@ const tableFields = [
     },
     {
         name: 'revenue',
-        label: 'COBRADO',
+        label: 'RECAUDADO',
         type:'input'
     }
 ]
@@ -64,6 +64,8 @@ class SalesSummary extends React.Component {
             output.push( summaryData )
         })
 
+        totals.revenue = <Currency quantity={totals.revenue} currency='EUR' />
+
         return { summary: output, totals: totals }
     }
 
@@ -76,15 +78,10 @@ class SalesSummary extends React.Component {
                     scrollable
                     items={summaryData.summary}
                     fields={tableFields}
+                    calculateTotals={( items ) => {
+                        return summaryData.totals
+                    }}
                 />
-                <Segment>
-                    <h3 style={{textAlign:'center'}}>
-                        RECAUDADO: <Currency quantity={ summaryData.totals.revenue } currency='EUR' />
-                    </h3>
-                    <h3 style={{textAlign:'center'}}>
-                        TOTAL VENDIDAS: {summaryData.totals.sold} 
-                    </h3>
-                </Segment>
             </div>
         )
     }

@@ -9,6 +9,7 @@ import Input from '../ui/form/Input/Input'
 import TypeSelector from '../forms/Controls/TypeSelector/TypeSelector'
 import Button from '../ui/button/Button'
 import ConfirmModal from '../confirmModal/ConfirmModal'
+import Currency from 'react-currency-formatter'
 
 import SalesFilters from '../entitites/sales/SalesFilters'
 import SalesTable from '../entitites/sales/SalesTable'
@@ -103,6 +104,8 @@ class TicketOfficeController extends React.Component {
         const items = []
         let revenue = 0
         let ticketsSold = 0
+        let totalDelivered = 0
+        let totalLeft = 0
         Object.keys( deliverByType ).forEach( typeId => {
             const type = types.get( parseInt(typeId) )
             if( !type ) {
@@ -117,6 +120,8 @@ class TicketOfficeController extends React.Component {
                 left: deliverByType[ typeId ] - (salesByType[ typeId ] || 0 )
             })
 
+            totalDelivered += deliverByType[ typeId ]
+            totalLeft += deliverByType[ typeId ] - (salesByType[ typeId ] || 0 )
             revenue += (salesByType[ typeId ] || 0) * type.price
             ticketsSold += (salesByType[ typeId ] || 0)
         })
@@ -134,10 +139,15 @@ class TicketOfficeController extends React.Component {
                     ]}                             
                     items={items}
                     full
+                    calculateTotals={( items ) => {
+                        return {
+                            delivered: totalDelivered,
+                            left: totalLeft,
+                            sold: ticketsSold,
+                            revenue: (<Currency currency="EUR" quantity={revenue}/>)
+                        }
+                    }}
                 />
-                <Segment>
-                    <h3 style={{textAlign: 'center'}}>TOTAL RECAUDADO: {revenue}€ / TOTAL VENDIDAS: {ticketsSold} </h3>
-                </Segment>
             </div>
         )
     }
