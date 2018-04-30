@@ -2,6 +2,7 @@ import React from 'react'
 
 import Segment from '../ui/segment/Segment'
 import Table from '../ui/table/Table'
+import Tabs from '../ui/tabs/Tabs'
 
 import Form from '../ui/form/Form'
 import Label from '../ui/form/Label/Label'
@@ -14,10 +15,15 @@ import Currency from 'react-currency-formatter'
 import SalesFilters from '../entitites/sales/SalesFilters'
 import SalesTable from '../entitites/sales/SalesTable'
 
+import PaymentFilters from '../entitites/payments/PaymentFilters'
+import NewPaymentButton from '../entitites/payments/NewPaymentButton'
+import PaymentsTable from '../entitites/payments/PaymentsTable'
+
 import PrintTicket from '../printTicket/PrintTicket'
 import { crud as saleActions } from '../../redux/actions/sales'
 import { crud as typeActions } from '../../redux/actions/types'
 import { crud as deliverActions } from '../../redux/actions/deliveries'
+import { crud as paymentActions } from '../../redux/actions/payments'
 import { crud as sessionActions } from '../../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -47,6 +53,7 @@ class TicketOfficeController extends React.Component {
         this.props.fetchSession( sessionId )
         this.props.fetchTypes('?session='+sessionId )
         this.props.fetchDeliveries( '?session='+sessionId )
+        this.props.fetchPayments( '?session='+sessionId )
         this.props.fetchSales('?session='+sessionId )
     }
 
@@ -100,7 +107,7 @@ class TicketOfficeController extends React.Component {
     }
 
     renderSummaryList() {
-        const { types, deliverByType, salesByType } = this.props
+        const { types, deliverByType, salesByType, totalPaid } = this.props
         const items = []
         let revenue = 0
         let ticketsSold = 0
@@ -117,7 +124,9 @@ class TicketOfficeController extends React.Component {
                 delivered: deliverByType[ typeId ],
                 sold: salesByType[ typeId ] || 0,
                 revenue: (salesByType[ typeId ] || 0) * type.price,
-                left: deliverByType[ typeId ] - (salesByType[ typeId ] || 0 )
+                left: deliverByType[ typeId ] - (salesByType[ typeId ] || 0 ),
+                paid: '-',
+                toPay: '-'
             })
 
             totalDelivered += deliverByType[ typeId ]
@@ -131,20 +140,25 @@ class TicketOfficeController extends React.Component {
                 <Table           
                     fields={[
                         { label: "TIPO", name: 'type' },
-                        { label: "PRECIO", name: 'price', displayFormat: ( price) => price+"€" },
+                        { label: "PRECIO", name: 'price', displayFormat: ( price) => <Currency currency="EUR" quantity={price}/> },
                         { label: "TOTAL", name: 'delivered' },
                         { label: "VENDIDAS", name: 'sold' },
                         { label: "QUEDAN", name: 'left' },
-                        { label: "RECAUDADO", name: 'revenue', displayFormat: ( reven ) => reven+"€" },
+                        { label: "RECAUDADO", name: 'revenue', displayFormat: ( reven ) => <Currency currency="EUR" quantity={reven}/> },
+                        { label: 'PAGADO', name: 'paid' },
+                        { label: 'A PAGAR', name:'toPay' }
                     ]}                             
                     items={items}
                     full
                     calculateTotals={( items ) => {
                         return {
+                            type: 'TOTAL',
                             delivered: totalDelivered,
                             left: totalLeft,
                             sold: ticketsSold,
-                            revenue: (<Currency currency="EUR" quantity={revenue}/>)
+                            revenue: (<Currency currency="EUR" quantity={revenue}/>),
+                            paid: (<Currency currency="EUR" quantity={totalPaid}/>),
+                            toPay: (<Currency currency="EUR" quantity={revenue - totalPaid}/>)
                         }
                     }}
                 />
@@ -169,6 +183,30 @@ class TicketOfficeController extends React.Component {
                     Una vez confirmada la venta, no se podrá anular ni eliminar. Asegúrese de 
                     recaudar el dinero antes de imprimir.
                 </p>
+            </div>
+        )
+    }
+
+    renderSales( sessionId ) {
+        return(
+            <div>
+                <Segment secondary>
+                    <h2 style={{textAlign: 'center'}}>VENTAS</h2>
+                </Segment>
+                <SalesFilters sessionId={sessionId} />
+                <SalesTable />
+            </div>
+        )
+    }
+
+    renderPayments( sessionId ) {
+        return(
+            <div>
+                <Segment secondary>
+                    <h2 style={{textAlign: 'center'}}>PAGOS</h2>
+                </Segment>
+                <PaymentFilters sessionId={sessionId} />
+                <PaymentsTable sessionId={sessionId} />
             </div>
         )
     }
@@ -228,11 +266,12 @@ class TicketOfficeController extends React.Component {
                     </Segment>
                 </div>
                 
-                <Segment secondary>
-                    <h2 style={{textAlign: 'center'}}>VENTAS</h2>
-                </Segment>
-                <SalesFilters sessionId={sessionId} />
-                <SalesTable />
+                <Tabs
+                    tabs={[
+                        {label:'VENTAS', content:this.renderSales( sessionId )},
+                        {label:'PAGOS', content:this.renderPayments( sessionId )},
+                    ]}
+                />
             </div>
         )
     }
@@ -256,12 +295,18 @@ export default connect(
                 salesByType[ sale.type_id ] += 1
             }
         }) 
-        
+
+        let totalPaid = 0
+        store.payments.data.forEach( payment => {
+            totalPaid += payment.ammount
+        })
+
         return {
             me: store.auth.me,
             types: store.types.data,
             deliverByType,
-            salesByType
+            salesByType,
+            totalPaid
         }
     },
     ( dispatch ) => {
@@ -269,6 +314,7 @@ export default connect(
             fetchSession: bindActionCreators( sessionActions.fetchById, dispatch ),
             fetchTypes: bindActionCreators( typeActions.fetch, dispatch ),
             fetchDeliveries: bindActionCreators( deliverActions.fetch, dispatch ),
+            fetchPayments: bindActionCreators( paymentActions.fetch, dispatch ),
             fetchSales: bindActionCreators( saleActions.fetch, dispatch ),
             createSale: bindActionCreators( saleActions.create, dispatch )
         }

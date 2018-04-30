@@ -8,10 +8,23 @@ import { connect } from 'react-redux'
 import schema from './Schema'
 import EntityTable from '../EntityTable'
 import PaymentForm from './PaymentForm'
+import Currency from 'react-currency-formatter'
 
 class PaymentsTable extends React.Component {
     componentWillMount() {
         this.props.fetch( this.props.sessionId ? '?session='+this.props.sessionId : '' )
+    }
+
+    calculateTotals( items ) {
+        let totalPaid = 0
+        items.forEach( payment => {
+            totalPaid += parseFloat( payment.ammount )
+        })
+
+        return {
+            username: 'TOTAL',
+            ammount:<Currency currency='EUR' quantity={totalPaid}/>
+        }
     }
 
     render() {
@@ -27,6 +40,7 @@ class PaymentsTable extends React.Component {
                     items={payments} 
                     formTitle="EDITAR PAGO"
                     Form={PaymentForm}
+                    calculateTotals={this.calculateTotals.bind(this)}
                     full 
                 />
             </div>

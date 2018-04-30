@@ -14,6 +14,18 @@ class DeliveriesTable extends React.Component {
         this.props.fetch( '?session=' + sessionId )
     }
 
+    calculateTotals( items ) {
+        let totalAmmount = 0
+        items.forEach( delivery => {
+            totalAmmount += delivery.ammount
+        })
+
+        return {
+            username: 'TOTAL',
+            ammount: totalAmmount
+        }
+    }
+
     render() {
         const { deliveries } = this.props
         return(
@@ -23,6 +35,7 @@ class DeliveriesTable extends React.Component {
                 formTitle="EDITAR ENTREGA"
                 Form={DeliverForm}
                 hidden={{type_id: true, user_id: true}}
+                calculateTotals={this.calculateTotals.bind(this)}
                 scrollable
                 full
             />

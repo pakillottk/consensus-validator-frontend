@@ -4,6 +4,7 @@ const styles = {
     secondaryColor: '#ddd',
     thirdColor: '#ccc',
     dark: '#444',
+    light: '#eee',
     textColor: '#333',
     secondaryTextColor: '#666',
     brightTextColor: '#ddd',

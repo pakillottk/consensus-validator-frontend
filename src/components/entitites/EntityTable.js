@@ -32,7 +32,7 @@ class EntityTable extends React.Component {
     }
 
     render() {
-        const { schema, multiselect, selected, onSelection, scrollable, items, hidden, full, onItemClick } = this.props
+        const { schema, calculateTotals, multiselect, selected, onSelection, scrollable, items, hidden, full, onItemClick } = this.props
 
         return(
             <Table
@@ -42,6 +42,7 @@ class EntityTable extends React.Component {
                 scrollable={scrollable}
                 fields={this.hideFields( schema, hidden )}
                 items={items}
+                calculateTotals={calculateTotals}
                 onItemClick={(item) => onItemClick ? onItemClick( item ) : this.itemClicked( item )}
                 full
             />

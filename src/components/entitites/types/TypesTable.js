@@ -8,10 +8,27 @@ import schema from './Schema'
 import EntityTable from '../EntityTable'
 import TypeForm from './TypeForm'
 
+import Currency from 'react-currency-formatter'
+
 class TypesTable extends React.Component {
     componentWillMount() {
         const { sessionId } = this.props
         this.props.fetch( '?session=' + sessionId )
+    }
+
+    calculateTotals( items ) {
+        let totalPrice = 0
+        let totalAmmount = 0
+        items.forEach( type => {
+            totalPrice += parseFloat( type.price )
+            totalAmmount += parseInt( type.ammount )
+        })
+
+        return {
+            type:'TOTAL',
+            price: (<Currency currency='EUR' quantity={totalPrice/items.size}/>),
+            ammount: totalAmmount 
+        }
     }
 
     render() {
@@ -23,6 +40,7 @@ class TypesTable extends React.Component {
                 hidden={{session_id: true}}
                 formTitle="EDITAR TIPO"
                 Form={TypeForm}
+                calculateTotals={this.calculateTotals.bind(this)}
                 full
             />
         )
