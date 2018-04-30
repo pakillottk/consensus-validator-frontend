@@ -14,7 +14,14 @@ class SaleCharts extends React.Component {
                 <Bar
                     data={sales}
                     options={{
-                        maintainAspectRatio: false
+                        maintainAspectRatio: false,
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            }]
+                        }
                     }}
                 />
             </div>

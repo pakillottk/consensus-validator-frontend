@@ -9,6 +9,8 @@ import NewTypeButton from '../components/entitites/types/NewTypeButton'
 import TypesTable from '../components/entitites/types/TypesTable'
 import NewDeliverButton from '../components/entitites/deliveries/NewDeliverButton'
 import DeliveriesTable from '../components/entitites/deliveries/DeliveriesTable'
+import NewComissionButton from '../components/entitites/comissions/NewComissionButton'
+import ComissionsTable from '../components/entitites/comissions/ComissionsTable'
 import NewScanGroupButton from '../components/entitites/scangroups/NewScanGroupButton'
 import ScanGroupsTable from '../components/entitites/scangroups/ScanGroupsTable'
 import ScanTypesTable from '../components/entitites/scantypes/ScanTypesTable'
@@ -88,6 +90,11 @@ class SessionAdminPage extends React.Component {
                             <h2 style={{textAlign: 'center'}}>ENTREGAS</h2>
                             <NewDeliverButton />
                             <DeliveriesTable sessionId={sessionId} />
+                        </div>
+                        <div>
+                            <h2 style={{textAlign: 'center'}}>GASTOS Y COMISIONES</h2>
+                            <NewComissionButton sessionId={sessionId} />
+                            <ComissionsTable sessionId={sessionId} />
                         </div>
                     </div>
 

@@ -8,6 +8,7 @@ import codes from './codes'
 import deliveries from './deliveries'
 import sales from './sales'
 import payments from './payments'
+import comissions from './comissions'
 import scangroups from './scangroups'
 import scantypes from './scantypes'
 import userscangroups from './userscangroups'
@@ -26,6 +27,7 @@ const reducers = {
     deliveries,
     sales,
     payments,
+    comissions,
     scangroups,
     scantypes,
     userscangroups,

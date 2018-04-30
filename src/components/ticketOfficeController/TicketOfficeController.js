@@ -12,6 +12,9 @@ import Button from '../ui/button/Button'
 import ConfirmModal from '../confirmModal/ConfirmModal'
 import Currency from 'react-currency-formatter'
 
+import ApplyComission from '../../entities/comissions/ApplyComission'
+import CalculateSellerComission from '../../entities/comissions/CalculateSellerComission'
+
 import SalesFilters from '../entitites/sales/SalesFilters'
 import SalesTable from '../entitites/sales/SalesTable'
 
@@ -22,6 +25,7 @@ import PaymentsTable from '../entitites/payments/PaymentsTable'
 import PrintTicket from '../printTicket/PrintTicket'
 import { crud as saleActions } from '../../redux/actions/sales'
 import { crud as typeActions } from '../../redux/actions/types'
+import { crud as comissionActions } from '../../redux/actions/comissions'
 import { crud as deliverActions } from '../../redux/actions/deliveries'
 import { crud as paymentActions } from '../../redux/actions/payments'
 import { crud as sessionActions } from '../../redux/actions/sessions'
@@ -51,7 +55,8 @@ class TicketOfficeController extends React.Component {
     componentWillMount() {
         const { sessionId } = this.props
         this.props.fetchSession( sessionId )
-        this.props.fetchTypes('?session='+sessionId )
+        this.props.fetchTypes( '?session='+sessionId )
+        this.props.fetchComissions( '?session='+sessionId )
         this.props.fetchDeliveries( '?session='+sessionId )
         this.props.fetchPayments( '?session='+sessionId )
         this.props.fetchSales('?session='+sessionId )
@@ -107,7 +112,7 @@ class TicketOfficeController extends React.Component {
     }
 
     renderSummaryList() {
-        const { types, deliverByType, salesByType, totalPaid } = this.props
+        const { types, deliverByType, salesByType, revenueByType, comissionsByType, totalComission, totalPaid } = this.props
         const items = []
         let revenue = 0
         let ticketsSold = 0
@@ -123,7 +128,8 @@ class TicketOfficeController extends React.Component {
                 price: type.price,
                 delivered: deliverByType[ typeId ],
                 sold: salesByType[ typeId ] || 0,
-                revenue: (salesByType[ typeId ] || 0) * type.price,
+                revenue: (revenueByType[ typeId ] || 0),
+                comission: comissionsByType[ typeId ] || 0,
                 left: deliverByType[ typeId ] - (salesByType[ typeId ] || 0 ),
                 paid: '-',
                 toPay: '-'
@@ -131,7 +137,7 @@ class TicketOfficeController extends React.Component {
 
             totalDelivered += deliverByType[ typeId ]
             totalLeft += deliverByType[ typeId ] - (salesByType[ typeId ] || 0 )
-            revenue += (salesByType[ typeId ] || 0) * type.price
+            revenue += (revenueByType[ typeId ] || 0)
             ticketsSold += (salesByType[ typeId ] || 0)
         })
 
@@ -145,6 +151,7 @@ class TicketOfficeController extends React.Component {
                         { label: "VENDIDAS", name: 'sold' },
                         { label: "QUEDAN", name: 'left' },
                         { label: "RECAUDADO", name: 'revenue', displayFormat: ( reven ) => <Currency currency="EUR" quantity={reven}/> },
+                        { label: "COMISIÓN", name: 'comission', displayFormat: ( com ) =>  <Currency currency="EUR" quantity={com}/> },
                         { label: 'PAGADO', name: 'paid' },
                         { label: 'A PAGAR', name:'toPay' }
                     ]}                             
@@ -157,8 +164,9 @@ class TicketOfficeController extends React.Component {
                             left: totalLeft,
                             sold: ticketsSold,
                             revenue: (<Currency currency="EUR" quantity={revenue}/>),
+                            comission: (<Currency currency="EUR" quantity={totalComission}/>),
                             paid: (<Currency currency="EUR" quantity={totalPaid}/>),
-                            toPay: (<Currency currency="EUR" quantity={revenue - totalPaid}/>)
+                            toPay: (<Currency currency="EUR" quantity={ revenue - totalComission - totalPaid}/>)
                         }
                     }}
                 />
@@ -167,7 +175,7 @@ class TicketOfficeController extends React.Component {
     }
 
     getConfirmSaleMessage() {
-        const { types } = this.props
+        const { types, comissionByUser, me } = this.props
         const { values } = this.state
 
         const type = types.get( parseInt(values.type_id) )
@@ -178,7 +186,7 @@ class TicketOfficeController extends React.Component {
         return(
             <div style={{textAlign:'center'}}>
                 <h3> {values.ammount} ENTRADAS DE {type.type} </h3>
-                <h2> A PAGAR: {type.price * parseInt(values.ammount)}€ </h2>
+                <h2> A PAGAR: <Currency currency='EUR' quantity={ApplyComission( type, comissionByUser[ me.id ] ) * parseInt(values.ammount)} /> </h2>
                 <p style={{color:'red'}}>
                     Una vez confirmada la venta, no se podrá anular ni eliminar. Asegúrese de 
                     recaudar el dinero antes de imprimir.
@@ -206,6 +214,7 @@ class TicketOfficeController extends React.Component {
                     <h2 style={{textAlign: 'center'}}>PAGOS</h2>
                 </Segment>
                 <PaymentFilters sessionId={sessionId} />
+                <NewPaymentButton sessionId={sessionId} />
                 <PaymentsTable sessionId={sessionId} />
             </div>
         )
@@ -277,7 +286,9 @@ class TicketOfficeController extends React.Component {
     }
 }
 export default connect(
-    ( store ) => {        
+    ( store ) => {  
+        const types = store.types.data
+
         const deliverByType = {}
         store.deliveries.data.forEach( delivery => {
             if( !deliverByType[ delivery.type_id ] ) {
@@ -287,25 +298,55 @@ export default connect(
             }
         })
 
+        const comissionsMap = store.comissions.data
+        const comissionByUser = {}
+        comissionsMap.forEach( comission => {
+            comissionByUser[ comission.user_id ] = comission
+        })
+
         const salesByType = {}
+        const comissionsByType = {}
+        const revenueByType = {}
+        let totalComission = 0
         store.sales.data.forEach( sale => {
+            const type = types.get( parseInt(sale.type_id) )
+            const comission = comissionByUser[ sale.user_id ]
+            const realPrice = ApplyComission( type, comission )
+            const currentComission = CalculateSellerComission( type, comission )
+
             if( !salesByType[ sale.type_id ] ) {
                 salesByType[ sale.type_id ] = 1
             } else {
                 salesByType[ sale.type_id ] += 1
             }
+            if( !revenueByType[ sale.type_id ] ) {
+                revenueByType[ sale.type_id ] = realPrice
+            } else {
+                revenueByType[ sale.type_id ] += realPrice
+            }
+            if( !comissionsByType[ sale.type_id ] ) {
+                comissionsByType[ sale.type_id ] = currentComission
+            } else {
+                comissionsByType[ sale.type_id ] += currentComission
+            }
+
+            totalComission += currentComission
         }) 
 
         let totalPaid = 0
         store.payments.data.forEach( payment => {
             totalPaid += payment.ammount
-        })
+        })       
 
         return {
             me: store.auth.me,
-            types: store.types.data,
+            types,
             deliverByType,
             salesByType,
+            comissionsByType,
+            totalComission,
+            revenueByType,
+            comissionByUser,
             totalPaid
         }
     },
@@ -314,6 +355,7 @@ export default connect(
             fetchSession: bindActionCreators( sessionActions.fetchById, dispatch ),
             fetchTypes: bindActionCreators( typeActions.fetch, dispatch ),
             fetchDeliveries: bindActionCreators( deliverActions.fetch, dispatch ),
+            fetchComissions: bindActionCreators( comissionActions.fetch, dispatch ),
             fetchPayments: bindActionCreators( paymentActions.fetch, dispatch ),
             fetchSales: bindActionCreators( saleActions.fetch, dispatch ),
             createSale: bindActionCreators( saleActions.create, dispatch )

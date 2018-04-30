@@ -9,6 +9,8 @@ import jsbarcode from 'jsbarcode';
 import qrgenerator from 'qrcode-generator';
 
 import moment from 'moment'
+import Currency from 'react-currency-formatter';
+import ApplyComission from '../../entities/comissions/ApplyComission';
 
 class PrintTicket extends React.Component {
   componentDidUpdate() {
@@ -61,9 +63,9 @@ class PrintTicket extends React.Component {
   }
 
   renderTicket( ticketData ) {
-    const { types, company, session } = this.props
+    const { types, company, session, comissionsByUser, me } = this.props
     const type = types.get( ticketData.type_id )
-    const price = type ? type.price : 0 
+    const price = <Currency currency='EUR' quantity={ApplyComission( type, comissionsByUser[ me.id ] )} />
     return (
       <div 
         key={ ticketData.id } 
@@ -112,7 +114,7 @@ class PrintTicket extends React.Component {
               </div>
             </div>
           </div>
-          <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '42px', margin: 0}}> {price } € </p>
+          <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '42px', margin: 0}}> {price} </p>
           <p className="ticket-price-info" style={{margin: 0}}>(Imp. incluidos + Gastos de distribución)</p>
         </div>
 
@@ -189,9 +191,17 @@ class PrintTicket extends React.Component {
 
 PrintTicket = connect(
   ( store, props ) => {
+    const comissionsMap = store.comissions.data
+    const comissionsByUser = {}
+    comissionsMap.forEach( comission => {
+        comissionsByUser[ comission.user_id ] = comission
+    })
+
     return {
+      me: store.auth.me,
       session: store.sessions.data.get( props.sessionId ),
       types: store.types.data,
+      comissionsByUser,
       company: store.auth.me.company,
       tickets: store.sales.toPrint,
       print: store.sales.printRequest

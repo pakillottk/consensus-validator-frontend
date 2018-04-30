@@ -16,6 +16,9 @@ class Tabs extends React.Component {
                 justifyContent:'space-around',
                 fontSize:'1.2rem'
             },
+            animated: {
+                transition: 'all 300ms ease-in-out'
+            },
             tab: {
                 cursor:'pointer',
                 textAlign:'center',
@@ -49,7 +52,7 @@ class Tabs extends React.Component {
                     <div 
                         key={index} 
                         onClick={()=>this.setState({selectedTab:index})} 
-                        style={ this.state.selectedTab === index ? styles.activeTab : styles.tab}
+                        style={ this.state.selectedTab === index ? {...styles.activeTab, ...styles.animated} : {...styles.tab, ...styles.animated}}
                     >
                         {tab.label}
                     </div>) ) }

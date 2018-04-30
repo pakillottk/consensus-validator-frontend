@@ -4,6 +4,9 @@ import Table from '../../ui/table/Table'
 import { connect } from 'react-redux'
 import SalesActions from './SalesActions'
 
+import ApplyComission from '../../../entities/comissions/ApplyComission'
+
+import Currency from 'react-currency-formatter'
 import moment from 'moment'
 const fields = [
     {label: 'F.VENTA', name: 'created_at', displayFormat: ( date ) => moment( date ).format( 'DD/MM/YYYY HH:mm' ) },
@@ -52,13 +55,31 @@ class SalesTable extends React.Component {
 }
 export default connect( store => {
     const salesMap = store.sales.data
+    const comissionsMap = store.comissions.data
+    const comissionByUser = {}
+    comissionsMap.forEach( comission => {
+        comissionByUser[ comission.user_id ] = comission
+    })
+    
     let sales = []
     salesMap.forEach( sale => {
         const type = store.types.data.get( parseInt( sale.type_id ) )
         if( !type ) {
             return
         }
-        sales.push({...sale, codeStr: sale.code.code, type: type.type, price: type.price+'€', name: sale.code.name, email: sale.code.email })
+        const comission = comissionByUser[ sale.user_id ]
+        sales.push({
+            ...sale, 
+            codeStr: sale.code.code, 
+            type: type.type, 
+            price: (
+                <Currency 
+                    currency='EUR' 
+                    quantity={ApplyComission( type, comission )} 
+                />), 
+            name: sale.code.name, 
+            email: sale.code.email 
+        })
     })
     sales = sales.sort( (sale, otherSale) =>  {
         const saleDate = moment( sale.created_at );
