@@ -77,7 +77,7 @@ export default connect( store => {
         }
         let comission = null 
         if( comissionByUser[ sale.user_id ] ) {
-            comissionByUser[ sale.user_id ][ type.session_id ]
+            comission = comissionByUser[ sale.user_id ][ type.session_id ]
         }
         sales.push({
             ...sale, 
