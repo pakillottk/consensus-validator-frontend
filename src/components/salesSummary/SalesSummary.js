@@ -14,6 +14,9 @@ const tableFields = [
         label:'SESIÓN',
         type:'input',
         displayFormat: ( session ) => {
+            if( !session ) {
+                return null
+            }
             return(
                 <div>
                     <p>
