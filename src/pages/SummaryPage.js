@@ -5,7 +5,6 @@ import Segment from '../components/ui/segment/Segment'
 import SalesFilters from '../components/entitites/sales/SalesFilters'
 import SalesSummary from '../components/salesSummary/SalesSummary'
 import SaleCharts from '../components/entitites/sales/SaleCharts'
-import SalesTable from '../components/entitites/sales/SalesTable'
 
 import { crud as sessionActions } from '../redux/actions/sessions'
 import { crud as typesActions } from '../redux/actions/types'

@@ -17,7 +17,7 @@ class SessionSelector extends React.Component {
             session => {
                 options.push({
                     value: session.id,
-                    text: session.name + ' (' + moment(session.date).format('DD/MM/YYYY') + ')'
+                    text: session.name + ' (' + moment(session.date).format('DD/MM/YYYY HH:mm') + ')'
                 })
             }
         );

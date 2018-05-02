@@ -318,7 +318,10 @@ export default connect(
         let totalComission = 0
         store.sales.data.forEach( sale => {
             const type = types.get( parseInt(sale.type_id, 10) )
-            const comission = type ? comissionByUser[ sale.user_id ][ type.session_id ] : null
+            let comission = null
+            if( type && comissionByUser[ sale.user_id ] ) {
+                comission = comissionByUser[ sale.user_id ][ type.session_id ]
+            }
             const realPrice = ApplyComission( type, comission )
             const currentComission = CalculateSellerComission( type, comission )
 

@@ -64,7 +64,7 @@ class SaleFilters extends React.Component {
         return(
             <div>
                 <SaleFiltersComponent
-                    title="FILTRAR"
+                    title="BUSCAR VENTAS"
                     onQuerySent={onQuerySent}
                     fetchBaseQuery={sessionId ? 'session=' + sessionId : ''}
                     hidden={{}}
