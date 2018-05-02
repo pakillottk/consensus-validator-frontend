@@ -17,7 +17,15 @@ const tableFields = [
         label:'SESIÓN',
         type:'input',
         displayFormat: ( session ) => {
-            return session.name + ' (' + moment( session.date ).format( 'dddd DD MMMM YYYY HH:mm' ) + ' H)'
+            return(
+                <div>
+                    <p>
+                        <b>{session.name}</b>                    
+                    </p>
+                    <p style={{fontSize: '0.8rem'}}> {moment( session.date ).format( 'dddd DD MMMM YYYY HH:mm' )}H</p>
+                    <p style={{fontSize: '0.7rem'}}> {session.location}</p>  
+                </div>
+            )
         }
     },
     {
