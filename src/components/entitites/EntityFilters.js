@@ -60,7 +60,7 @@ export default ( schema, fetch ) => {
         }
     
         handleSubmit( data, initial ) {
-            const { fetchBaseQuery } = this.props
+            const { fetchBaseQuery, onQuerySent } = this.props
             const selectors = this.props.selectors || {}
             const queryParams = []
             Object.keys( data ).forEach( field => {
@@ -75,12 +75,19 @@ export default ( schema, fetch ) => {
                 queryParams.push( field + '=' + data[ field ] )
             })
 
+            if( onQuerySent ) {
+                onQuerySent( fetchBaseQuery, queryParams )
+            }
+
             const queryString = '?' + (fetchBaseQuery ? fetchBaseQuery + '&' : '') + queryParams.join( '&' )
             fetch( queryString )
         }
     
         fetchNoFilters() {
-            const { fetchBaseQuery } = this.props
+            const { fetchBaseQuery, onQuerySent } = this.props
+            if( onQuerySent ) {
+                onQuerySent( fetchBaseQuery, [] )
+            }
             fetch( '?' + fetchBaseQuery )
         }
     

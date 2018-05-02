@@ -301,7 +301,15 @@ export default connect(
         const comissionsMap = store.comissions.data
         const comissionByUser = {}
         comissionsMap.forEach( comission => {
-            comissionByUser[ comission.user_id ] = comission
+            let sessionComission = {}
+            if( !comissionByUser[ comission.user_id ] ) {
+                sessionComission[ comission.session_id ] = comission
+                comissionByUser[ comission.user_id ] = sessionComission
+            } else {
+                sessionComission = comissionByUser[ comission.user_id ]
+                sessionComission[ comission.session_id ] = comission
+                comissionByUser[ comission.user_id ] = sessionComission
+            }
         })
 
         const salesByType = {}
@@ -310,7 +318,7 @@ export default connect(
         let totalComission = 0
         store.sales.data.forEach( sale => {
             const type = types.get( parseInt(sale.type_id) )
-            const comission = comissionByUser[ sale.user_id ]
+            const comission = type ? comissionByUser[ sale.user_id ][ type.session_id ] : null
             const realPrice = ApplyComission( type, comission )
             const currentComission = CalculateSellerComission( type, comission )
 

@@ -5,6 +5,10 @@ class Img extends React.Component {
     computeStyles( size, bordered, theme ) {
         let width = 400;
         switch( size ) {
+            case 'micro': {
+                width = 30;
+                break;
+            }
             case 'tiny': {
                 width = 80;
                 break;

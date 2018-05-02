@@ -58,7 +58,15 @@ export default connect( store => {
     const comissionsMap = store.comissions.data
     const comissionByUser = {}
     comissionsMap.forEach( comission => {
-        comissionByUser[ comission.user_id ] = comission
+        let sessionComission = {}
+        if( !comissionByUser[ comission.user_id ] ) {
+            sessionComission[ comission.session_id ] = comission
+            comissionByUser[ comission.user_id ] = sessionComission
+        } else {
+            sessionComission = comissionByUser[ comission.user_id ]
+            sessionComission[ comission.session_id ] = comission
+            comissionByUser[ comission.user_id ] = sessionComission
+        }
     })
     
     let sales = []
@@ -67,7 +75,10 @@ export default connect( store => {
         if( !type ) {
             return
         }
-        const comission = comissionByUser[ sale.user_id ]
+        let comission = null 
+        if( comissionByUser[ sale.user_id ] ) {
+            comissionByUser[ sale.user_id ][ type.session_id ]
+        }
         sales.push({
             ...sale, 
             codeStr: sale.code.code, 

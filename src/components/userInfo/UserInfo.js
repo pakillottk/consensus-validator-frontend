@@ -23,8 +23,26 @@ class UserInfo extends React.Component {
                     {me.company && <div>
                        <h4 style={{textAlign:'center'}}>{me.company.name}</h4> 
 
-                        <div style={{display:'flex', justifyContent:'center'}}>
+                        <div style={{display:'flex', justifyContent:'center', position:'relative', marginBottom:'2px'}}>
                             <Img src={API.getFullPath( me.company.logo_url )} size={'tiny'}/>
+                            {me.role === 'admin' && <Img 
+                                src={API.getFullPath( '/public/images/admin-over-icon.png' )} 
+                                size={'micro'}
+                                styles={{
+                                    height:'30px',
+                                    position:'absolute',
+                                    right: 0,
+                                    top: 0,
+                                    transform: 'translateX(-50%) translateY(5px)'
+                                }}
+                            />}
+                        </div>                        
+                    </div>}
+
+                    {me.role === 'superadmin' && <div>
+                        <h4 style={{textAlign:'center'}}>SYS ADMIN</h4>
+                        <div style={{display:'flex', justifyContent:'center'}}>
+                            <Img src={API.getFullPath( '/public/images/admin-icon.png' )} size={'tiny'}/>
                         </div>
 
                         <Divider full />

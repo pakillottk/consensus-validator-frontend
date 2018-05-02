@@ -94,15 +94,10 @@ class ScanSummary extends React.Component {
                     full
                     items={summaryData.summary}
                     fields={tableFields}
+                    calculateTotals={(items) => {
+                        return summaryData.totals
+                    }}
                 />
-                <Segment>
-                    <h3 style={{textAlign:'center'}}>
-                        TOTAL ESCANEADOS: {summaryData.totals.scanned} / {summaryData.totals.total} 
-                    </h3>
-                    <h3 style={{textAlign:'center'}}>
-                        (Quedan fuera: {summaryData.totals.out}. No escaneados: {summaryData.totals.remaining})
-                    </h3>
-                </Segment>
             </div>
         )
     }

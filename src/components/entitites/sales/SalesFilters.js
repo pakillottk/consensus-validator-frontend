@@ -59,17 +59,19 @@ class SaleFilters extends React.Component {
     }
 
     render() {
-        const { sessionId } = this.props
+        const { sessionId, onQuerySent } = this.props
         const SaleFiltersComponent = this.filterComponent
 
         return(
             <div>
                 <SaleFiltersComponent
                     title="FILTRAR"
+                    onQuerySent={onQuerySent}
                     fetchBaseQuery={sessionId ? 'session=' + sessionId : ''}
                     hidden={{}}
                     selectors={{
-                        user_id: true
+                        user_id: true,
+                        session_id: true
                     }}
                 />
             </div>

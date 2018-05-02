@@ -9,6 +9,10 @@ import SalesSummary from '../components/salesSummary/SalesSummary'
 import LogEntriesTable from '../components/entitites/logentries/LogEntriesTable'
 
 import { crud } from '../redux/actions/sessions'
+import { crud as SaleActions } from '../redux/actions/sales'
+import { crud as TypeActions } from '../redux/actions/types'
+import { crud as PaymentActions } from '../redux/actions/payments'
+import { crud as ComissionActions } from '../redux/actions/comissions'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -43,6 +47,10 @@ class MonitorPage extends React.Component {
         })
         
         this.props.fetchById( sessionId )
+        this.props.fetchSales( '?session=' + sessionId )
+        this.props.fetchTypes( '?session=' + sessionId )
+        this.props.fetchPayments( '?session=' + sessionId )
+        this.props.fetchComissions( '?session=' + sessionId )
     }
 
     componentWillUnmount() {
@@ -103,6 +111,10 @@ export default connect(
     ( dispatch ) => {
         return {
             fetchById: bindActionCreators( crud.fetchById, dispatch ),
+            fetchSales: bindActionCreators( SaleActions.fetch, dispatch ),
+            fetchTypes: bindActionCreators( TypeActions.fetch, dispatch ),
+            fetchPayments: bindActionCreators( PaymentActions.fetch, dispatch ),
+            fetchComissions: bindActionCreators( ComissionActions.fetch, dispatch ),
             createSale: bindActionCreators( ( data ) => {
                 return {
                     type: 'SALES_CREATE_FULFILLED',
