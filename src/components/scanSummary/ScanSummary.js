@@ -1,7 +1,6 @@
 import React from 'react'
 
 import Table from '../ui/table/Table'
-import Segment from '../ui/segment/Segment'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'

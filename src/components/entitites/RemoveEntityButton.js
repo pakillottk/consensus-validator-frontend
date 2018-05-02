@@ -44,7 +44,7 @@ export default ( removeAction ) => {
                     <Button 
                         context='negative' 
                         styles={styles} 
-                        full 
+                        full={full}
                         onClick={() => this.switchConfirmDialog( true )}
                     >
                         {text || 'ELIMINAR'}

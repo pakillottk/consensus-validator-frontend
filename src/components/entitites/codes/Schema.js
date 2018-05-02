@@ -43,7 +43,7 @@ const schema = [
         type: 'input',
         component: 'number',
         displayFormat: ( maxValidations ) => {
-            if( parseInt(maxValidations) === -1 ) {
+            if( parseInt(maxValidations, 10) === -1 ) {
                 return "DESACTIVADO"
             }
             return maxValidations

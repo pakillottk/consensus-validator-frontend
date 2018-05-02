@@ -26,10 +26,13 @@ class Button extends React.Component {
                 fontSize = 1.5
                 break;
             }
+            default: {
+                fontSize = 1
+                break;
+            }
         }
         
         let color = theme.textColor
-        let borderColor = theme.borderColor
         let backgroundColor = theme.secondaryColor
         switch( context ) {
             case 'secondary': {
@@ -59,6 +62,11 @@ class Button extends React.Component {
             case 'dark': {
                 backgroundColor = theme.dark
                 color = theme.brightTextColor
+                break;
+            }
+            default: {
+                color = theme.textColor
+                backgroundColor = theme.secondaryColor 
                 break;
             }
         }

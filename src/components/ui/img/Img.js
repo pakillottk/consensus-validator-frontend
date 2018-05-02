@@ -29,6 +29,10 @@ class Img extends React.Component {
                 width = 800;
                 break;
             }
+            default: {
+                width = 400;
+                break;
+            }
         }
 
         let borderStyle = {}
@@ -46,11 +50,11 @@ class Img extends React.Component {
     }
 
     render() {
-        const { size, bordered, rounded, theme, styles, src } = this.props
+        const { alt, size, bordered, rounded, theme, styles, src } = this.props
         const imgStyle = this.computeStyles( size, bordered, theme )
         return(
             <div style={{...imgStyle, ...styles}}>
-                <img className={ rounded ? 'circle' : '' } style={{ width:'100%', height:'100%' }} src={src} />
+                <img alt={alt} className={ rounded ? 'circle' : '' } style={{ width:'100%', height:'100%' }} src={src} />
             </div>
         );
     }

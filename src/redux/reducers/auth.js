@@ -23,9 +23,11 @@ const reducer = ( state = {
             window.localStorage.removeItem( 'tokens' );
             return {...state, me: null, tokens: null };
         }
-    }
 
-    return state;
+        default: {
+            return state;
+        }
+    }
 }
 
 export default reducer;

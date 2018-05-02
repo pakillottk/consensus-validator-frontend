@@ -1,5 +1,4 @@
 import React from 'react'
-import Segment from '../../ui/segment/Segment'
 import { connect } from 'react-redux'
 
 import moment from 'moment'

@@ -1,8 +1,6 @@
 import Window from '../../components/ui/window/Window'
 import { Map } from 'immutable'
 
-import React from 'react'
-
 export default ( state = { windows: Map() }, action ) => {
     switch( action.type ) {
         case 'ADD_WINDOW': {
@@ -23,6 +21,9 @@ export default ( state = { windows: Map() }, action ) => {
         case 'REMOVE_WINDOW': {
             return {...state, windows: state.windows.remove( action.payload.id )}
         }
+
+        default: {
+            return state
+        }
     }
-    return state
 }

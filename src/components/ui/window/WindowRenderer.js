@@ -58,11 +58,8 @@ class WindowRenderer extends React.Component {
         e.preventDefault()
         const { window, manager } = this.props
 
-        const [ offsetX, offsetY ] = [ 
-            this.state.clickX - this.windowElem.offsetLeft - this.state.clickWindowX, 
-            this.state.clickY - this.windowElem.offsetTop
-        ]
-        
+        const offsetX = this.state.clickX - this.windowElem.offsetLeft - this.state.clickWindowX
+                
         const [ x, y ] = [ e.pageX, e.pageY ]
         manager.updateWindow( window.id, { x: x - offsetX, y } )
     }
@@ -158,7 +155,7 @@ class WindowRenderer extends React.Component {
     }
 
     render() {
-        const { window, manager, theme } = this.props
+        const { window, theme } = this.props
         const style = styles( theme )
 
         return(

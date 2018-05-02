@@ -44,7 +44,7 @@ class EntityTable extends React.Component {
                 items={items}
                 calculateTotals={calculateTotals}
                 onItemClick={(item) => onItemClick ? onItemClick( item ) : this.itemClicked( item )}
-                full
+                full={full}
             />
         )
     }

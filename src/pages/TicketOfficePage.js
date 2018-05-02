@@ -8,7 +8,7 @@ import moment from 'moment'
 
 class TicketOfficePage extends React.Component {
     render() {
-        const sessionId = parseInt( this.props.match.params.id );
+        const sessionId = parseInt( this.props.match.params.id, 10 );
         const session = this.props.sessions.get( sessionId );
         if( session ) {
             const meRole = this.props.meRole;

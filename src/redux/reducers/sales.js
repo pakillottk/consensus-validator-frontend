@@ -14,7 +14,7 @@ const preproccessor = ( sale ) => {
 
 const postprocessor = ( mode, newState, oldState, action, item ) => {
     if( mode === "create" && action.meta ) {
-        const target = parseInt(action.meta.total)
+        const target = parseInt(action.meta.total, 10)
         const received = newState.salesReceived + 1
         if( received === 1 ) {
             newState.toPrint = Map()

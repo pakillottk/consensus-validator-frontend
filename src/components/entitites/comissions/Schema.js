@@ -1,9 +1,6 @@
-import React from 'react'
 import UserSelector from '../../forms/Controls/UserSelector/UserSelector'
 import PayOnSelector from '../../forms/Controls/PayOnSelector/PayOnSelector'
 import TranslatePayOn from '../../../entities/comissions/TranslatePayOn'
-import Currency from 'react-currency-formatter'
-import moment from 'moment'
 
 const schema = [
     {

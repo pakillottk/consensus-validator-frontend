@@ -86,6 +86,10 @@ export default connect(
                     info++
                     break
                 }
+
+                default: {
+                    return;
+                }
             }
         })
 

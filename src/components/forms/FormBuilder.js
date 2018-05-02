@@ -78,7 +78,6 @@ class FormBuilder extends React.Component {
     }
 
     renderSelect( index, field, disabled ) {
-        const { values } = this.state;
         return(
             <Select 
                 key={index} 
@@ -92,7 +91,6 @@ class FormBuilder extends React.Component {
     }
 
     renderInput( index, field, disabled, vertical ) {
-        const { values } = this.state;
         return(
             <Input
                 key={ index }
@@ -107,7 +105,6 @@ class FormBuilder extends React.Component {
     }
 
     renderCustomField( index, field, Component, disabled ) {
-        const { values } = this.state;
         return(
             <div key={index}>
                 {field.type === "file" && field.filePreview( this.props.initialvalues[ field.name ] )}
@@ -172,7 +169,7 @@ class FormBuilder extends React.Component {
 
     render() {
         const { labels, fields, errors } = this.state;
-        const { vertical, extErrors, title, secondary, submitText, submitColor, theme, multipart } = this.props;
+        const { vertical, extErrors, title, secondary, submitText, submitColor, multipart } = this.props;
         const allErrors = {...errors, ...extErrors };
 
         return(

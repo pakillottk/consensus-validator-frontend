@@ -1,5 +1,4 @@
 import EntityReducer from './generators/EntityReducer';
-import moment from 'moment'
 
 const preprocess = ( entry ) => {
     if( entry.user ) {

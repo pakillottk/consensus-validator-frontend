@@ -22,7 +22,7 @@ class CodesActions extends React.Component {
         const { codes, update } = this.props
         Object.keys(codes).forEach( codeId => {
             const code = codes[ codeId ]
-            if( parseInt(code.maxValidations) === -1 ) {
+            if( parseInt(code.maxValidations, 10) === -1 ) {
                 update( code.id, { maxValidations: 1 } )
             }
         })
@@ -34,7 +34,7 @@ class CodesActions extends React.Component {
         const { codes, update } = this.props
         Object.keys(codes).forEach( codeId => {
             const code = codes[ codeId ]
-            if( parseInt(code.maxValidations) !== 0 ) {
+            if( parseInt(code.maxValidations, 10) !== 0 ) {
                 update( code.id, { maxValidations: 0 } )
             }
         })
@@ -46,7 +46,7 @@ class CodesActions extends React.Component {
         const { codes, update } = this.props
         Object.keys(codes).forEach( codeId => {
             const code = codes[ codeId ]
-            if( parseInt(code.validations) !== 0 ) {
+            if( parseInt(code.validations, 10) !== 0 ) {
                 update( code.id, { validations: 0, out: true } )
             }
         })
@@ -68,7 +68,7 @@ class CodesActions extends React.Component {
         const { codes, update } = this.props
         Object.keys(codes).forEach( codeId => {
             const code = codes[ codeId ]
-            if( parseInt(code.maxValidations) !== -1 ) {
+            if( parseInt(code.maxValidations, 10) !== -1 ) {
                 update( code.id, { maxValidations: -1 } )            
             }
         })

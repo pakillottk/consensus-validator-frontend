@@ -30,7 +30,7 @@ class NewEntityButton extends React.Component {
         const { disabled, styles, full, text } = this.props
         const GuardedButton = this.guardedButton
         return(
-            <GuardedButton disabled={disabled} context='possitive' styles={styles} full onClick={() => this.createWindow()}>{text || 'NUEVO'}</GuardedButton>
+            <GuardedButton disabled={disabled} context='possitive' styles={styles} full={full} onClick={() => this.createWindow()}>{text || 'NUEVO'}</GuardedButton>
         )
     }
 }

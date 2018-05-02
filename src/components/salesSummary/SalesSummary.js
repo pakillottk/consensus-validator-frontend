@@ -1,11 +1,8 @@
 import React from 'react'
 
 import Table from '../ui/table/Table'
-import Segment from '../ui/segment/Segment'
 
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-
 import moment from 'moment'
 import Currency from 'react-currency-formatter'
 import ApplyComission from '../../entities/comissions/ApplyComission'
@@ -88,8 +85,8 @@ class SalesSummary extends React.Component {
         const data = {}
         
         sales.forEach( sale => {
-            const type = this.props.types.get( parseInt( sale.type_id ) )
-            const session = type ? this.props.sessions.get( parseInt( type.session_id ) ) : null
+            const type = this.props.types.get( parseInt( sale.type_id, 10 ) )
+            const session = type ? this.props.sessions.get( parseInt( type.session_id, 10 ) ) : null
             let comission = null 
             if( type && this.props.comissionByUser[ sale.user_id ] ) {
                 comission = this.props.comissionByUser[ sale.user_id ][ type.session_id ]
@@ -154,7 +151,6 @@ class SalesSummary extends React.Component {
 
 export default connect( 
     ( store, props ) => {    
-        const types = store.types.data
         const comissionsMap = store.comissions.data
         const comissionByUser = {}
         comissionsMap.forEach( comission => {

@@ -55,11 +55,15 @@ export default connect(
                 if( a.updated_at < b.updated_at ) { return 1; }
                 if( a.updated_at > b.updated_at ) { return -1; }
                 if( a.updated_at === b.updated_at ) { return 0; }
+                
+                return 0;
             })
             .sort((a, b) => {
                 if( a.type_id < b.type_id ) { return -1; }
                 if( a.type_id > b.type_id ) { return 1; }
                 if( a.type_id === b.type_id ) { return 0; }
+
+                return 0;
             })            
         }
     },

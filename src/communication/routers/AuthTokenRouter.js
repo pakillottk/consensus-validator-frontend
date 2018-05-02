@@ -65,7 +65,7 @@ class AuthTokenRouter {
 
     async logout() {
         const request  = new Request( {}, this.connection.headers.headers ); 
-        const response = await this.connection.post( this.authPaths.logout, request );
+        await this.connection.post( this.authPaths.logout, request );
         this.connection.removeHeader( 'Authorization' );
     }
 }

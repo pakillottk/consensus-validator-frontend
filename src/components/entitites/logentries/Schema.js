@@ -35,6 +35,9 @@ const schema = [
                     color = 'red';
                     break;
                 }
+                default: {
+                    return level
+                }
             }
 
             return (

@@ -10,10 +10,6 @@ import UserScanGroupForm from './UserScanGroupForm'
 import NewUserScanGroupButton from './NewUserScanGroupButton'
 
 class UserScanGroupsTable extends React.Component {
-    constructor( props ) {
-        super( props )
-    }
-
     componentWillMount() {
         const { sessionId } = this.props
         this.props.fetch( '?session=' + sessionId )

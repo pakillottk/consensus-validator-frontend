@@ -49,7 +49,6 @@ class Drawer extends React.Component {
     }
 
     getBorder( theme, width, right ) {
-        let borderStyles;
         if( right ) {
             return { 
                 borderLeftWidth: width, 

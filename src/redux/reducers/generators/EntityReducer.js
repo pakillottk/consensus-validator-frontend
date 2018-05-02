@@ -51,7 +51,7 @@ export const onUpdate = ( preprocessor, postprocessor ) => ( state, action ) => 
 }
 
 export const onDelete = ( state, action ) => {
-    let data = state.data.delete( parseInt(action.meta.deleted_id) );
+    let data = state.data.delete( parseInt(action.meta.deleted_id, 10) );
     return {...state, data };
 }
 
@@ -63,12 +63,12 @@ const builder = ( entity, validActions, preprocessor, postprocessor ) => {
     preprocessor = preprocessor || ( ( item ) => { return item; } );
     const prefix = entity.toUpperCase();
     let validTypes = {};
-    validTypes[ prefix + '_' + 'FETCH_FULFILLED' ]          = onFetch( preprocessor, postprocessor );
-    validTypes[ prefix + '_' + 'SINGLE_FETCH_FULFILLED' ]   = onSingleFetch( preprocessor, postprocessor )
-    validTypes[ prefix + '_' + 'CREATE_FULFILLED' ]         = onCreation( preprocessor, postprocessor );
-    validTypes[ prefix + '_' + 'UPDATE_FULFILLED' ]         = onUpdate( preprocessor, postprocessor );
-    validTypes[ prefix + '_' + 'DELETE_FULFILLED' ]         = onDelete;
-    validTypes[ 'LOGOUT' ]                                  = flushData;
+    validTypes[ prefix + '_FETCH_FULFILLED' ]          = onFetch( preprocessor, postprocessor );
+    validTypes[ prefix + '_SINGLE_FETCH_FULFILLED' ]   = onSingleFetch( preprocessor, postprocessor )
+    validTypes[ prefix + '_CREATE_FULFILLED' ]         = onCreation( preprocessor, postprocessor );
+    validTypes[ prefix + '_UPDATE_FULFILLED' ]         = onUpdate( preprocessor, postprocessor );
+    validTypes[ prefix + '_DELETE_FULFILLED' ]         = onDelete;
+    validTypes[ 'LOGOUT' ]                             = flushData;
 
     validTypes = {...validTypes, ...validActions};
 

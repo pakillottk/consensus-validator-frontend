@@ -2,7 +2,6 @@ import React from 'react';
 
 import Segment from '../components/ui/segment/Segment'
 import Divider from '../components/ui/divider/Divider'
-import SessionsTable from '../components/entitites/sessions/SessionsTable'
 import SessionForm from '../components/entitites/sessions/SessionForm'
 
 import NewTypeButton from '../components/entitites/types/NewTypeButton'
@@ -34,7 +33,7 @@ class SessionAdminPage extends React.Component {
 
     render() {
         const { session } = this.props
-        const sessionId = parseInt( this.props.match.params.id );
+        const sessionId = parseInt( this.props.match.params.id, 10 );
         if( !session ) {
             return(
                 <div>
@@ -127,7 +126,7 @@ class SessionAdminPage extends React.Component {
 export default connect(
     ( store, props ) => { 
         return {
-            session: store.sessions.data.get( parseInt( props.match.params.id ) )
+            session: store.sessions.data.get( parseInt( props.match.params.id, 10 ) )
         }; 
     },
     ( dispatch ) => {

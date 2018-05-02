@@ -3,7 +3,9 @@ export default ( state = { data: [] }, action ) => {
         case 'CSV_LOADED':{
             return {...state, data: action.payload.data }
         }
-    }
 
-    return state;
+        default: {
+            return state
+        }
+    }
 }

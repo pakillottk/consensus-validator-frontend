@@ -1,11 +1,9 @@
 import React from 'react';
 
-import { Admin, Supervisor, Seller } from '../components/auth/authLevels'
+import { Supervisor, Seller } from '../components/auth/authLevels'
 import Button from '../components/ui/button/Button'
 import Divider from '../components/ui/divider/Divider'
 import Segment from '../components/ui/segment/Segment'
-import SessionForm from '../components/entitites/sessions/SessionForm'
-
 import { crud } from '../redux/actions/sessions'
 
 import { bindActionCreators } from 'redux'
@@ -14,7 +12,6 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/es'
 
-const AdminButton = Admin( Button, true )
 const SupervisorButton = Supervisor( Button, true )
 const SellerButton = Seller( Button, true )
 
@@ -61,7 +58,7 @@ class SessionPage extends React.Component {
 export default connect(
     ( store, props ) => {
         return {
-            session: store.sessions.data.get( parseInt( props.match.params.id ) )
+            session: store.sessions.data.get( parseInt( props.match.params.id, 10 ) )
         }
     },
     ( dispatch ) => {

@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Button from '../components/ui/button/Button'
 import Divider from '../components/ui/divider/Divider'
 import Segment from '../components/ui/segment/Segment'
 
@@ -59,7 +58,7 @@ class MonitorPage extends React.Component {
 
     render() {
         const { session } = this.props
-        const sessionId = parseInt( this.props.match.params.id )
+        const sessionId = parseInt( this.props.match.params.id, 10 )
 
         if( !session ) {
             return(
@@ -105,7 +104,7 @@ class MonitorPage extends React.Component {
 export default connect(
     ( store, props ) => {
         return {
-            session: store.sessions.data.get( parseInt( props.match.params.id ) )
+            session: store.sessions.data.get( parseInt( props.match.params.id, 10 ) )
         }
     },
     ( dispatch ) => {

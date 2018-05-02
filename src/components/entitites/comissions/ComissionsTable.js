@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Segment from '../../ui/segment/Segment'
 import { crud } from '../../../redux/actions/comissions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -8,7 +7,6 @@ import { connect } from 'react-redux'
 import schema from './Schema'
 import EntityTable from '../EntityTable'
 import ComissionsForm from './ComissionsForm'
-import Currency from 'react-currency-formatter'
 
 class PaymentsTable extends React.Component {
     componentWillMount() {

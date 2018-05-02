@@ -71,7 +71,7 @@ export default connect( store => {
     
     let sales = []
     salesMap.forEach( sale => {
-        const type = store.types.data.get( parseInt( sale.type_id ) )
+        const type = store.types.data.get( parseInt( sale.type_id, 10 ) )
         if( !type ) {
             return
         }

@@ -43,7 +43,7 @@ class Tabs extends React.Component {
     }
 
     render() {
-        const { theme, tabs, defaultTab } = this.props
+        const { theme, tabs } = this.props
         const styles = this.applyThemeStyles( theme )
         return(
             <div>

@@ -21,7 +21,7 @@ class TypesTable extends React.Component {
         let totalAmmount = 0
         items.forEach( type => {
             totalPrice += parseFloat( type.price )
-            totalAmmount += parseInt( type.ammount )
+            totalAmmount += parseInt( type.ammount, 10 )
         })
 
         return {

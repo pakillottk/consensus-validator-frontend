@@ -3,7 +3,7 @@ import Select from '../../../ui/form/Select/Select'
 
 export default class PayFormSelector extends React.Component {
     render() {
-        const { name,  disabled, roles, onChange, value } = this.props;
+        const { name,  disabled, onChange, value } = this.props;
 
         return(
            <Select

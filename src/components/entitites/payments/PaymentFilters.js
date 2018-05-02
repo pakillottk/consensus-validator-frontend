@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Button from '../../ui/button/Button'
 import { crud } from '../../../redux/actions/payments'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'

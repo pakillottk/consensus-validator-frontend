@@ -1,6 +1,5 @@
 import React from 'react'
 
-import Button from '../../ui/button/Button'
 import { crud } from '../../../redux/actions/logentries'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -24,7 +23,6 @@ const filterFormSchema = [
     {
         name: 'to_date',
         label: 'HASTA',
-        type: 'input',
         defaulValue: new Date(),
         type:'custom',
         component: DatePicker,

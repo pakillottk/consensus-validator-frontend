@@ -71,9 +71,9 @@ class TicketOfficeController extends React.Component {
         if( event.target.name === 'ammount' ) {
             const { deliverByType, salesByType } = this.props
             const typeId = this.state.values.type_id
-            const futureTotal = parseInt((salesByType[ typeId ] || 0 )) + parseInt(event.target.value)
+            const futureTotal = parseInt((salesByType[ typeId ] || 0 ), 10) + parseInt(event.target.value, 10)
             const left = deliverByType[ typeId ] - futureTotal
-            if( parseInt(event.target.value) < 1 ||  left < 0 ) {
+            if( parseInt(event.target.value, 10) < 1 ||  left < 0 ) {
                 return
             }
         }
@@ -103,7 +103,7 @@ class TicketOfficeController extends React.Component {
             const data = {...values}
             delete data.ammount
             for( let i = 0; i < values.ammount; i++ ) {
-                this.props.createSale( data, '?session='+sessionId, {current: (i+1), total: parseInt(values.ammount)} )
+                this.props.createSale( data, '?session='+sessionId, {current: (i+1), total: parseInt(values.ammount, 10)} )
             }
             this.setState({ errors: {}, values: {...this.inititalValues, type_id: this.state.values.type_id} })
         }
@@ -119,7 +119,7 @@ class TicketOfficeController extends React.Component {
         let totalDelivered = 0
         let totalLeft = 0
         Object.keys( deliverByType ).forEach( typeId => {
-            const type = types.get( parseInt(typeId) )
+            const type = types.get( parseInt(typeId, 10) )
             if( !type ) {
                 return
             }
@@ -178,7 +178,7 @@ class TicketOfficeController extends React.Component {
         const { types, comissionByUser, me } = this.props
         const { values } = this.state
 
-        const type = types.get( parseInt(values.type_id) )
+        const type = types.get( parseInt(values.type_id, 10) )
         if( !type ) {
             return;
         }
@@ -186,7 +186,7 @@ class TicketOfficeController extends React.Component {
         return(
             <div style={{textAlign:'center'}}>
                 <h3> {values.ammount} ENTRADAS DE {type.type} </h3>
-                <h2> A PAGAR: <Currency currency='EUR' quantity={ApplyComission( type, comissionByUser[ me.id ] ) * parseInt(values.ammount)} /> </h2>
+                <h2> A PAGAR: <Currency currency='EUR' quantity={ApplyComission( type, comissionByUser[ me.id ] ) * parseInt(values.ammount, 10)} /> </h2>
                 <p style={{color:'red'}}>
                     Una vez confirmada la venta, no se podrá anular ni eliminar. Asegúrese de 
                     recaudar el dinero antes de imprimir.
@@ -256,7 +256,7 @@ class TicketOfficeController extends React.Component {
                                 <Label>CANTIDAD</Label>
                                 <Input styles={{textAlign:'right'}} type="number" name="ammount" value={this.state.values.ammount} onChange={this.handleFieldChange}/>
 
-                                <Button disabled={ ( parseInt(salesByType[ typeId ] || 0) + parseInt(values.ammount) > parseInt(deliverByType[ typeId ]) ) || typeId <= 0 } context="possitive" type="submit">VENDER</Button>
+                                <Button disabled={ ( parseInt((salesByType[ typeId ] || 0), 10) + parseInt(values.ammount, 10) > parseInt(deliverByType[ typeId ], 10) ) || typeId <= 0 } context="possitive" type="submit">VENDER</Button>
                             </Form>
                             <ConfirmModal
                                 open={this.state.openConfirmSale}
@@ -317,7 +317,7 @@ export default connect(
         const revenueByType = {}
         let totalComission = 0
         store.sales.data.forEach( sale => {
-            const type = types.get( parseInt(sale.type_id) )
+            const type = types.get( parseInt(sale.type_id, 10) )
             const comission = type ? comissionByUser[ sale.user_id ][ type.session_id ] : null
             const realPrice = ApplyComission( type, comission )
             const currentComission = CalculateSellerComission( type, comission )

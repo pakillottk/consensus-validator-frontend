@@ -1,4 +1,4 @@
-import { Super, Admin, Supervisor, Seller, Any } from '../auth/authLevels'
+import { Super, Admin, Seller, Any } from '../auth/authLevels'
 const paths = [
     { path: '/companias', label: 'COMPAÑÍAS', Auth: Super },
     { path: '/usuarios', label: 'USUARIOS', Auth: Admin },

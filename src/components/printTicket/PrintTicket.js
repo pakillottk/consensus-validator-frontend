@@ -17,7 +17,7 @@ class PrintTicket extends React.Component {
     if( this.props.print ) {
       const barcodes = document.getElementsByClassName("barcode");
       for( let i = 0; i < barcodes.length; i++ ) {
-        const code = this.props.tickets.get( parseInt( barcodes[ i ].id ) ).code.code;        
+        const code = this.props.tickets.get( parseInt( barcodes[ i ].id, 10 ) ).code.code;        
         barcodes[ i ].setAttribute( "jsbarcode-format", "CODE128" );
         barcodes[ i ].setAttribute( "jsbarcode-value", code );
       }
@@ -26,7 +26,7 @@ class PrintTicket extends React.Component {
 
       const qrcodes = document.getElementsByClassName("qrcode");
       for( let i = 0; i < qrcodes.length; i++ ) {
-        const _code = this.props.tickets.get( parseInt( qrcodes[ i ].id ) ).code.code;
+        const _code = this.props.tickets.get( parseInt( qrcodes[ i ].id, 10 ) ).code.code;
         const qr = qrgenerator( 4, 'L' );
         qr.addData(_code);
         qr.make();
@@ -81,7 +81,7 @@ class PrintTicket extends React.Component {
           <div className="page-column ticket-logo">
             <p className="ticket-compname">{company.name}</p>
             <div style={{display:'flex', justifyContent:'center'}}>
-              <img style={{width: '25mm', height:'20mm'}} src={API.getFullPath(company.logo_url)} />
+              <img alt="" style={{width: '25mm', height:'20mm'}} src={API.getFullPath(company.logo_url)} />
             </div> 
             <p className="ticket-cif">NIF: {company.nif}</p>
           </div>
@@ -183,7 +183,7 @@ class PrintTicket extends React.Component {
             { tickets }
           </div>
         </div>
-        <iframe style={{opacity:0, position:'absolute'}} className="ticket-preview" ref={(iframe) => this.iframe = iframe} />
+        <iframe title="ticket-iframe-wrapper" style={{opacity:0, position:'absolute'}} className="ticket-preview" ref={(iframe) => this.iframe = iframe} />
       </div>
     );
   }
