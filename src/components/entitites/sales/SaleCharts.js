@@ -9,7 +9,7 @@ class SaleCharts extends React.Component {
         const { sales } = this.props
 
         return(
-            <div style={{height:'200px'}}>
+            <div style={{height:'400px'}}>
                 <Bar
                     data={sales}
                     options={{

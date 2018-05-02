@@ -68,7 +68,6 @@ class SummaryPage extends React.Component {
                     <SalesFilters onQuerySent={this.handleFilters.bind(this)} showSessionSelector />
                     <SalesSummary />
                     <SaleCharts />
-                    <SalesTable hideActions={true} /> 
                 </Segment>
             </div>
         )
