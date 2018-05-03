@@ -183,10 +183,14 @@ class TicketOfficeController extends React.Component {
             return;
         }
 
+        let realPrice = type.price
+        if( comissionByUser[ me.id ] ) {
+            realPrice = ApplyComission( type, comissionByUser[ me.id ][ type.session_id ] )
+        }
         return(
             <div style={{textAlign:'center'}}>
                 <h3> {values.ammount} ENTRADAS DE {type.type} </h3>
-                <h2> A PAGAR: <Currency currency='EUR' quantity={ApplyComission( type, comissionByUser[ me.id ] ) * parseInt(values.ammount, 10)} /> </h2>
+                <h2> A PAGAR: <Currency currency='EUR' quantity={realPrice * parseInt(values.ammount, 10)} /> </h2>
                 <p style={{color:'red'}}>
                     Una vez confirmada la venta, no se podrá anular ni eliminar. Asegúrese de 
                     recaudar el dinero antes de imprimir.

@@ -63,9 +63,17 @@ const tableFields = [
         }
     },
     {
-        name: 'proffit',
-        label: 'NETO',
+        name: 'payment',
+        label: 'A COBRAR',
         type:'input',
+        displayFormat: ( paym ) => {
+            return <Currency currency='EUR' quantity={paym} />
+        }
+    },
+    {
+        name:'proffit',
+        label: 'NETO',
+        type: 'input',
         displayFormat: ( proffit ) => {
             return <Currency currency='EUR' quantity={proffit} />
         }
@@ -91,6 +99,7 @@ class SalesSummary extends React.Component {
             revenue: 0,
             comission: 0,
             distributionCost: 0,
+            payment: 0,
             proffit: 0,
             toPay: 0
         }
@@ -114,7 +123,8 @@ class SalesSummary extends React.Component {
                     revenue: realPrice,
                     comission: sellerComission,
                     distributionCost: distCost, 
-                    proffit: ( realPrice - sellerComission ),
+                    payment: ( realPrice - sellerComission ),
+                    proffit: ( realPrice - sellerComission - distCost ),
                     paid: '-',
                     toPay: '-'
                 }
@@ -123,7 +133,8 @@ class SalesSummary extends React.Component {
                 data[ sale.type_id ].revenue += realPrice
                 data[ sale.type_id ].comission += sellerComission
                 data[ sale.type_id ].distributionCost += distCost
-                data[ sale.type_id ].proffit += ( realPrice - sellerComission )
+                data[ sale.type_id ].payment += ( realPrice - sellerComission )
+                data[ sale.type_id ].proffit += ( realPrice - sellerComission - distCost )
             }
         })
 
@@ -134,16 +145,18 @@ class SalesSummary extends React.Component {
             totals.revenue += summaryData.revenue
             totals.comission += summaryData.comission
             totals.distributionCost += summaryData.distributionCost
+            totals.proffit += summaryData.proffit
 
             output.push( summaryData )
         })
 
         totals.toPay            = <Currency quantity={( totals.revenue - totals.comission - this.props.totalPaid )} currency='EUR' />
-        totals.proffit          = <Currency quantity={( totals.revenue - totals.comission )} currency='EUR' />
+        totals.payment          = <Currency quantity={( totals.revenue - totals.comission )} currency='EUR' />
+        totals.comission        = <Currency quantity={totals.comission} currency='EUR' />
         totals.revenue          = <Currency quantity={totals.revenue} currency='EUR' />
         totals.distributionCost = <Currency quantity={totals.distributionCost} currency='EUR' />
         totals.paid             = <Currency quantity={this.props.totalPaid} currency='EUR' />
-        totals.comission        = <Currency quantity={totals.comission} currency='EUR' />
+        totals.proffit          = <Currency quantity={totals.proffit} currency='EUR' />
 
         return { summary: output, totals: totals }
     }
