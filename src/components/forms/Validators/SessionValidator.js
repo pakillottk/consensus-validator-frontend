@@ -20,5 +20,11 @@ export default new Validator({
     ],
     ticketoffice_closed_at: [
         new Required( true )
+    ],
+    logos_img: [
+        new Required( true )
+    ],
+    header_img: [
+        new Required( true )
     ]
 });

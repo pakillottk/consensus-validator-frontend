@@ -77,7 +77,7 @@ const schema = [
             }
             return(
                 <div style={{display:'flex', justifyContent:'center'}}>
-                    <Img src={API.getFullPath(logoPath)} size={'tiny'} />
+                    <Img src={API.getFullPath(logoPath)} size={'small'} />
                 </div>
             )
         },
@@ -88,7 +88,7 @@ const schema = [
             
             return(
                 <div style={{display:'flex', justifyContent:'center'}}>
-                    <Img src={API.getFullPath(logoPath)} size={'tiny'} />
+                    <Img src={API.getFullPath(logoPath)} size={'small'} />
                 </div>
             )
         }
@@ -104,7 +104,7 @@ const schema = [
             }
             return(
                 <div style={{display:'flex', justifyContent:'center'}}>
-                    <Img src={API.getFullPath(headerPath)} size={'tiny'} />
+                    <Img src={API.getFullPath(headerPath)} size={'small'} />
                 </div>
             )
         },
@@ -115,7 +115,7 @@ const schema = [
             
             return(
                 <div style={{display:'flex', justifyContent:'center'}}>
-                    <Img src={API.getFullPath(headerPath)} size={'tiny'} />
+                    <Img src={API.getFullPath(headerPath)} size={'small'} />
                 </div>
             )
         }
