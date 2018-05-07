@@ -93,13 +93,13 @@ class PrintTicket extends React.Component {
         </div>
 
         <div className="bordered centered" style={{border:'2px solid black', textAlign: 'center', position:'relative', zIndex: 10, width: '200mm' }}>
-          <div className="bordered session-title" style={{position: 'relative', zIndex: 10, borderBottom: '2px solid black', fontWeight: 'bold', fontSize:'46px', height:'20mm'}}>
+          <div className="bordered session-title" style={{position: 'relative', zIndex: 10, borderBottom: '2px solid black', fontWeight: 'bold', fontSize:'14pt', height:'6mm'}}>
             <div className="session-title-darkener"></div>
             <div className="session-title-text">{session.name}</div>
           </div>
-          <div className="page-row" style={{position: 'relative', zIndex: 10, height:'65mm', display: 'flex', justifyContent: 'space-evenly', alignItems: 'stretch', fontSize: '20px'}}>
-            <div className="page-column">
-              <h2>{ session.recint } </h2>
+          <div className="page-row" style={{position: 'relative', zIndex: 10, height:'85mm', display: 'flex', justifyContent: 'space-evenly', alignItems: 'stretch', fontSize: '20px'}}>
+            <div className="page-column" style={{paddingLeft: '0.5mm', width:'40mm', textAlign:'left'}}>
+              <h2 style={{fontSize:'18pt'}}>{ session.recint } </h2>
               <h3>{ session.location }</h3>
               <p className="ticket-date">
                 { moment(session.date).format( 'DD MMMM YYYY' ) }
@@ -108,28 +108,31 @@ class PrintTicket extends React.Component {
                 { moment(session.date).format( 'HH:mm' ) } H.
               </p>
             </div>
-            <div className="page-column">
-              <h2>{ type.type } </h2>
+            <div style={{width:'66.67mm'}}></div> 
+            <div className="page-column" style={{textAlign:'right', width:'80mm'}}>
+              <div style={{width:'100%', display:'flex', justifyContent:'flex-end'}}>
+                <h2 style={{width:'40mm', paddingRight: '1mm'}}>{ type.type } </h2>
+              </div>
               <div id={ ticketData.id } className="qrcode">
               </div>
               <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '42px', margin: 0}}> {price} </p>
-              <p className="ticket-price-info" style={{margin: 0}}>(Incluidos: Impuestos + Gastos de distribución)</p>
+              <p className="ticket-price-info" style={{margin: 0}}>(Incl.: IMP + G.D.)</p>
             </div>
           </div>
           
           {/* LOGOS */}
-          <div style={{borderTop: '2px solid black', height:'20mm', width:'100%'}}>
-            <img alt='' style={{width:'100%', height:'100%'}} src={API.getFullPath(session.logos_img)} />
+          <div style={{borderTop: '2px solid black', height:'22mm', width:'100%'}}>
+            <img alt='' style={{width:'100%', height:'20mm', position: 'relative', top: '1mm'}} src={API.getFullPath(session.logos_img)} />
           </div>
 
           {/* BG IMG */}
-          <div style={{position:'absolute', top: 0, left: 0, opacity: 0.25, zIndex: 9, width:'100%', height:'85mm'}}>
+          <div style={{position:'absolute', top: '6.5mm', left: 0, opacity: 0.75, zIndex: 9, width:'100%', height:'85mm'}}>
             <img alt='' style={{width:'100%', height:'100%'}} src={API.getFullPath(session.header_img)}/>
           </div>
         </div>
 
           <div>
-        <div className="ticket-conditions page-row" style={{fontSize:'10pt'}}>
+        <div className="ticket-conditions page-row" style={{fontSize:'9pt'}}>
             <h5 className="centered"> LA ADQUISICIÓN DE ESTA ENTRADA REPRESENTA LA ACEPTACIÓN DE LAS SIGUIENTES CONDICIONES: </h5>
             <p>- La organización no garantiza la autenticidad de las entradas adquiridas fuera de los puntos de venta oficiales. </p>
             <p>
