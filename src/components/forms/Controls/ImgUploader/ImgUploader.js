@@ -5,7 +5,9 @@ export default class ImgUploader extends React.Component {
         const { name, onChange } = this.props
 
         return(
-            <input type="file" name={name} onChange={onChange} accept='image/*' />
+            <div style={{textAlign:'center'}}>
+                <input type="file" name={name} onChange={onChange} accept='image/*' />
+            </div>
         )
     }
 }

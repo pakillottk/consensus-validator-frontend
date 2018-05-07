@@ -74,7 +74,7 @@ class PrintTicket extends React.Component {
           width: '210mm',
           height: '297mm',
           pageBreakAfter: 'always',
-          overflow: 'hidden'
+          overflow: 'show'
         }}
       >
         <div className="page-row" style={{display: 'flex', justifyContent: 'space-between', textAlign: 'center', alignItems:'stretch'}}>
@@ -92,12 +92,12 @@ class PrintTicket extends React.Component {
           </div>
         </div>
 
-        <div className="bordered centered" style={{border:'2px solid black', textAlign: 'center'}}>
-          <div className="bordered session-title" style={{borderBottom: '2px solid black', fontWeight: 'bold', fontSize:'46px'}}>
+        <div className="bordered centered" style={{border:'2px solid black', textAlign: 'center', position:'relative', zIndex: 10, width: '200mm' }}>
+          <div className="bordered session-title" style={{position: 'relative', zIndex: 10, borderBottom: '2px solid black', fontWeight: 'bold', fontSize:'46px', height:'20mm'}}>
             <div className="session-title-darkener"></div>
             <div className="session-title-text">{session.name}</div>
           </div>
-          <div className="page-row" style={{borderBottom: '2px solid black', display: 'flex', justifyContent: 'space-evenly', alignItems: 'stretch', fontSize: '20px'}}>
+          <div className="page-row" style={{position: 'relative', zIndex: 10, height:'65mm', display: 'flex', justifyContent: 'space-evenly', alignItems: 'stretch', fontSize: '20px'}}>
             <div className="page-column">
               <h2>{ session.recint } </h2>
               <h3>{ session.location }</h3>
@@ -112,14 +112,24 @@ class PrintTicket extends React.Component {
               <h2>{ type.type } </h2>
               <div id={ ticketData.id } className="qrcode">
               </div>
+              <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '42px', margin: 0}}> {price} </p>
+              <p className="ticket-price-info" style={{margin: 0}}>(Incluidos: Impuestos + Gastos de distribución)</p>
             </div>
           </div>
-          <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '42px', margin: 0}}> {price} </p>
-          <p className="ticket-price-info" style={{margin: 0}}>(Imp. incluidos + Gastos de distribución)</p>
+          
+          {/* LOGOS */}
+          <div style={{borderTop: '2px solid black', height:'20mm', width:'100%'}}>
+            <img alt='' style={{width:'100%', height:'100%'}} src={API.getFullPath(session.logos_img)} />
+          </div>
+
+          {/* BG IMG */}
+          <div style={{position:'absolute', top: 0, left: 0, opacity: 0.25, zIndex: 9, width:'100%', height:'85mm'}}>
+            <img alt='' style={{width:'100%', height:'100%'}} src={API.getFullPath(session.header_img)}/>
+          </div>
         </div>
 
-        <div className="ticket-conditions page-row">
           <div>
+        <div className="ticket-conditions page-row" style={{fontSize:'10pt'}}>
             <h5 className="centered"> LA ADQUISICIÓN DE ESTA ENTRADA REPRESENTA LA ACEPTACIÓN DE LAS SIGUIENTES CONDICIONES: </h5>
             <p>- La organización no garantiza la autenticidad de las entradas adquiridas fuera de los puntos de venta oficiales. </p>
             <p>
@@ -197,12 +207,13 @@ PrintTicket = connect(
         comissionsByUser[ comission.user_id ] = comission
     })
 
+    const session = store.sessions.data.get( props.sessionId )
     return {
       me: store.auth.me,
-      session: store.sessions.data.get( props.sessionId ),
+      session,
       types: store.types.data,
       comissionsByUser,
-      company: store.auth.me.company,
+      company: session ? session.company : null,
       tickets: store.sales.toPrint,
       print: store.sales.printRequest
     };

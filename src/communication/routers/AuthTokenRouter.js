@@ -49,20 +49,20 @@ class AuthTokenRouter {
         return await this.connection.get( env.auth.mePath );
     }
 
-    /*
-    async refresh() {
-        const refreshToken = ''; //TODO: get the token from where is stored
-        const response = await this.connection.post( this.authPaths.refresh, { refresh_token: refreshToken } );
+/*
+    async refresh( tokens ) {
+        const data = {...this.getClientParams(), refreshToken: tokens.refreshToken}; 
+        const request = new Request( this.ObjectToURLEnconded(data), this.connection.headers.headers )
+        const response = await this.connection.post( this.authPaths.refresh, request );
         console.log( response );
 
-        //TODO: Update the tokens and the store
+        //TODO: Update the tokens and the store        
         const accessToken  = response.data.data.access_token;
         const refreshToken = response.data.data.refresh_token;
 
         this.connection.updateHeaders( 'Authorization', 'Bearer ' + accessToken );
     }
-    */
-
+*/
     async logout() {
         const request  = new Request( {}, this.connection.headers.headers ); 
         await this.connection.post( this.authPaths.logout, request );

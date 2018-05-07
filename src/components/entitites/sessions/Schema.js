@@ -1,6 +1,11 @@
-import moment from 'moment'
+import React from 'react'
+import Img from '../../ui/img/Img'
 import CompanySelector from '../../forms/Controls/CompanySelector/CompanySelector'
 import DatePicker from '../../forms/Controls/DatePicker/DatePicker' 
+import ImgUploader from '../../forms/Controls/ImgUploader/ImgUploader'
+
+import API from '../../../API/API'
+import moment from 'moment'
 
 const schema = [
     {
@@ -60,6 +65,60 @@ const schema = [
         defaultValue: 0,
         type:'custom',
         component: CompanySelector
+    },
+    {
+        name: 'logos_img',
+        label: 'LOGOS',
+        type: 'file',
+        component: ImgUploader,
+        displayFormat: ( logoPath ) => {
+            if( !logoPath ) {
+                return logoPath
+            }
+            return(
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Img src={API.getFullPath(logoPath)} size={'tiny'} />
+                </div>
+            )
+        },
+        filePreview: ( logoPath ) => {
+            if( !logoPath ) {
+                return null
+            }
+            
+            return(
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Img src={API.getFullPath(logoPath)} size={'tiny'} />
+                </div>
+            )
+        }
+    },
+    {
+        name: 'header_img',
+        label: 'CABECERA',
+        type: 'file',
+        component: ImgUploader,
+        displayFormat: ( headerPath ) => {
+            if( !headerPath ) {
+                return headerPath
+            }
+            return(
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Img src={API.getFullPath(headerPath)} size={'tiny'} />
+                </div>
+            )
+        },
+        filePreview: ( headerPath ) => {
+            if( !headerPath ) {
+                return null
+            }
+            
+            return(
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Img src={API.getFullPath(headerPath)} size={'tiny'} />
+                </div>
+            )
+        }
     }
 ]
 export default schema

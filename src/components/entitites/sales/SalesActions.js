@@ -38,8 +38,6 @@ class SalesActions extends React.Component {
             toPrint.push( sales[ saleId ] )
         })
         print( toPrint )
-
-        this.deselectSales()
     }
 
     deleteSales() {
@@ -49,6 +47,7 @@ class SalesActions extends React.Component {
         })
 
         this.switchConfirmDialog( false )
+        this.deselectSales()
     }
 
     render() {   
