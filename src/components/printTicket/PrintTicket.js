@@ -11,6 +11,7 @@ import qrgenerator from 'qrcode-generator';
 import moment from 'moment'
 import Currency from 'react-currency-formatter';
 import ApplyComission from '../../entities/comissions/ApplyComission';
+import GetDistributionCost from '../../entities/comissions/GetDistributionCost';
 
 class PrintTicket extends React.Component {
   componentDidUpdate() {
@@ -65,6 +66,8 @@ class PrintTicket extends React.Component {
   renderTicket( ticketData ) {
     const { types, company, session, comissionsByUser, me } = this.props
     const type = types.get( ticketData.type_id )
+    const basePrice = <Currency currency="EUR" quantity={type.price} />
+    const gd = <Currency currency="EUR" quantity={GetDistributionCost( type, comissionsByUser[ me.id ] )} />
     const price = <Currency currency='EUR' quantity={ApplyComission( type, comissionsByUser[ me.id ] )} />
     return (
       <div 
@@ -115,8 +118,16 @@ class PrintTicket extends React.Component {
               </div>
               <div id={ ticketData.id } className="qrcode">
               </div>
+              <p className="ticket-price" style={{fontSize: '10pt', margin: 0}}> 
+                Precio base: {basePrice} 
+              </p>
+              <p className="ticket-price" style={{fontSize: '10pt', margin: 0}}> 
+                + Gastos: {gd} 
+              </p>
+              <p className="ticket-price" style={{fontSize: '12pt', margin: 0}}> 
+                PRECIO VENTA 
+              </p>
               <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '42px', margin: 0}}> {price} </p>
-              <p className="ticket-price-info" style={{margin: 0}}>(Incl.: IMP + G.D.)</p>
             </div>
           </div>
           
