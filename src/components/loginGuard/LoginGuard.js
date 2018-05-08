@@ -8,32 +8,45 @@ import CryptoService from '../../communication/crypto/CryptoService';
 import AuthAPI from '../../API/APIAuthRouter';
 
 class LoginGuard extends React.Component {
-    async attemptToLogin( tokens ) {
+    async attemptToLogin( storeTokens ) {
         //LOGGED, DO NOTHING
-        if( tokens !== null ) {
+        if( storeTokens !== null ) {
             return;
         }
 
         //Attempt to rearm auth data
         const cryptedTokens = window.localStorage.getItem( 'tokens' );
-        try { 
-            if( cryptedTokens ) {
-                const tokens = JSON.parse( 
-                    CryptoService.decrypt( cryptedTokens ) 
-                );
+        let tokens;
+        if( cryptedTokens ) {
+            //Decrypt the tokens
+            tokens = JSON.parse( 
+                CryptoService.decrypt( cryptedTokens ) 
+            );
+        } else {
+            //Can't login, go to Login page
+            this.props.history.replace( '/' );
+            return;
+        }
+
+        try {
+            //Attempt to use the stored access token
+            AuthAPI.setAuthHeaders( tokens );
+            const me = await AuthAPI.getMe();
+
+            this.props.loginSuccess( me.data, tokens );
+        } catch( error ) {
+            try {
+                //The token didn't work, attempt to refresh
+                tokens = await AuthAPI.refresh( tokens );
                 AuthAPI.setAuthHeaders( tokens );
                 const me = await AuthAPI.getMe();
-    
+
                 this.props.loginSuccess( me.data, tokens );
-            } else {
-                //Can't login, go to Login page
+            } catch( e ) {
+                //The refresh token failed, have to relog
                 this.props.history.replace( '/' );
             }
-        } catch( exception ) {
-            //Login failed, redirect
-            this.props.history.replace( '/' );
         }
-        
     }
 
     componentWillMount() {
