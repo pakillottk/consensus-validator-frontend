@@ -17,7 +17,7 @@ class DeliveriesTable extends React.Component {
     calculateTotals( items ) {
         let totalAmmount = 0
         items.forEach( delivery => {
-            totalAmmount += delivery.ammount
+            totalAmmount += parseInt(delivery.ammount, 10)
         })
 
         return {

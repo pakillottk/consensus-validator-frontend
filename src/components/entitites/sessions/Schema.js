@@ -9,19 +9,31 @@ import moment from 'moment'
 
 const schema = [
     {
-        name: 'name',
-        label: 'NOMBRE',
-        type:'input'
-    },
-    {
-        name: 'location',
-        label: 'LOCALIDAD',
-        type:'input'
-    },
-    {
-        name: 'recint',
-        label: 'RECINTO',
-        type:'input'
+        name: 'header_img',
+        label: 'CABECERA',
+        type: 'file',
+        component: ImgUploader,
+        displayFormat: ( headerPath ) => {
+            if( !headerPath ) {
+                return headerPath
+            }
+            return(
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Img src={API.getFullPath(headerPath)} size={'small'} />
+                </div>
+            )
+        },
+        filePreview: ( headerPath ) => {
+            if( !headerPath ) {
+                return null
+            }
+            
+            return(
+                <div style={{display:'flex', justifyContent:'center'}}>
+                    <Img src={API.getFullPath(headerPath)} size={'small'} />
+                </div>
+            )
+        }
     },
     {
         name: 'date',
@@ -35,6 +47,21 @@ const schema = [
             return moment( date )
         }
     },
+    {
+        name: 'name',
+        label: 'NOMBRE',
+        type:'input'
+    },
+    {
+        name: 'location',
+        label: 'LOCALIDAD',
+        type:'input'
+    },
+    {
+        name: 'recint',
+        label: 'RECINTO',
+        type:'input'
+    },    
     {
         name: 'sellers_locked_at',
         label: 'CERRAR PUNTOS DE VENTA',
@@ -92,33 +119,6 @@ const schema = [
                 </div>
             )
         }
-    },
-    {
-        name: 'header_img',
-        label: 'CABECERA',
-        type: 'file',
-        component: ImgUploader,
-        displayFormat: ( headerPath ) => {
-            if( !headerPath ) {
-                return headerPath
-            }
-            return(
-                <div style={{display:'flex', justifyContent:'center'}}>
-                    <Img src={API.getFullPath(headerPath)} size={'small'} />
-                </div>
-            )
-        },
-        filePreview: ( headerPath ) => {
-            if( !headerPath ) {
-                return null
-            }
-            
-            return(
-                <div style={{display:'flex', justifyContent:'center'}}>
-                    <Img src={API.getFullPath(headerPath)} size={'small'} />
-                </div>
-            )
-        }
-    }
+    }    
 ]
 export default schema

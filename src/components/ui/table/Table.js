@@ -175,7 +175,7 @@ class Table extends React.Component {
                     <table style={{...themeStyles.container}}>
                         <thead style={{...themeStyles.header}}>
                             <tr>
-                                { multiselect && <th className={!itemCount ? 'disabled': ''} style={{padding: '10px'}}> <Input type="checkbox" onClick={() => this.selectAll(items)}/></th> }
+                                { multiselect && <th className={!itemCount ? 'disabled': ''} style={{padding: '10px'}}> <Input type="checkbox" onClick={() => this.selectAll(items)}/> </th> }
                                 { this.renderFields( {...themeStyles.headerCell}, fields ) }
                             </tr>
                         </thead>

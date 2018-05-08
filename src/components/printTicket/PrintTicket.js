@@ -124,8 +124,11 @@ class PrintTicket extends React.Component {
               <p className="ticket-price" style={{fontSize: '10pt', margin: 0}}> 
                 + Gastos: {gd} 
               </p>
-              <p className="ticket-price" style={{fontSize: '12pt', margin: 0}}> 
-                PRECIO VENTA 
+              <p className="ticket-price" style={{fontSize: '12pt', margin: 0, marginTop: '2mm'}}> 
+                PRECIO TOTAL
+              </p>
+              <p className="ticket-price" style={{fontSize: '8pt', margin: 0}}> 
+                (Incluye IVA)
               </p>
               <p className="ticket-price" style={{fontWeight: 'bold', fontSize: '42px', margin: 0}}> {price} </p>
             </div>
