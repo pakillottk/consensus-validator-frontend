@@ -5,11 +5,23 @@ import Divider from '../components/ui/divider/Divider'
 import TicketOfficeController from '../components/ticketOfficeController/TicketOfficeController' 
 import { connect } from 'react-redux'
 import moment from 'moment'
+import API from '../API/API'
 
 class TicketOfficePage extends React.Component {
     render() {
         const sessionId = parseInt( this.props.match.params.id, 10 );
         const session = this.props.sessions.get( sessionId );
+
+        //Cache the session imgs for fast ticket printing
+        let header_cached
+        let logos_cached
+        if( session ) {
+          header_cached = new Image()
+          header_cached.src = API.getFullPath( API.getFullPath(session.header_img) )
+          logos_cached = new Image()
+          logos_cached.src = API.getFullPath( API.getFullPath(session.logos_img) )
+        }
+
         if( session ) {
             const meRole = this.props.meRole;
             const now = new Date();

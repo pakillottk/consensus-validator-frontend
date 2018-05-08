@@ -118,11 +118,11 @@ class PrintTicket extends React.Component {
               </div>
               <div id={ ticketData.id } className="qrcode">
               </div>
-              <p className="ticket-price" style={{fontSize: '10pt', margin: 0}}> 
-                Precio base: {basePrice} 
+              <p className="ticket-price" style={{fontSize: '8pt', margin: 0, marginTop: '1mm'}}> 
+                Precio entrada: {basePrice} 
               </p>
-              <p className="ticket-price" style={{fontSize: '10pt', margin: 0}}> 
-                + Gastos: {gd} 
+              <p className="ticket-price" style={{fontSize: '8pt', margin: 0}}> 
+                + Gastos distribución: {gd} 
               </p>
               <p className="ticket-price" style={{fontSize: '12pt', margin: 0, marginTop: '2mm'}}> 
                 PRECIO TOTAL
