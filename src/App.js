@@ -22,6 +22,8 @@ import TicketOfficePage from './pages/TicketOfficePage'
 import MonitorPage from './pages/MonitorPage'
 import SummaryPage from './pages/SummaryPage'
 
+import UISetup from './pages/UISetup'
+
 import { Any, Seller, Supervisor, Super, Admin } from './components/auth/authLevels'
 
 class App extends Component {
@@ -32,6 +34,7 @@ class App extends Component {
           <ConnectedRouter history={history}>
             <div>
                 <Layout Navigation={Navigation}>
+                  <Route exact path='/ui' component={UISetup} />
                   <Route path='/' component={LoginGuard} />
                   <Route exact path="/" component={LoginPage} />
                   <Route exact path="/sesiones" component={Any(SessionsPage)} />

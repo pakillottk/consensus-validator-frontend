@@ -8,10 +8,13 @@ import FormBuilder from '../components/forms/FormBuilder'
 import List from '../components/ui/list/List'
 import Table from '../components/ui/table/Table'
 
+import ThemeEditor from '../components/themeEditor/ThemeEditor'
+
 export default class UISetup extends React.Component {
     render() {
         return(
             <div>
+                <ThemeEditor />
                 <div>
                     <Segment secondary>
                         <h1>Buttons</h1>
@@ -155,9 +158,9 @@ export default class UISetup extends React.Component {
                     <Segment>
                         <Table 
                             fields={[
-                                {label: 'foo', key:'foo'},
-                                {label: 'bar', key:'bar'},
-                                {label: 'x', key:'x'}
+                                {label: 'foo', name:'foo'},
+                                {label: 'bar', name:'bar'},
+                                {label: 'x', name:'x'}
                             ]}
                             items={[
                                 {foo: 'bar', bar: 'foo', x: 'y'}
@@ -166,13 +169,50 @@ export default class UISetup extends React.Component {
                         <Table
                             secondary 
                             fields={[
-                                {label: 'foo', key:'foo'},
-                                {label: 'bar', key:'bar'},
-                                {label: 'x', key:'x'}
+                                {label: 'foo', name:'foo'},
+                                {label: 'bar', name:'bar'},
+                                {label: 'x', name:'x'}
                             ]}
                             items={[
                                 {foo: 'bar', bar: 'foo', x: 'y'}
                             ]}
+                        />
+                        <Table                             
+                            fields={[
+                                {label: 'foo', name:'foo'},
+                                {label: 'bar', name:'bar'},
+                                {label: 'x', name:'x'}
+                            ]}
+                            items={[
+                                {foo: 1, bar: 2, x: 3},
+                                {foo: 1, bar: 2, x: 3}
+                            ]}
+                            calculateTotals={( items ) => {
+                                return {
+                                    foo: 2,
+                                    bar: 4,
+                                    x: 3
+                                }
+                            }}
+                        />
+                        <Table     
+                            secondary                        
+                            fields={[
+                                {label: 'foo', name:'foo'},
+                                {label: 'bar', name:'bar'},
+                                {label: 'x', name:'x'}
+                            ]}
+                            items={[
+                                {foo: 1, bar: 2, x: 3},
+                                {foo: 1, bar: 2, x: 3}
+                            ]}
+                            calculateTotals={( items ) => {
+                                return {
+                                    foo: 2,
+                                    bar: 4,
+                                    x: 3
+                                }
+                            }}
                         />
                     </Segment>
                 </div>
