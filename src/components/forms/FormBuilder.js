@@ -149,9 +149,9 @@ class FormBuilder extends React.Component {
 
         if( vertical ) {
             const verticalOutput = []
-            for( let i = 0; i < output.length; i=i+10 ) {
+            for( let i = 0; i < output.length; i=i+8 ) {
                 const currentFields = []
-                for( let j = i; j < (i + 10); j++ ) {
+                for( let j = i; j < (i + 8); j++ ) {
                     currentFields.push( output[j] )
                 }
                 verticalOutput.push(

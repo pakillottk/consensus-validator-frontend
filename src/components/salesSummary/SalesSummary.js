@@ -34,9 +34,19 @@ const tableFields = [
         type:'input'
     },
     {
+        name: 'ammount',
+        label: 'AFORO',
+        type: 'input'
+    },    
+    {
         name: 'sold',
         label: 'VENDIDAS',
         type:'input'
+    },
+    {
+        name: 'toSell',
+        label: 'DISPONIBLE',
+        type: 'input'
     },
     {
         name: 'revenue',
@@ -95,6 +105,8 @@ class SalesSummary extends React.Component {
         const output = []
         const totals = {
             session: 'TOTAL',
+            ammount: 0,
+            toSell: 0,
             sold: 0,
             revenue: 0,
             comission: 0,
@@ -119,6 +131,8 @@ class SalesSummary extends React.Component {
                 data[ sale.type_id ] = {
                     session: session,
                     type: sale.code.type.type + ' ' + sale.code.type.price + '€',
+                    ammount: sale.code.type.ammount,
+                    toSell: parseInt(sale.code.type.ammount, 10) - 1,
                     sold: 1,
                     revenue: realPrice,
                     comission: sellerComission,
@@ -129,6 +143,7 @@ class SalesSummary extends React.Component {
                     toPay: '-'
                 }
             } else {
+                data[ sale.type_id ].toSell--
                 data[ sale.type_id ].sold++
                 data[ sale.type_id ].revenue += realPrice
                 data[ sale.type_id ].comission += sellerComission
@@ -146,6 +161,8 @@ class SalesSummary extends React.Component {
             totals.comission += summaryData.comission
             totals.distributionCost += summaryData.distributionCost
             totals.proffit += summaryData.proffit
+            totals.ammount += summaryData.ammount
+            totals.toSell += summaryData.toSell
 
             output.push( summaryData )
         })

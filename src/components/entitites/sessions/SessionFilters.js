@@ -46,7 +46,7 @@ class SessionFilters extends React.Component {
                 <SessionFilterComponent
                     title="BUSCAR SESIÓN"
                     fetchBaseQuery={''}
-                    hidden={{date: true, sellers_locked_at: true, ticketoffice_closed_at: true}}
+                    hidden={{header_img: true, logos_img: true, date: true, sellers_locked_at: true, ticketoffice_closed_at: true}}
                     selectors={{}}
                 />
             </div>

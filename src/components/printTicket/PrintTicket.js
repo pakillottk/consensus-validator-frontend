@@ -67,8 +67,8 @@ class PrintTicket extends React.Component {
     const { types, company, session, comissionsByUser, me } = this.props
     const type = types.get( ticketData.type_id )
     const basePrice = <Currency currency="EUR" quantity={type.price} />
-    const gd = <Currency currency="EUR" quantity={GetDistributionCost( type, comissionsByUser[ me.id ] )} />
-    const price = <Currency currency='EUR' quantity={ApplyComission( type, comissionsByUser[ me.id ] )} />
+    const gd = <Currency currency="EUR" quantity={GetDistributionCost( type, comissionsByUser[ ticketData.user_id ] )} />
+    const price = <Currency currency='EUR' quantity={ApplyComission( type, comissionsByUser[ ticketData.user_id ] )} />
     return (
       <div 
         key={ ticketData.id } 

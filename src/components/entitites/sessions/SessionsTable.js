@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 
 import schema from './Schema'
 import EntityTable from '../EntityTable'
+import moment from 'moment'
 
 class SessionsTable extends React.Component {
     componentWillMount() {
@@ -29,7 +30,14 @@ class SessionsTable extends React.Component {
 export default connect(
     ( store ) => {
         return {
-            sessions: store.sessions.data
+            sessions: store.sessions.data.sort( ( a, b ) =>  {
+                const aDate = moment( a.date );
+                const bDate = moment( b.date );
+                if( aDate.isBefore( bDate ) ) { return -1; }
+                if( aDate.isAfter( bDate ) ) { return 1; }
+        
+                return 0;
+            })
         }
     },
     ( dispatch ) => {
