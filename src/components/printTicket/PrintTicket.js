@@ -114,7 +114,7 @@ class PrintTicket extends React.Component {
             <div style={{width:'66.67mm'}}></div> 
             <div className="page-column" style={{textAlign:'right', width:'80mm'}}>
               <div style={{width:'100%', display:'flex', justifyContent:'flex-end'}}>
-                <h2 style={{width:'40mm', paddingRight: '1mm'}}>{ type.type } </h2>
+                <h2 style={{fontSize: '15pt', width:'40mm', paddingRight: '1mm'}}>{ type.type } </h2>
               </div>
               <div id={ ticketData.id } className="qrcode">
               </div>
