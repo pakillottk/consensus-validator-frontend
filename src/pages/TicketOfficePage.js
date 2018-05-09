@@ -17,9 +17,9 @@ class TicketOfficePage extends React.Component {
         let logos_cached
         if( session ) {
           header_cached = new Image()
-          header_cached.src = API.getFullPath( API.getFullPath(session.header_img) )
+          header_cached.src = API.getFullPath(session.header_img)
           logos_cached = new Image()
-          logos_cached.src = API.getFullPath( API.getFullPath(session.logos_img) )
+          logos_cached.src = API.getFullPath(session.logos_img)
         }
 
         if( session ) {
