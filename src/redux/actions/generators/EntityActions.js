@@ -46,6 +46,11 @@ const builder = ( Entity, connection, paths ) => {
                 payload: connection.delete( paths.delete + '/' + id, new Request( {}, connection.headers.headers ) ),
                 meta: {...meta, deleted_id: id }
             }
+        },
+        flush: () => {
+            return {
+                type: prefix + '_FLUSH'
+            }
         }
     }
 };

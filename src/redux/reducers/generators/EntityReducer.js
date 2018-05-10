@@ -68,6 +68,7 @@ const builder = ( entity, validActions, preprocessor, postprocessor ) => {
     validTypes[ prefix + '_CREATE_FULFILLED' ]         = onCreation( preprocessor, postprocessor );
     validTypes[ prefix + '_UPDATE_FULFILLED' ]         = onUpdate( preprocessor, postprocessor );
     validTypes[ prefix + '_DELETE_FULFILLED' ]         = onDelete;
+    validTypes[ prefix + '_FLUSH' ]                    = flushData;
     validTypes[ 'LOGOUT' ]                             = flushData;
 
     validTypes = {...validTypes, ...validActions};

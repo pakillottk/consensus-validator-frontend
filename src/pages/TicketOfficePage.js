@@ -6,6 +6,7 @@ import TicketOfficeController from '../components/ticketOfficeController/TicketO
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { storeCachedImg, flushCache } from '../redux/actions/imgcache'
+import { saleActions } from '../redux/actions/sales'
 
 import ImgToBase64 from '../utils/ImgToBase64'
 import API from '../API/API'
@@ -33,6 +34,7 @@ class TicketOfficePage extends React.Component {
     }
 
     componentWillUnmount() {
+        this.props.flushSales()
         this.props.flushCache()
     }
 
@@ -99,7 +101,8 @@ export default connect(
     ( dispatch ) => {
         return {
             storeCachedImg: bindActionCreators( storeCachedImg, dispatch ),
-            flushCache: bindActionCreators( flushCache, dispatch )
+            flushCache: bindActionCreators( flushCache, dispatch ),
+            flushSales: bindActionCreators( saleActions.flush, dispatch )
         }
     }
 )( TicketOfficePage )
