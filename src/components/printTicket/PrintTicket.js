@@ -84,7 +84,7 @@ class PrintTicket extends React.Component {
           <div className="page-column ticket-logo">
             <p className="ticket-compname">{company.name}</p>
             <div style={{display:'flex', justifyContent:'center'}}>
-              <img alt="" style={{width: '25mm', height:'20mm'}} src={API.getFullPath(company.logo_url)} />
+              <img alt="" style={{width: '25mm', height:'20mm'}} src={this.props.logo_img} />
             </div> 
             <p className="ticket-cif">NIF: {company.nif}</p>
           </div>
@@ -233,8 +233,9 @@ PrintTicket = connect(
       company: session ? session.company : null,
       tickets: store.sales.toPrint,
       print: store.sales.printRequest,
+      logo_img: store.imgcache.cache.get( 'company_logo' ),
       header_img: store.imgcache.cache.get( 'header_img' ),
-      logos_img: store.imgcache.cache.get( 'logos_img' ),
+      logos_img: store.imgcache.cache.get( 'logos_img' )
     };
   },
   ( dispatch ) => {

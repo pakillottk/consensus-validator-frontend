@@ -354,6 +354,7 @@ export default connect(
             totalPaid += payment.ammount
         })      
         
+        const companyCache = store.imgcache.cache.get( 'company_logo' )
         const headerCache = store.imgcache.cache.get( 'header_img' )
         const logosCache = store.imgcache.cache.get( 'logos_img' )
         return {
@@ -366,7 +367,7 @@ export default connect(
             revenueByType,
             comissionByUser,
             totalPaid,
-            imgsCached: headerCache && logosCache
+            imgsCached: headerCache && logosCache && companyCache
         }
     },
     ( dispatch ) => {

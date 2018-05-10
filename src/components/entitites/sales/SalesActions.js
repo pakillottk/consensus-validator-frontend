@@ -85,10 +85,11 @@ class SalesActions extends React.Component {
 }
 export default connect(
     ( store ) => {
+        const companyCache = store.imgcache.cache.get( 'company_logo' )
         const headerCache = store.imgcache.cache.get( 'header_img' )
         const logosCache = store.imgcache.cache.get( 'logos_img' )
         return {
-            imgsCached: headerCache && logosCache                        
+            imgsCached: headerCache && logosCache && companyCache                      
         } 
     }, 
     dispatch => {

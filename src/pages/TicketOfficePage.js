@@ -12,6 +12,14 @@ import API from '../API/API'
 import moment from 'moment'
 
 class TicketOfficePage extends React.Component {
+    //Stores in memory a base64 of the company logo
+    async cacheLogoImg( company ) {
+        if( company.logo_url ) {
+            const logoImg = await ImgToBase64( API.getFullPath( company.logo_url ) )
+            this.props.storeCachedImg( 'company_logo', logoImg )
+        }
+    }
+
     //Stores in memory a base64 represenation of the session imgs
     async cacheSessionImgs( session ) {
         if( session.header_img ) {
@@ -25,10 +33,14 @@ class TicketOfficePage extends React.Component {
     }
 
     render() {
+        const { meCompany } = this.props;
         const sessionId = parseInt( this.props.match.params.id, 10 );
         const session = this.props.sessions.get( sessionId );
         if( session ) {
             this.cacheSessionImgs( session );
+            if( meCompany ) {
+                this.cacheLogoImg( meCompany );
+            }
             const meRole = this.props.meRole;
             const now = new Date();
             const sellers_locked_at = new Date( session.sellers_locked_at );
@@ -78,6 +90,7 @@ class TicketOfficePage extends React.Component {
 export default connect( 
     ( store, props ) =>  {
         return {
+            meCompany: store.auth.me.company,
             meRole: store.auth.me.role,
             sessions: store.sessions.data
         }
