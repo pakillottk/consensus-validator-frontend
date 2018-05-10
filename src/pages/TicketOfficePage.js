@@ -6,7 +6,7 @@ import TicketOfficeController from '../components/ticketOfficeController/TicketO
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { storeCachedImg, flushCache } from '../redux/actions/imgcache'
-import { saleActions } from '../redux/actions/sales'
+import { crud as saleActions } from '../redux/actions/sales'
 
 import ImgToBase64 from '../utils/ImgToBase64'
 import API from '../API/API'
