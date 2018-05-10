@@ -1,5 +1,4 @@
 import React from 'react'
-import API from '../../API/API'
 
 import { endPrint } from '../../redux/actions/sales';
 import { bindActionCreators } from 'redux';
