@@ -15,6 +15,7 @@ import userscangroups from './userscangroups'
 import logentries from './logentries'
 import windows from './windows'
 import csv from './csv'
+import imgcache from './imgcache'
 
 const reducers = {
     auth,
@@ -33,7 +34,8 @@ const reducers = {
     userscangroups,
     logentries,
     windows,
-    csv
+    csv,
+    imgcache
 }
 
 export default reducers

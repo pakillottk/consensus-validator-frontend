@@ -62,7 +62,7 @@ class SalesActions extends React.Component {
                 <Segment secondary style={{padding: 0}}>
                     <div style={{textAlign: 'center'}}>SELECCIONADOS: {Object.keys(sales).length}</div>
                     <div style={{display:'flex', justifyContent:'center'}}>
-                        <Button disabled={salesCount === 0} context="relevant" onClick={() => this.printSales()}> IMPRIMIR </Button>                                
+                        <Button disabled={salesCount === 0 || !this.props.imgsCached} context="relevant" onClick={() => this.printSales()}> IMPRIMIR </Button>                                
                         <ConfirmModal 
                             open={this.state.openConfirm}
                             title="Confirmar eliminación"
@@ -83,9 +83,18 @@ class SalesActions extends React.Component {
         )
     }
 }
-export default connect(() => { return {} }, dispatch => {
-    return {
-        print: bindActionCreators( print, dispatch ),
-        remove: bindActionCreators( crud.delete, dispatch )
+export default connect(
+    ( store ) => {
+        const headerCache = store.imgcache.cache.get( 'header_img' )
+        const logosCache = store.imgcache.cache.get( 'logos_img' )
+        return {
+            imgsCached: headerCache && logosCache                        
+        } 
+    }, 
+    dispatch => {
+        return {
+            print: bindActionCreators( print, dispatch ),
+            remove: bindActionCreators( crud.delete, dispatch )        
+        }
     }
-})(SalesActions)
+)(SalesActions)

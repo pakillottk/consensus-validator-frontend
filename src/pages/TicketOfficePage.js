@@ -4,25 +4,31 @@ import Segment from '../components/ui/segment/Segment'
 import Divider from '../components/ui/divider/Divider'
 import TicketOfficeController from '../components/ticketOfficeController/TicketOfficeController' 
 import { connect } from 'react-redux'
-import moment from 'moment'
+import { bindActionCreators } from 'redux'
+import { storeCachedImg } from '../redux/actions/imgcache'
+
+import ImgToBase64 from '../utils/ImgToBase64'
 import API from '../API/API'
+import moment from 'moment'
 
 class TicketOfficePage extends React.Component {
+    //Stores in memory a base64 represenation of the session imgs
+    async cacheSessionImgs( session ) {
+        if( session.header_img ) {
+            const headerImg = await ImgToBase64( API.getFullPath( session.header_img ) )
+            this.props.storeCachedImg( 'header_img', headerImg )
+        }
+        if( session.logos_img ) {
+            const logosImg = await ImgToBase64( API.getFullPath( session.logos_img ) )
+            this.props.storeCachedImg( 'logos_img', logosImg )
+        }
+    }
+
     render() {
         const sessionId = parseInt( this.props.match.params.id, 10 );
         const session = this.props.sessions.get( sessionId );
-
-        //Cache the session imgs for fast ticket printing
-        let header_cached
-        let logos_cached
         if( session ) {
-          header_cached = new Image()
-          header_cached.src = API.getFullPath(session.header_img)
-          logos_cached = new Image()
-          logos_cached.src = API.getFullPath(session.logos_img)
-        }
-
-        if( session ) {
+            this.cacheSessionImgs( session );
             const meRole = this.props.meRole;
             const now = new Date();
             const sellers_locked_at = new Date( session.sellers_locked_at );
@@ -69,9 +75,16 @@ class TicketOfficePage extends React.Component {
     }
 }
 
-export default connect( ( store, props ) =>  {
-    return {
-        meRole: store.auth.me.role,
-        sessions: store.sessions.data
+export default connect( 
+    ( store, props ) =>  {
+        return {
+            meRole: store.auth.me.role,
+            sessions: store.sessions.data
+        }
+    },
+    ( dispatch ) => {
+        return {
+            storeCachedImg: bindActionCreators( storeCachedImg, dispatch )
+        }
     }
-})( TicketOfficePage )
+)( TicketOfficePage )

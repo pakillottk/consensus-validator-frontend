@@ -237,6 +237,7 @@ class TicketOfficeController extends React.Component {
             )
         }
 
+        const sellAmmountAllowed = ( parseInt((salesByType[ typeId ] || 0), 10) + parseInt(values.ammount, 10) > parseInt(deliverByType[ typeId ], 10) ) || typeId <= 0
         return(
             <div>
                 <PrintTicket sessionId={sessionId} />
@@ -260,7 +261,7 @@ class TicketOfficeController extends React.Component {
                                 <Label>CANTIDAD</Label>
                                 <Input styles={{textAlign:'right'}} type="number" name="ammount" value={this.state.values.ammount} onChange={this.handleFieldChange}/>
 
-                                <Button disabled={ ( parseInt((salesByType[ typeId ] || 0), 10) + parseInt(values.ammount, 10) > parseInt(deliverByType[ typeId ], 10) ) || typeId <= 0 } context="possitive" type="submit">VENDER</Button>
+                                <Button disabled={ sellAmmountAllowed || !this.props.imgsCached } context="possitive" type="submit">VENDER</Button>
                             </Form>
                             <ConfirmModal
                                 open={this.state.openConfirmSale}
@@ -351,8 +352,10 @@ export default connect(
         let totalPaid = 0
         store.payments.data.forEach( payment => {
             totalPaid += payment.ammount
-        })       
-
+        })      
+        
+        const headerCache = store.imgcache.cache.get( 'header_img' )
+        const logosCache = store.imgcache.cache.get( 'logos_img' )
         return {
             me: store.auth.me,
             types,
@@ -362,7 +365,8 @@ export default connect(
             totalComission,
             revenueByType,
             comissionByUser,
-            totalPaid
+            totalPaid,
+            imgsCached: headerCache && logosCache
         }
     },
     ( dispatch ) => {

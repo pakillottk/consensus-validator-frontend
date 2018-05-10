@@ -136,12 +136,12 @@ class PrintTicket extends React.Component {
           
           {/* LOGOS */}
           <div style={{borderTop: '2px solid black', height:'22mm', width:'100%'}}>
-            <img alt='' style={{width:'100%', height:'20mm', position: 'relative', top: '1mm'}} src={API.getFullPath(session.logos_img)} />
+            <img alt='' style={{width:'100%', height:'20mm', position: 'relative', top: '1mm'}} src={this.props.logos_img} />
           </div>
 
           {/* BG IMG */}
           <div style={{position:'absolute', top: '6.5mm', left: 0, opacity: 0.75, zIndex: 9, width:'100%', height:'85mm'}}>
-            <img alt='' style={{width:'100%', height:'100%'}} src={API.getFullPath(session.header_img)}/>
+            <img alt='' style={{width:'100%', height:'100%'}} src={this.props.header_img}/>
           </div>
         </div>
 
@@ -232,7 +232,9 @@ PrintTicket = connect(
       comissionsByUser,
       company: session ? session.company : null,
       tickets: store.sales.toPrint,
-      print: store.sales.printRequest
+      print: store.sales.printRequest,
+      header_img: store.imgcache.cache.get( 'header_img' ),
+      logos_img: store.imgcache.cache.get( 'logos_img' ),
     };
   },
   ( dispatch ) => {
