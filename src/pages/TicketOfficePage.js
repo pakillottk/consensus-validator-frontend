@@ -5,7 +5,7 @@ import Divider from '../components/ui/divider/Divider'
 import TicketOfficeController from '../components/ticketOfficeController/TicketOfficeController' 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { storeCachedImg } from '../redux/actions/imgcache'
+import { storeCachedImg, flushCache } from '../redux/actions/imgcache'
 
 import ImgToBase64 from '../utils/ImgToBase64'
 import API from '../API/API'
@@ -32,8 +32,11 @@ class TicketOfficePage extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.props.flushCache()
+    }
+
     render() {
-        const { meCompany } = this.props;
         const sessionId = parseInt( this.props.match.params.id, 10 );
         const session = this.props.sessions.get( sessionId );
         if( session ) {
@@ -95,7 +98,8 @@ export default connect(
     },
     ( dispatch ) => {
         return {
-            storeCachedImg: bindActionCreators( storeCachedImg, dispatch )
+            storeCachedImg: bindActionCreators( storeCachedImg, dispatch ),
+            flushCache: bindActionCreators( flushCache, dispatch )
         }
     }
 )( TicketOfficePage )

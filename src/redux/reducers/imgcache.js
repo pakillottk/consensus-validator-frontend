@@ -6,6 +6,10 @@ export default ( state = { cache: Map() }, action ) => {
             return {...state, cache: state.cache.set( action.payload.key, action.payload.imgData )}
         }
 
+        case 'FLUSH_IMG_CACHE': {
+            return {...state, cache: Map()}
+        }
+
         default: {
             return state
         }

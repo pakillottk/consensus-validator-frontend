@@ -7,3 +7,9 @@ export const storeCachedImg = ( key, imgData ) => {
         }
     }
 }
+
+export const flushCache = () => {
+    return {
+        type: 'FLUSH_IMG_CACHE'
+    }
+}
