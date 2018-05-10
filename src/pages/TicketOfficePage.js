@@ -38,9 +38,8 @@ class TicketOfficePage extends React.Component {
         const session = this.props.sessions.get( sessionId );
         if( session ) {
             this.cacheSessionImgs( session );
-            if( meCompany ) {
-                this.cacheLogoImg( meCompany );
-            }
+            this.cacheLogoImg( session.company );
+
             const meRole = this.props.meRole;
             const now = new Date();
             const sellers_locked_at = new Date( session.sellers_locked_at );
@@ -90,7 +89,6 @@ class TicketOfficePage extends React.Component {
 export default connect( 
     ( store, props ) =>  {
         return {
-            meCompany: store.auth.me.company,
             meRole: store.auth.me.role,
             sessions: store.sessions.data
         }
