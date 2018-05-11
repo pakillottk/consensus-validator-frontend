@@ -7,10 +7,14 @@ import { connect } from 'react-redux';
 import CryptoService from '../../communication/crypto/CryptoService';
 import AuthAPI from '../../API/APIAuthRouter';
 
+//Time to recheck the session
+const SESSION_REFRESH_TIME = 1000 * 60 * 30; //30 minutes
+
 class LoginGuard extends React.Component {
     async attemptToLogin( storeTokens ) {
         //LOGGED, DO NOTHING
         if( storeTokens !== null ) {
+            setTimeout( async () => { await this.attemptToLogin( this.props.tokens ) }, SESSION_REFRESH_TIME )
             return;
         }
 
@@ -33,7 +37,7 @@ class LoginGuard extends React.Component {
             AuthAPI.setAuthHeaders( tokens );
             const me = await AuthAPI.getMe();
 
-            this.props.loginSuccess( me.data, tokens );
+            this.props.loginSuccess( me.data, tokens );            
         } catch( error ) {
             try {
                 //The token didn't work, attempt to refresh
@@ -47,11 +51,15 @@ class LoginGuard extends React.Component {
                 this.props.history.replace( '/' );
             }
         }
+
+        if( tokens ) {
+            setTimeout( async () => { await this.attemptToLogin( this.props.tokens ) }, SESSION_REFRESH_TIME )
+        }
     }
 
     componentWillMount() {
         if( this.props.location.pathname !== '/' ) {
-            this.attemptToLogin( this.props.tokens )
+            this.attemptToLogin( this.props.tokens )            
         }
     }
 
