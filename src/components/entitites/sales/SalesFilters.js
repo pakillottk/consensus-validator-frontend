@@ -35,7 +35,13 @@ const filterSchema = [
         inputFormat: ( date ) => {
             return moment( date )
         }
-    }
+    },
+    {
+        name: 'code',
+        label: 'CÓDIGO',
+        type:'input',
+        component: 'text'
+    },
 ]
 
 const sessionField =  {

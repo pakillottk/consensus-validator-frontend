@@ -341,17 +341,17 @@ export default connect(
                 revenueByType[ sale.type_id ] += realPrice
             }
             if( !comissionsByType[ sale.type_id ] ) {
-                comissionsByType[ sale.type_id ] = currentComission
+                comissionsByType[ sale.type_id ] = parseFloat(currentComission)
             } else {
-                comissionsByType[ sale.type_id ] += currentComission
+                comissionsByType[ sale.type_id ] += parseFloat(currentComission)
             }
 
-            totalComission += currentComission
+            totalComission += parseFloat(currentComission)
         }) 
 
         let totalPaid = 0
         store.payments.data.forEach( payment => {
-            totalPaid += payment.ammount
+            totalPaid += parseFloat(payment.ammount)
         })      
         
         const companyCache = store.imgcache.cache.get( 'company_logo' )

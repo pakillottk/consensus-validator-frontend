@@ -69,6 +69,12 @@ body {
   opacity: 0.5;
 }
 
+@media (max-width: 1150px) {
+  html {
+    font-size: 12px;
+  }
+}
+
 @media (max-width: 768px) {
   html {
     font-size: 10px;
