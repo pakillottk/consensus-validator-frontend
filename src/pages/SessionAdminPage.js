@@ -3,6 +3,7 @@ import React from 'react';
 import Segment from '../components/ui/segment/Segment'
 import Divider from '../components/ui/divider/Divider'
 import SessionForm from '../components/entitites/sessions/SessionForm'
+import RefundsModeButton from '../components/entitites/sessions/RefundsModeButton'
 
 import NewTypeButton from '../components/entitites/types/NewTypeButton'
 import TypesTable from '../components/entitites/types/TypesTable'
@@ -50,6 +51,9 @@ class SessionAdminPage extends React.Component {
                 </Segment>
                 <Segment>
                     <SessionForm id={ sessionId } />
+                </Segment>
+                <Segment>
+                    <RefundsModeButton id={ sessionId } />
                 </Segment>
                 <Segment>
                     <Segment secondary styles={{border:'none'}}>

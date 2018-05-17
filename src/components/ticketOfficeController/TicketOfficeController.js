@@ -226,9 +226,9 @@ class TicketOfficeController extends React.Component {
 
     render() {
         const { errors, values } = this.state
-        const { me, sessionId, salesByType, deliverByType } = this.props
+        const { me, sessionId, refunds, salesByType, deliverByType } = this.props
         const typeId = values.type_id
-        
+
         if( Object.keys( deliverByType ).length === 0 && me.role !== 'superadmin' && me.role !== 'admin' ) {
             return(
                 <Segment secondary styles={{position: 'relative', fontSize: '2rem', overflow: 'hidden', height: '93vh', textAlign:'center'}}>
@@ -247,7 +247,7 @@ class TicketOfficeController extends React.Component {
                             <Segment>
                                 <h2 style={{textAlign: 'center'}}>TAQUILLA</h2>
                             </Segment>
-                            <Form onSubmit={this.handleSubmit.bind(this)}>
+                            {!refunds && <Form onSubmit={this.handleSubmit.bind(this)}>
                                 <div style={{color:'red'}}>
                                     { Object.keys( errors ).map( ( key, index ) => <p key={index}>{key}: {errors[key]} </p> ) }
                                 </div>
@@ -262,7 +262,8 @@ class TicketOfficeController extends React.Component {
                                 <Input styles={{textAlign:'right'}} type="number" name="ammount" value={this.state.values.ammount} onChange={this.handleFieldChange}/>
 
                                 <Button disabled={ sellAmmountAllowed || !this.props.imgsCached } context="possitive" type="submit">VENDER</Button>
-                            </Form>
+                            </Form>}
+                            {refunds && <h2>VENTAS DESACTIVADAS.</h2>}
                             <ConfirmModal
                                 open={this.state.openConfirmSale}
                                 onConfirm={() => this.sellTickets()}
@@ -291,7 +292,7 @@ class TicketOfficeController extends React.Component {
     }
 }
 export default connect(
-    ( store ) => {  
+    ( store, props ) => {  
         const types = store.types.data
 
         const deliverByType = {}
@@ -354,11 +355,17 @@ export default connect(
             totalPaid += parseFloat(payment.ammount)
         })      
         
+        const session = store.sessions.data.get( parseInt( props.sessionId, 10) )
         const companyCache = store.imgcache.cache.get( 'company_logo' )
         const headerCache = store.imgcache.cache.get( 'header_img' )
         const logosCache = store.imgcache.cache.get( 'logos_img' )
+        let refunds = false
+        if( session ) {
+            refunds = session.refund_mode
+        }
         return {
             me: store.auth.me,
+            refunds,
             types,
             deliverByType,
             salesByType,
