@@ -50,8 +50,17 @@ class SalesActions extends React.Component {
         this.deselectSales()
     }
 
+    refundSale() {
+        const { sales, update } = this.props
+        Object.keys( sales ).forEach( saleId => {
+            update( saleId, { refund: true } )
+        })
+
+        this.deselectSales()
+    }
+
     render() {   
-        const { sales } = this.props
+        const { sales, enableRefunds } = this.props
         const salesCount = Object.keys( sales ).length  
         if( !sales ) {
             return null
@@ -62,7 +71,7 @@ class SalesActions extends React.Component {
                 <Segment secondary style={{padding: 0}}>
                     <div style={{textAlign: 'center'}}>SELECCIONADOS: {Object.keys(sales).length}</div>
                     <div style={{display:'flex', justifyContent:'center'}}>
-                        <Button disabled={salesCount === 0 || !this.props.imgsCached} context="relevant" onClick={() => this.printSales()}> IMPRIMIR </Button>                                
+                        {!enableRefunds && <Button disabled={salesCount === 0 || !this.props.imgsCached} context="relevant" onClick={() => this.printSales()}> IMPRIMIR </Button>}                                
                         <ConfirmModal 
                             open={this.state.openConfirm}
                             title="Confirmar eliminación"
@@ -70,6 +79,7 @@ class SalesActions extends React.Component {
                             onConfirm={() => this.deleteSales()}
                             onCancel={() => this.switchConfirmDialog( false )}
                         />
+                        { enableRefunds && <Button disabled={salesCount === 0} context="relevant" onClick={() => this.refundSale()}>DEVOLVER</Button>}
                         <AdminButton 
                             disabled={salesCount === 0}
                             context='negative' 
@@ -95,6 +105,7 @@ export default connect(
     dispatch => {
         return {
             print: bindActionCreators( print, dispatch ),
+            update: bindActionCreators( crud.update, dispatch ),
             remove: bindActionCreators( crud.delete, dispatch )        
         }
     }

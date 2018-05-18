@@ -219,7 +219,7 @@ export default connect(
 
         return {
             sessions: store.sessions.data,
-            sales: store.sales.data,
+            sales: store.sales.data.filter( sale => !sale.refund ),
             types: store.types.data,
             comissionByUser,
             totalPaid

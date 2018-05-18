@@ -33,10 +33,10 @@ class SalesTable extends React.Component {
 
     render() {
         const { selected } = this.state
-        const { sales, hideActions } = this.props
+        const { sales, hideActions, enableRefunds } = this.props
         return(
             <div>
-                {!hideActions && <SalesActions sales={selected} onDeselect={() => this.onSelection({})}/>}
+                {!hideActions && <SalesActions enableRefunds={enableRefunds} sales={selected} onDeselect={() => this.onSelection({})}/>}
                 <Segment secondary>
                     <h3 style={{textAlign:'center'}}> TOTAL VENTAS: {sales.length} </h3>
                 </Segment>
@@ -53,7 +53,7 @@ class SalesTable extends React.Component {
         )
     }
 }
-export default connect( store => {
+export default connect( (store, props) => {
     const salesMap = store.sales.data
     const comissionsMap = store.comissions.data
     const comissionByUser = {}
@@ -92,7 +92,7 @@ export default connect( store => {
             email: sale.code.email 
         })
     })
-    sales = sales.sort( (sale, otherSale) =>  {
+    sales = sales.filter( sale => props.showRefunds ? sale.refund : !sale.refund ).sort( (sale, otherSale) =>  {
         const saleDate = moment( sale.created_at );
         const otherDate = moment( otherSale.created_at );
         if( saleDate.isBefore( otherDate ) ) { return 1; }

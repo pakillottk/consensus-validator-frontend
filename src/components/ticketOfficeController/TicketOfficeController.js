@@ -206,7 +206,19 @@ class TicketOfficeController extends React.Component {
                     <h2 style={{textAlign: 'center'}}>VENTAS</h2>
                 </Segment>
                 <SalesFilters sessionId={sessionId} />
-                <SalesTable />
+                <SalesTable enableRefunds={this.props.refunds} />
+            </div>
+        )
+    }
+
+    renderRefunds( sessionId ) {
+        return(
+            <div>
+                <Segment secondary>
+                    <h2 style={{textAlign: 'center'}}>DEVOLUCIONES</h2>
+                </Segment>
+                <SalesFilters sessionId={sessionId} />
+                <SalesTable hideActions showRefunds />
             </div>
         )
     }
@@ -228,6 +240,14 @@ class TicketOfficeController extends React.Component {
         const { errors, values } = this.state
         const { me, sessionId, refunds, salesByType, deliverByType } = this.props
         const typeId = values.type_id
+
+        const tabs = [
+            {label:'VENTAS', content:this.renderSales( sessionId )},            
+            {label:'PAGOS', content:this.renderPayments( sessionId )}
+        ];
+        if( refunds ) {
+            tabs.push( {label:'DEVOLUCIONES', content:this.renderRefunds( sessionId )} )
+        }
 
         if( Object.keys( deliverByType ).length === 0 && me.role !== 'superadmin' && me.role !== 'admin' ) {
             return(
@@ -282,10 +302,7 @@ class TicketOfficeController extends React.Component {
                 </div>
                 
                 <Tabs
-                    tabs={[
-                        {label:'VENTAS', content:this.renderSales( sessionId )},
-                        {label:'PAGOS', content:this.renderPayments( sessionId )},
-                    ]}
+                    tabs={tabs}
                 />
             </div>
         )
@@ -323,6 +340,9 @@ export default connect(
         const revenueByType = {}
         let totalComission = 0
         store.sales.data.forEach( sale => {
+            if( sale.refund ) {
+                return
+            }
             const type = types.get( parseInt(sale.type_id, 10) )
             let comission = null
             if( type && comissionByUser[ sale.user_id ] ) {
