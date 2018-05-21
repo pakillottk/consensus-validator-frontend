@@ -209,7 +209,7 @@ class PrintTicket extends React.Component {
             { tickets }
           </div>
         </div>
-        <iframe title="ticket-iframe-wrapper" style={{opacity:0, position:'absolute'}} className="ticket-preview" ref={(iframe) => this.iframe = iframe} />
+        <iframe title="ticket-iframe-wrapper" style={{opacity:0, position:'absolute', pointerEvents: 'none'}} className="ticket-preview" ref={(iframe) => this.iframe = iframe} />
       </div>
     );
   }
