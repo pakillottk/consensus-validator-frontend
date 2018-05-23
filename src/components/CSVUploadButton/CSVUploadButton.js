@@ -7,18 +7,40 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Admin } from '../auth/authLevels'
 
+import SplitUploader from '../../utils/SplitUploader'
+
 class CSVUploadButton extends React.Component {
     uploadCodes() {
-        const { sessionId, csvData, createCode, CSVLoaded } = this.props
+        const { sessionId, createCode, csvData, CSVLoaded } = this.props
+        const upload = []
         csvData.forEach( code => {
             if( !code.code ) {
                 return
             }
             delete code[""]
-            createCode( code, '?session=' + sessionId )
+            upload.push( code )
         });
+        SplitUploader( upload, ( uploading, remaining ) => {
+            createCode( {codes: JSON.stringify(uploading)}, '?session=' + sessionId )
+            CSVLoaded({ data: remaining||[] })
+        })
+    }
 
-        CSVLoaded({ data: [] })
+    splitUpload( codes, limit=500, delay=250 ) {
+        const { sessionId, createCode, CSVLoaded } = this.props
+        let upload
+        let remaining
+        if( codes.length > limit ) {
+            upload = codes.slice( 0, limit )
+            remaining = codes.slice( limit, codes.length )
+        }
+        if( upload ) {
+            createCode( {codes: JSON.stringify(upload)}, '?session=' + sessionId )
+            CSVLoaded({ data: remaining })
+            if(remaining ) {
+                setTimeout( () => this.splitUpload(remaining), delay )
+            }
+        }
     }
 
     render() {

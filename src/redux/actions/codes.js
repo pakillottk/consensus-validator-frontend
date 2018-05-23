@@ -5,5 +5,6 @@ export const crud = EntityActions( 'codes', API, {
     fetch: '/codes',
     create: '/codes',
     update: '/codes',
-    delete: '/codes'
+    delete: '/codes',
+    bulkDelete:'/codes/bulkDelete'
 });

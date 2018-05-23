@@ -28,12 +28,24 @@ export const onSingleFetch = ( preprocessor, postprocessor ) => ( state, action 
 
 export const onCreation = ( preprocessor, postprocessor ) => ( state, action ) => {
     const item = action.payload.data;
-    let data = state.data.set( item.id, preprocessor( item ) );
-
-    let newState = {...state, data };
-    if( postprocessor ) {
-        newState = postprocessor( 'create', newState, state, action, item )
-    }
+    let data;
+    let newState = {...state};
+    if( action.payload.data.array ) {
+        const items = JSON.parse( action.payload.data.array );
+        for( let i = 0; i < items.length; i++ ) {
+            data = newState.data.set( items[i].id, preprocessor( items[i] ) );
+            newState = {...newState, data };
+            if( postprocessor ) {
+                newState = postprocessor( 'create', newState, state, action, items[i] );
+            }
+        }
+    } else {
+        data = state.data.set( item.id, preprocessor( item ) );
+        newState = {...newState, data };
+        if( postprocessor ) {
+            newState = postprocessor( 'create', newState, state, action, item )
+        }
+    }   
 
     return newState;
 }
@@ -55,6 +67,15 @@ export const onDelete = ( state, action ) => {
     return {...state, data };
 }
 
+export const onBulkDelete = ( state, action ) => {
+    const ids = action.meta.deleted_ids;
+    let data = state.data;
+    for( let i = 0; i < ids.length; i++ ) {
+        data = data.delete( parseInt(ids[i], 10) );        
+    }
+    return {...state, data};
+}
+
 export const flushData = ( state, action ) => {
     return {...state, data: Map()};
 }
@@ -68,6 +89,7 @@ const builder = ( entity, validActions, preprocessor, postprocessor ) => {
     validTypes[ prefix + '_CREATE_FULFILLED' ]         = onCreation( preprocessor, postprocessor );
     validTypes[ prefix + '_UPDATE_FULFILLED' ]         = onUpdate( preprocessor, postprocessor );
     validTypes[ prefix + '_DELETE_FULFILLED' ]         = onDelete;
+    validTypes[ prefix + '_BULK_DELETE_FULFILLED' ]    = onBulkDelete;
     validTypes[ prefix + '_FLUSH' ]                    = flushData;
     validTypes[ 'LOGOUT' ]                             = flushData;
 

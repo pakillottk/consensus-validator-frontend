@@ -15,7 +15,6 @@ export default new Validator({
         new MatchRegex( false, /[0-9]+/ )
     ],
     company_id: [
-        new Required( true ),
         new MatchRegex( false, /[0-9]+/ )
     ]
 });

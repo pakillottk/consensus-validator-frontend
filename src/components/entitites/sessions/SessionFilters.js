@@ -9,12 +9,16 @@ import EntityFilters from '../EntityFilters'
 import moment from 'moment'
 import DatePicker from '../../forms/Controls/DatePicker/DatePicker'
 
+const now = new Date()
+const initialFrom = new Date(now.getFullYear(), 0, 1, 0, 0)
+const initialTo = new Date(now.getFullYear(), 11, 31, 23, 59)
 const modifiedSchema = [
     ...schema,
     {
         name: 'from_date',
         label: 'DESDE',
         type:'custom',
+        defaultValue: initialFrom,
         component: DatePicker,
         inputFormat: ( date ) => {
             return moment( date )
@@ -23,7 +27,7 @@ const modifiedSchema = [
     {
         name: 'to_date',
         label: 'HASTA',
-        defaultValue: new Date(),
+        defaultValue: initialTo,
         type:'custom',
         component: DatePicker,
         inputFormat: ( date ) => {
@@ -45,6 +49,7 @@ class SessionFilters extends React.Component {
             <div>
                 <SessionFilterComponent
                     title="BUSCAR SESIÓN"
+                    initialQuery={"from_date="+moment(initialFrom).toISOString()+"&to_date="+moment(initialTo).toISOString()}
                     fetchBaseQuery={''}
                     hidden={{header_img: true, logos_img: true, date: true, sellers_locked_at: true, ticketoffice_closed_at: true}}
                     selectors={{}}

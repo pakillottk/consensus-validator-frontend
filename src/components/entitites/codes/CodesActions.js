@@ -9,6 +9,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Admin } from '../../auth/authLevels'
 
+import SplitUploader from '../../../utils/SplitUploader'
+
 class CodesActions extends React.Component {
     constructor( props ) {
         super( props )
@@ -77,15 +79,26 @@ class CodesActions extends React.Component {
     }
 
     deleteCodes() {
-        const { codes, remove } = this.props
+        const { codes, remove, bulkDelete } = this.props
+        let toDelete = []
         Object.keys(codes).forEach( codeId => {
             const code = codes[ codeId ]
-            remove( code.id )
+            toDelete.push( code.id )
         })
+
+        if( toDelete.length === 1 ) {
+            remove( toDelete[0] )
+        } else {
+            SplitUploader( toDelete, ( upload, remaining ) => {
+                bulkDelete( upload )
+            })
+        }
 
         this.switchConfirmDialog( false )
         this.deselectCodes()
     }
+
+    splitted
 
     switchConfirmDialog( open ) {
         this.setState({openConfirm: open})
@@ -138,6 +151,7 @@ class CodesActions extends React.Component {
 export default connect(() => { return {} }, dispatch => {
     return {
         update: bindActionCreators( crud.update, dispatch ),
-        remove: bindActionCreators( crud.delete, dispatch )
+        remove: bindActionCreators( crud.delete, dispatch ),
+        bulkDelete: bindActionCreators( crud.bulkDelete, dispatch )
     }
 })(Admin(CodesActions, true))

@@ -7,7 +7,12 @@ import moment from 'moment'
 export default ( schema, fetch ) => {
     return class EntityFilters extends React.Component {
         componentWillMount() {
-            this.fetchNoFilters()
+            const { initialQuery, fetchBaseQuery } = this.props
+            if( initialQuery ) {
+                fetch( '?'+ (fetchBaseQuery ? fetchBaseQuery + '&' : '') + this.props.initialQuery )
+            } else {
+                this.fetchNoFilters()
+            }
         }
 
         hideFields( hidden, fields ) {

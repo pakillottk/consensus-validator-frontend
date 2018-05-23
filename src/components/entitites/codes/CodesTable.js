@@ -50,7 +50,7 @@ class CompaniesTable extends React.Component {
 export default connect(
     ( store ) => {
         return {
-            codes: store.codes.data
+            codes: store.codes.data            
             .sort((a,b) =>{
                 if( a.updated_at < b.updated_at ) { return 1; }
                 if( a.updated_at > b.updated_at ) { return -1; }

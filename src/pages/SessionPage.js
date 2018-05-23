@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Supervisor, Seller } from '../components/auth/authLevels'
+import { Admin, Supervisor, Seller } from '../components/auth/authLevels'
 import Button from '../components/ui/button/Button'
 import Divider from '../components/ui/divider/Divider'
 import Segment from '../components/ui/segment/Segment'
@@ -12,6 +12,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import 'moment/locale/es'
 
+const AdminButton = Admin( Button, true )
 const SupervisorButton = Supervisor( Button, true )
 const SellerButton = Seller( Button, true )
 
@@ -47,6 +48,7 @@ class SessionPage extends React.Component {
                     <Divider full/>
 
                     <SupervisorButton full onClick={() => this.props.history.push('/sesiones/' + id + '/administrar')}> ADMINISTRAR </SupervisorButton>
+                    <AdminButton onClick={() => this.props.history.push('/sesiones/' + id + '/analizador')} context="dark" full> ANALIZADOR </AdminButton>
                     <SupervisorButton onClick={() => this.props.history.push('/sesiones/' + id + '/monitor')} context="relevant" full> MONITOR </SupervisorButton>
                     <SellerButton onClick={() => this.props.history.push('/sesiones/' + id + '/taquilla')} context="possitive" full> TAQUILLA </SellerButton> 
                 </Segment>

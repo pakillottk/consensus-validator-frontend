@@ -20,6 +20,7 @@ import CompaniesPage from './pages/CompaniesPage'
 import UsersPage from './pages/UsersPage'
 import TicketOfficePage from './pages/TicketOfficePage'
 import MonitorPage from './pages/MonitorPage'
+import AnalyzerPage from './pages/AnalyzerPage'
 import SummaryPage from './pages/SummaryPage'
 
 import UISetup from './pages/UISetup'
@@ -42,6 +43,7 @@ class App extends Component {
                   <Route exact path="/sesiones/:id/administrar" component={Supervisor(SessionAdminPage)} />
                   <Route exact path="/sesiones/:id/taquilla" component={Seller(TicketOfficePage)} />
                   <Route exact path="/sesiones/:id/monitor" component={Supervisor(MonitorPage)} />
+                  <Route exact path="/sesiones/:id/analizador" component={Admin(AnalyzerPage)} />
                   <Route exact path="/resumen" component={Seller(SummaryPage)} />
                   <Route exact path="/companias" component={Super(CompaniesPage)} />
                   <Route exact path="/usuarios" component={Admin(UsersPage)} />

@@ -10,7 +10,7 @@ import moment from 'moment'
 
 class SessionsTable extends React.Component {
     componentWillMount() {
-        this.props.fetch()
+        //this.props.fetch();
     }
 
     render() {

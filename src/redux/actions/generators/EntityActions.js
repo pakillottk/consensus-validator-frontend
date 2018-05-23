@@ -47,6 +47,13 @@ const builder = ( Entity, connection, paths ) => {
                 meta: {...meta, deleted_id: id }
             }
         },
+        bulkDelete: ( ids, meta ) => {
+            return {
+                type: prefix + '_BULK_DELETE',
+                payload: connection.post( paths.bulkDelete, new Request( {ids:JSON.stringify(ids)}, connection.headers.headers ) ),
+                meta: {...meta, deleted_ids: ids }
+            }
+        },
         flush: () => {
             return {
                 type: prefix + '_FLUSH'
