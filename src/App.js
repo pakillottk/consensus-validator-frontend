@@ -13,6 +13,8 @@ import Navigation from './components/navigation/Navigation'
 
 import LoginGuard from './components/loginGuard/LoginGuard';
 import LoginPage from './pages/LoginPage'
+import RecintsPage from './pages/RecintsPage'
+import RecintEditorPage from './pages/RecintEditorPage'
 import SessionsPage from './pages/SessionsPage'
 import SessionPage from './pages/SessionPage'
 import SessionAdminPage from './pages/SessionAdminPage'
@@ -38,6 +40,8 @@ class App extends Component {
                   <Route exact path='/ui' component={UISetup} />
                   <Route path='/' component={LoginGuard} />
                   <Route exact path="/" component={LoginPage} />
+                  <Route exact path="/recintos" component={Super(RecintsPage)} />
+                  <Route exact path="/recintos/:id" component={Super(RecintEditorPage)} />
                   <Route exact path="/sesiones" component={Any(SessionsPage)} />
                   <Route exact path="/sesiones/:id" component={Any(SessionPage)} />
                   <Route exact path="/sesiones/:id/administrar" component={Supervisor(SessionAdminPage)} />

@@ -98,8 +98,6 @@ class CodesActions extends React.Component {
         this.deselectCodes()
     }
 
-    splitted
-
     switchConfirmDialog( open ) {
         this.setState({openConfirm: open})
     }

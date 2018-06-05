@@ -93,7 +93,7 @@ export default ( schema, fetch ) => {
             if( onQuerySent ) {
                 onQuerySent( fetchBaseQuery, [] )
             }
-            fetch( '?' + fetchBaseQuery )
+            fetch( fetchBaseQuery ? ('?' + fetchBaseQuery) : '' )
         }
     
         render() {
