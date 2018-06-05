@@ -23,7 +23,7 @@ class CSVInput extends React.Component {
 
         Papa.parse( file, {
             header: true,
-            dynamicTyping: true,
+            dynamicTyping: false,
             complete: ( results ) => {
                 this.props.CSVLoaded( results )
             }
