@@ -9,8 +9,7 @@ import { crud as ZoneActions } from '../redux/actions/recintzones'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
-import RecintRenderer from '../components/recintRenderer/RecintRenderer'
-import Polygon from '../2d/Polygon'
+import RecintEditor from '../components/recintEditor/RecintEditor'
 
 class RecintEditorPage extends React.Component {
     componentWillMount() {
@@ -44,17 +43,9 @@ class RecintEditorPage extends React.Component {
                     <h1>LOCALIDADES</h1>
                 </Segment>
                 <Segment styles={{padding:0}}>
-                    <RecintRenderer 
+                    <RecintEditor 
                         plane={recint.recint_plane} 
-                        zones={zones} 
-                        polygons={{
-                            1: new Polygon([
-                                {x: 50, y: 50 },
-                                {x: 150, y: 50 },
-                                {x: 150, y: 250 },
-                                {x: 50, y: 250 },
-                            ])
-                        }}
+                        zones={zones}
                     />
                 </Segment>
             </div> 

@@ -29,7 +29,7 @@ export default class RecintRenderer extends React.Component {
     }
 
     render() {
-        const { plane, zones, polygons } = this.props
+        const { plane, zones, polygons, getPlaneRef } = this.props
         if( !plane ) {
             return null
         }
@@ -59,7 +59,14 @@ export default class RecintRenderer extends React.Component {
                         { zoneCaptions }
                    </div>
                </Segment>
-               <div style={{position:'relative'}}>
+               <div 
+                    style={{position:'relative'}} 
+                    ref={ (ref) =>{
+                        if( getPlaneRef ) {
+                            getPlaneRef( ref )
+                        }
+                    }}
+                >
                     <img alt={"Plano del recinto"} src={API.getFullPath(plane)} />
                     <div style={{position:'absolute', top: 0, left: 0, zIndex:10}}>
                         {polygonsRendered}
