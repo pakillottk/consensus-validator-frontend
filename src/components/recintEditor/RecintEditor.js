@@ -23,7 +23,7 @@ export default class RecintEditor extends React.Component {
 
     updatePolygon( polygon ) {
         const polygons = {...this.state.polygons}
-        polygons[ this.state.editingZone ] = polygon
+        polygons[ this.state.editingZone ] = polygon ? polygon : undefined 
         this.setState({polygons})
     }
 

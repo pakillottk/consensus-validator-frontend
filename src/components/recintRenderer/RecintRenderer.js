@@ -18,13 +18,15 @@ export default class RecintRenderer extends React.Component {
     renderPolygon( zone, polygon ) {
         const rgbZoneColor = hexToRGB( zone.color )
         return(
-            <PolygonRenderer
-                key={polygon.id}
-                polygon={polygon}
-                fill={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b}, 0.5)`}
-                stroke={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b}, 0.75)`}
-                strokeSize={0.25}
-            />
+            <div style={{position:'absolute', top: 0, left: 0, zIndex:10}}>
+                <PolygonRenderer
+                    key={polygon.id}
+                    polygon={polygon}
+                    fill={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b}, 0.5)`}
+                    stroke={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b}, 0.75)`}
+                    strokeSize={0.25}
+                />
+            </div>
         )
     }
 
@@ -67,10 +69,8 @@ export default class RecintRenderer extends React.Component {
                         }
                     }}
                 >
-                    <img alt={"Plano del recinto"} src={API.getFullPath(plane)} />
-                    <div style={{position:'absolute', top: 0, left: 0, zIndex:10}}>
-                        {polygonsRendered}
-                    </div>
+                    <img alt={"Plano del recinto"} src={API.getFullPath(plane)} />                    
+                    {polygonsRendered}                    
                </div>
            </div> 
         )
