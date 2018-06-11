@@ -10,6 +10,17 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import RecintEditor from '../components/recintEditor/RecintEditor'
+import Polygon from '../2d/Polygon';
+
+const dummyPoligon = new Polygon([
+    {x:201.4375, y:689.28125}, 
+    {x:277.4375, y:692.28125}, 
+    {x:285.4375, y:417.28125}, 
+    {x:94.4375, y:403.28125}, 
+    {x:17.4375, y:624.28125}, 
+    {x:103.4375, y:643.28125}, 
+    {x:198.4375, y:652.28125}
+])
 
 class RecintEditorPage extends React.Component {
     componentWillMount() {
@@ -46,6 +57,7 @@ class RecintEditorPage extends React.Component {
                     <RecintEditor 
                         plane={recint.recint_plane} 
                         zones={zones}
+                        polygons={{1: dummyPoligon}}
                     />
                 </Segment>
             </div> 

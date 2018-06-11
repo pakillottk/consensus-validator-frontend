@@ -3,6 +3,7 @@ import React from 'react'
 import RecintRenderer from '../recintRenderer/RecintRenderer'
 import RecintZoneSelector from '../forms/Controls/RecintZoneSelector/RecintZoneSelector'
 import PolygonEditor from '../polygonEditor/PolygonEditor'
+import SeatsEditor from '../seatsEditor/SeatsEditor'
 
 import Segment from '../ui/segment/Segment'
 
@@ -13,6 +14,7 @@ export default class RecintEditor extends React.Component {
         this.state = {
             editingZone: 0,
             polygons: {...props.polygons},
+            rows: {...props.rows} || {},
             planeContainer: null
         }
     }
@@ -31,9 +33,15 @@ export default class RecintEditor extends React.Component {
         this.setState({polygons})
     }
 
+    updateSeatRows( rows ) {
+        const newRows = {...this.state.rows}
+        newRows[ this.state.editingZone ] = rows
+        this.setState({rows: newRows})
+    }
+
     render() {
         const { plane, zones } = this.props
-        const { polygons, editingZone } = this.state
+        const { polygons, rows, editingZone } = this.state
         return(
             <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'top'}}>
                 <div>
@@ -42,6 +50,7 @@ export default class RecintEditor extends React.Component {
                         plane={plane}
                         zones={zones}
                         polygons={polygons}
+                        rows={rows}
                         onPolygonClicked={(zone, polygon) => {
                             this.setState({editingZone: zone.id})
                         }}
@@ -69,6 +78,15 @@ export default class RecintEditor extends React.Component {
                             polygon={polygons[ editingZone ]}
                             onChange={this.updatePolygon.bind(this)}
                             planeContainer={this.state.planeContainer}
+                        />
+                    </Segment>}
+                    {editingZone > 0 && <Segment secondary styles={{textAlign:'center'}}>
+                        <h3>ASIENTOS</h3>
+                        <SeatsEditor
+                            rows={rows[ editingZone ]} 
+                            onChange={(rows) => this.updateSeatRows(rows)}
+                            zone={zones.get( parseInt(editingZone,10) )} 
+                            polygon={polygons[ editingZone ]}
                         />
                     </Segment>}
                 </div>

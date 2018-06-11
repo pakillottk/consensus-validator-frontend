@@ -11,7 +11,14 @@ class Polygon {
   static get counter() {
      Polygon._counter = (Polygon._counter || 0) + 1;
      return Polygon._counter;
-   }
+  }
+
+  get centroid() {
+    return {
+      x: ( this.bounds[2] + this.bounds[ 0 ] ) / 2,
+      y: ( this.bounds[3] + this.bounds[ 1 ] ) / 2
+    }
+  }
 
   addPoint( point ) {
     this.points =  [...this.points, point];

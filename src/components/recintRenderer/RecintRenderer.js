@@ -3,6 +3,7 @@ import API from '../../API/API'
 
 import Segment from '../ui/segment/Segment'
 import PolygonRenderer from '../polygonRenderer/PolygonRenderer'
+import SeatsRenderer from '../seatsRenderer/SeatsRenderer'
 import { hexToRGB } from '../../utils/ColorFuncs'
 
 export default class RecintRenderer extends React.Component {
@@ -22,7 +23,7 @@ export default class RecintRenderer extends React.Component {
             <div key={polygon.id} style={{position:'absolute', top: 0, left: 0, zIndex:10}}>
                 <PolygonRenderer                    
                     polygon={polygon}
-                    fill={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b},0.5)`}
+                    fill={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b},0.35)`}
                     stroke={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b}, 0.75)`}
                     strokeSize={0.25}
                     onPolygonClicked={() => onClick( zone, polygon )}
@@ -31,8 +32,22 @@ export default class RecintRenderer extends React.Component {
         )
     }
 
+    renderSeats( zone, polygon, rows, onEdit=false ) {
+        const rgbZoneColor = hexToRGB( zone.color )
+        return(
+            <div key={zone.id} style={{position:'absolute', top: 0, left: 0, zIndex:11}}>
+                <SeatsRenderer
+                    color={rgbZoneColor}
+                    rows={rows}
+                    polygon={polygon}
+                    showCurves={onEdit}
+                />
+            </div>
+        )
+    }
+
     render() {
-        const { plane, zones, onEdit, polygons, getPlaneRef } = this.props
+        const { plane, zones, onEdit, polygons, rows, getPlaneRef } = this.props
         if( !plane ) {
             return null
         }
@@ -45,11 +60,19 @@ export default class RecintRenderer extends React.Component {
         }
 
         const polygonsRendered = []
+        const seatsRendered = []
         if( polygons ) {
             zones.forEach( zone => {
                 const polygon = polygons[ zone.id ]
-                if( polygon && onEdit !== zone.id ) {
-                    polygonsRendered.push( this.renderPolygon( zone, polygon ) )
+                if( polygon ) {
+                    if( onEdit !== zone.id ) {
+                        polygonsRendered.push( this.renderPolygon( zone, polygon ) )
+                    } 
+                    if( rows ) {
+                        if( rows[ zone.id ] ) {
+                            seatsRendered.push( this.renderSeats( zone, polygon, rows[ zone.id ], onEdit === zone.id ) )
+                        }
+                    }
                 }
             })
         }
@@ -71,7 +94,8 @@ export default class RecintRenderer extends React.Component {
                     }}
                 >
                     <img alt={"Plano del recinto"} src={API.getFullPath(plane)} />                    
-                    {polygonsRendered}                    
+                    {polygonsRendered}      
+                    {seatsRendered}              
                </div>
            </div> 
         )
