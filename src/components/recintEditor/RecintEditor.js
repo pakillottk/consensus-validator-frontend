@@ -23,7 +23,11 @@ export default class RecintEditor extends React.Component {
 
     updatePolygon( polygon ) {
         const polygons = {...this.state.polygons}
-        polygons[ this.state.editingZone ] = polygon ? polygon : undefined 
+        if( !polygon ) {
+            delete polygons[ this.state.editingZone ]
+        } else {
+            polygons[ this.state.editingZone ] = polygon 
+        }
         this.setState({polygons})
     }
 
@@ -34,9 +38,13 @@ export default class RecintEditor extends React.Component {
             <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'top'}}>
                 <div>
                     <RecintRenderer
+                        onEdit={parseInt(editingZone,10)}
                         plane={plane}
                         zones={zones}
                         polygons={polygons}
+                        onPolygonClicked={(zone, polygon) => {
+                            this.setState({editingZone: zone.id})
+                        }}
                         getPlaneRef={
                             (ref) =>{ 
                                 if( !this.state.planeContainer ) { 

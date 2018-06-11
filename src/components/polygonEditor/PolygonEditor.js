@@ -10,8 +10,10 @@ export default class PolygonEditor extends React.Component {
 
         this.state = {
             editing: false,
+            vertexEdit: false,
+            editingVertex: null,
             polygon: props.polygon,
-            previewPolygon: null,
+            previewPolygon: props.polygon ? new Polygon( props.polygon.points ) : null,
             newX: null,
             newY: null
         }
@@ -20,6 +22,13 @@ export default class PolygonEditor extends React.Component {
         this.updateCursor = this.updateCursor.bind( this );
         this.clickHandler = this.clickHandler.bind( this );
         this.keyHandler = this.keyHandler.bind( this );
+    }
+
+    componentWillReceiveProps( nextProps ) {
+        this.setState({
+            polygon: nextProps.polygon,
+            previewPolygon: nextProps.polygon ? new Polygon( nextProps.polygon.points ) : null
+        }) 
     }
 
     enableEditMode() {
@@ -33,18 +42,16 @@ export default class PolygonEditor extends React.Component {
         document.removeEventListener( 'mousemove', this.updateCursor );
         document.removeEventListener( 'mousedown', this.clickHandler );
         document.removeEventListener( 'keydown', this.keyHandler );
-        this.setState({editing:false, previewPolygon: null})
+        this.setState({editing:false, vertexEdit: false, editingVertex: null})
     }
 
     componentWillUnmount() {
         this.disableEditMode()
     }
 
-    updateCursor( e ) {
-        const { polygon } = this.state
-        const { planeContainer } = this.props
-        const { pageX, pageY } = e
+    cursorToPlaneCoords( pageX, pageY  ) {
         //adjusted bounds of plane container
+        const { planeContainer } = this.props
         const bounds = planeContainer.getBoundingClientRect();
         const scrolledBounds = {
             left: bounds.left + window.scrollX,
@@ -62,58 +69,97 @@ export default class PolygonEditor extends React.Component {
                 { x: pageX, y: pageY } 
             ) 
         ) {
-            const [ relativeX, relativeY ] = [
-                (pageX - scrolledBounds.left),
-                (pageY - scrolledBounds.top)
-            ]
-            this.setState({newX: relativeX, newY: relativeY})   
-            this.updatePreview( relativeX, relativeY )  
+            return {
+                x: (pageX - scrolledBounds.left),
+                y: (pageY - scrolledBounds.top)
+            }
+        }
+
+        return null        
+    }
+
+    updateCursor( e ) {
+        const { pageX, pageY } = e
+        //if editing vertices but no vertex selected, returns
+        if( this.state.vertexEdit && this.state.editingVertex === null ) {
+            return
+        }
+
+        const currentPoint = this.cursorToPlaneCoords( pageX, pageY )
+        if( currentPoint ) {
+            this.setState({newX: currentPoint.x, newY: currentPoint.y})   
+            this.updatePreview( currentPoint.x, currentPoint.y, this.state.vertexEdit ? this.state.editingVertex : null )   
         }
     }
 
     clickHandler( e ) {
-        this.updatePolygon( new Polygon([
-            ...this.state.polygon.points, 
-            { x: this.state.newX, y: this.state.newY }
-        ]))    
+        const points = [...this.state.polygon.points]
+        if( this.state.vertexEdit ) {
+            if( this.state.editingVertex !== null ) {
+                points[ this.state.editingVertex ] = {x: this.state.newX, y: this.state.newY} 
+                this.setState({editingVertex: null})
+            }
+        } else {
+            points.push( {x: this.state.newX, y: this.state.newY} )
+        }
+        
+        this.updatePolygon( new Polygon(points) )
     }
 
     keyHandler( e ) {
         switch( e.keyCode ) {
-          case 13: //ENTER
-          case 27: //SCAPE
+          case 13: { //ENTER
             this.disableEditMode();
-          break;
+            this.notifyChanges( this.state.polygon );
+            break;
+          }
+          case 27: { //SCAPE
+            this.disableEditMode();
+            break;
+          }
           default:{
               break;
           }
         }
     }
 
-    updatePreview( x, y ) {
-        this.setState({previewPolygon: new Polygon( [...this.state.polygon.points, {x,y}] )})
+    updatePreview( x, y, index=null ) {
+        const points = [...this.state.polygon.points]
+        if( index === null ) {
+            points.push( {x,y} )
+        } else {
+            points[ index ] = {x,y}
+        }
+        this.setState({previewPolygon: new Polygon( points )})
     }
 
     createPolygon() {
         this.setState({ polygon:new Polygon(), previewPolygon: new Polygon() })
-        this.notifyChanges()
         this.enableEditMode()
     }
 
     removePolygon() {
         this.setState({ polygon: null })
-        this.notifyChanges()
+        this.notifyChanges( null )
     }
 
     updatePolygon( polygon ) {
         this.setState({ polygon })
-        this.notifyChanges()
+    }
+
+    enterVertexSelect() {
+        this.setState({ vertexEdit: true, editingVertex: null })
+        this.enableEditMode()
+    }
+
+    revertChanges() {
+        this.setState({})
     }
 
     notifyChanges( polygon ) {
         const { onChange } = this.props
         if( onChange ) {
-            onChange( this.state.polygon )
+            onChange( polygon )
         }
     }
 
@@ -134,7 +180,7 @@ export default class PolygonEditor extends React.Component {
             <div>
                 <div style={{marginTop:'10px'}}>
                     <Button disabled={polygon || editing} onClick={() => this.createPolygon()} context="dark">CREAR</Button>
-                    <Button disabled={!polygon || editing} context="relevant">EDITAR</Button>
+                    <Button disabled={!polygon || editing} context="relevant" onClick={() => this.enterVertexSelect()}>EDITAR</Button>
                     <Button disabled={!polygon || editing} onClick={() => this.removePolygon()} context="negative">ELIMINAR</Button>
                 </div>
                 <div 
@@ -152,9 +198,17 @@ export default class PolygonEditor extends React.Component {
                 >
                     {this.state.previewPolygon && <PolygonRenderer
                         polygon={this.state.previewPolygon}
-                        fill={`rgba(0, 255, 0, 1.0)`}
-                        stroke={`rgba(0, 155, 0, 1.0)`}
-                        strokeSize={0.25}
+                        fill={`rgba(0, 255, 0, 0.5)`}
+                        stroke={`rgba(0, 100, 0, 1.0)`}
+                        strokeSize={1}
+                        drawVertices={this.state.editing}
+                        vertexColor="rgba(255,0,0,1.0)"
+                        onVertexClicked={this.state.vertexEdit ? (
+                            (index, vertex) => {
+                                this.setState({editingVertex: index})        
+                            }) 
+                            : (() => {})
+                        }
                     />}
                 </div>
             </div>

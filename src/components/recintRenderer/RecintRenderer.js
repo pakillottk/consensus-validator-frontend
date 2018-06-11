@@ -16,22 +16,23 @@ export default class RecintRenderer extends React.Component {
     }
 
     renderPolygon( zone, polygon ) {
+        const onClick = this.props.onPolygonClicked || (() => {})
         const rgbZoneColor = hexToRGB( zone.color )
         return(
-            <div style={{position:'absolute', top: 0, left: 0, zIndex:10}}>
-                <PolygonRenderer
-                    key={polygon.id}
+            <div key={polygon.id} style={{position:'absolute', top: 0, left: 0, zIndex:10}}>
+                <PolygonRenderer                    
                     polygon={polygon}
-                    fill={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b}, 0.5)`}
+                    fill={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b},0.5)`}
                     stroke={`rgba(${rgbZoneColor.r},${rgbZoneColor.g},${rgbZoneColor.b}, 0.75)`}
                     strokeSize={0.25}
+                    onPolygonClicked={() => onClick( zone, polygon )}
                 />
             </div>
         )
     }
 
     render() {
-        const { plane, zones, polygons, getPlaneRef } = this.props
+        const { plane, zones, onEdit, polygons, getPlaneRef } = this.props
         if( !plane ) {
             return null
         }
@@ -47,7 +48,7 @@ export default class RecintRenderer extends React.Component {
         if( polygons ) {
             zones.forEach( zone => {
                 const polygon = polygons[ zone.id ]
-                if( polygon ) {
+                if( polygon && onEdit !== zone.id ) {
                     polygonsRendered.push( this.renderPolygon( zone, polygon ) )
                 }
             })

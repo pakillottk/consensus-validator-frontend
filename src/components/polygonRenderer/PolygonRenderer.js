@@ -12,12 +12,20 @@ export default class PolygonRenderer extends React.Component {
         return formattedPoints
     }
 
-    renderVertices( vertices ) {
+    renderVertices( color, vertices ) {
+        const clickHandler = this.props.onVertexClicked || (() => {})
         const verticesRendered = []
         vertices.forEach(
             ( vertex, index ) => {
                 verticesRendered.push(
-                    <circle key={index} cx={vertex.x} cy={vertex.y} r={4} style={{fill:'rgba( 0, 255, 0, 0.8 )', cursor: 'pointer'}} />
+                    <a key={index} style={{cursor:'pointer', position:'relative', zIndex:15}} onClick={() => {clickHandler( index, vertex )}}>
+                        <circle                                                     
+                            cx={vertex.x} 
+                            cy={vertex.y} 
+                            r={4} 
+                            style={{fill:color}} 
+                        />
+                    </a>
                 )
             }
         )
@@ -26,11 +34,12 @@ export default class PolygonRenderer extends React.Component {
     }
 
     render() {
-        const { polygon, strokeSize, stroke, fill, drawVertices } = this.props
+        const { polygon, strokeSize, stroke, fill, vertexColor, drawVertices } = this.props
+        const onClick = this.props.onPolygonClicked || (() => {})
         if( !polygon ) {
             return null
         }
-
+        
         const formattedPoints = this.stringifyPoints( polygon.points )
         let [ width, height ] = [ polygon.bounds[ 2 ], polygon.bounds[ 3 ] ]
         if( drawVertices ) {
@@ -40,12 +49,14 @@ export default class PolygonRenderer extends React.Component {
 
         return(
             <div style={{width:'100%', height:'100%'}}>
-                <svg width={ width } height={ height } style={{pointerEvents:'none'}}>
-                    <polygon
-                        points={formattedPoints}
-                        style={{ fill: fill, stroke: stroke, strokeWidth: strokeSize, pointerEvents:'all' }}
-                    />
-                    { drawVertices && this.renderVertices( polygon.points ) }
+                <svg width={ width } height={ height } style={{position:'relative', pointerEvents:'all'}}>
+                    { drawVertices && this.renderVertices( vertexColor, polygon.points ) }
+                    <a style={{cursor:'pointer', position:'relative', zIndex:14}} onClick={() => onClick()}>
+                        <polygon
+                            points={formattedPoints}
+                            style={{ fill: fill, stroke: stroke, strokeWidth: strokeSize }}
+                        />
+                    </a>
                 </svg>
             </div>
         )
