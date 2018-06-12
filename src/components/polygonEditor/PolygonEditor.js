@@ -96,7 +96,7 @@ export default class PolygonEditor extends React.Component {
         const points = [...this.state.polygon.points]
         if( this.state.vertexEdit ) {
             if( this.state.editingVertex !== null ) {
-                points[ this.state.editingVertex ] = {x: this.state.newX, y: this.state.newY} 
+                points[ this.state.editingVertex ] = {...points[ this.state.editingVertex ], x: this.state.newX, y: this.state.newY} 
                 this.setState({editingVertex: null})
             }
         } else {
@@ -128,7 +128,7 @@ export default class PolygonEditor extends React.Component {
         if( index === null ) {
             points.push( {x,y} )
         } else {
-            points[ index ] = {x,y}
+            points[ index ] = {...points[index], x,y}
         }
         this.setState({previewPolygon: new Polygon( points )})
     }

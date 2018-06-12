@@ -6,30 +6,24 @@ import NewRecintZoneButton from '../components/entitites/recintzones/NewRecintZo
 import RecintZonesTable from '../components/entitites/recintzones/RecintZonesTable'
 import { crud } from '../redux/actions/recints'
 import { crud as ZoneActions } from '../redux/actions/recintzones'
+import { crud as PolyActions } from '../redux/actions/zonepolygons'
+import { crud as SeatActions } from '../redux/actions/seatrows'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 
 import RecintEditor from '../components/recintEditor/RecintEditor'
 import Polygon from '../2d/Polygon';
 
-const dummyPoligon = new Polygon([
-    {x:201.4375, y:689.28125}, 
-    {x:277.4375, y:692.28125}, 
-    {x:285.4375, y:417.28125}, 
-    {x:94.4375, y:403.28125}, 
-    {x:17.4375, y:624.28125}, 
-    {x:103.4375, y:643.28125}, 
-    {x:198.4375, y:652.28125}
-])
-
 class RecintEditorPage extends React.Component {
     componentWillMount() {
         this.props.fetch( this.props.match.params.id )
         this.props.fetchZones( '?recint='+this.props.match.params.id )
+        this.props.fetchPolys( '?recint='+this.props.match.params.id )
+        this.props.fetchSeats( '?recint='+this.props.match.params.id )
     }
 
     render() {
-        const { recint, zones } = this.props
+        const { recint, zones, polygons, seats } = this.props
         const recintId = parseInt( this.props.match.params.id, 10 );
         if( !recint ) {
             return(
@@ -57,7 +51,8 @@ class RecintEditorPage extends React.Component {
                     <RecintEditor 
                         plane={recint.recint_plane} 
                         zones={zones}
-                        polygons={{1: dummyPoligon}}
+                        polygons={polygons}
+                        rows={seats}
                     />
                 </Segment>
             </div> 
@@ -66,15 +61,48 @@ class RecintEditorPage extends React.Component {
 }
 export default connect(
     ( store, props ) => {
+        const polyData = store.zonepolygons.data.sort( (a,b) => {
+            return a.vertex_index < b.vertex_index ? -1.0 : 1.0
+        })
+        const polygonPoints = {}
+        polyData.forEach( polyPoint => {
+            if( !polygonPoints[ polyPoint.zone_id ] ) {
+                polygonPoints[ polyPoint.zone_id ] = [ polyPoint ]
+            } else {
+                polygonPoints[ polyPoint.zone_id ].push( polyPoint )
+            }
+        })
+
+        const polygons = {}
+        Object.keys( polygonPoints ).forEach( zone => {
+            polygons[ zone ] = new Polygon( polygonPoints[ zone ] )
+        })
+
+        const seatData = store.seatrows.data.sort( (a,b) => {
+            return a.row_index < b.row_index ? -1.0 : 1.0
+        })
+        const seats = {}
+        seatData.forEach( seatRow => {
+            if( !seats[ seatRow.zone_id ] ) {
+                seats[ seatRow.zone_id ] = [ seatRow ]
+            } else {
+                seats[ seatRow.zone_id ].push( seatRow )
+            }
+        })       
+
         return {
             recint: store.recints.data.get( parseInt( props.match.params.id, 10 ) ),
-            zones: store.recintzones.data
+            zones: store.recintzones.data,
+            polygons,
+            seats
         }
     },
     ( dispatch ) => {
         return {
             fetch: bindActionCreators( crud.fetchById, dispatch ),
-            fetchZones: bindActionCreators( ZoneActions.fetch, dispatch )
+            fetchZones: bindActionCreators( ZoneActions.fetch, dispatch ),
+            fetchPolys: bindActionCreators( PolyActions.fetch, dispatch ),
+            fetchSeats: bindActionCreators( SeatActions.fetch, dispatch )
         }
     }
 )(RecintEditorPage)
