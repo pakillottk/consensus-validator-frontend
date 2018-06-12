@@ -9,14 +9,24 @@ export default class SeatsEditor extends React.Component {
         super( props )
 
         this.state = {
-            rows: props.rows || []
+            rows: props.rows || [],
+            selectedRow: 0
         }
+    }
+
+    componentWillReceiveProps( nextProps ) {
+        this.setState({
+            rows: nextProps.rows || [],
+            selectedRow: nextProps.rows ? this.state.selectedRow : 0
+        }) 
     }
 
     createSeatRow() {
         const { polygon } = this.props
         const defaultCurvePoint = polygon.centroid
         return {
+            numeration: 'even',
+            firstSeat: 2,
             type:'line',
             rowOffset: 0,
             rowDirection: 'right',
@@ -25,31 +35,32 @@ export default class SeatsEditor extends React.Component {
             seatSize:8,
             seatSpacing:16,
             startMargin:0,
-            p0x: defaultCurvePoint.x,
+            p0x: defaultCurvePoint.x - 100,
             p0y: defaultCurvePoint.y,
             p1x: defaultCurvePoint.x,
             p1y: defaultCurvePoint.y,
-            p2x: defaultCurvePoint.x,
+            p2x: defaultCurvePoint.x + 100,
             p2y: defaultCurvePoint.y
         }
     }
 
     addRow() {
-        this.setState({rows: [...this.state.rows, this.createSeatRow()]})
-        this.notifyChanges()
+        const rowData = [...this.state.rows, this.createSeatRow()]
+        this.setState({rows: rowData})
+        this.notifyChanges( rowData )
     }
 
     updateRow( index, field, value, toInt=false ) {
         const rowData = [...this.state.rows]
         rowData[ index ][ field ] = toInt ? parseInt(value, 10):value
         this.setState({rows: rowData})
-        this.notifyChanges()
+        this.notifyChanges( rowData )
     }
 
-    notifyChanges() {
+    notifyChanges( rows ) {
         const {onChange} = this.props
         if( onChange ) {
-            onChange( this.state.rows )
+            onChange( rows )
         }
     }
 
@@ -61,13 +72,7 @@ export default class SeatsEditor extends React.Component {
                     value={rowData.orientation} 
                     options={[{text:'HORIZONTAL',value:'horizontal'},{text:'VERTICAL',value:'vertical'}]} 
                     onChange={(e) => this.updateRow( index, 'orientation', e.target.value )}
-                />
-                <Label>EMPIEZA EN</Label>
-                <Select 
-                    value={rowData.rowDirection} 
-                    options={[{text:'IZQUIERDA',value:'left'},{text:'DERECHA',value:'right'}]} 
-                    onChange={(e) => this.updateRow( index, 'rowDirection', e.target.value )}
-                />
+                />                
                 <Label>ALTURA</Label>
                 <Input
                    type='number'
@@ -126,6 +131,18 @@ export default class SeatsEditor extends React.Component {
         return(
             <div key={index}>
                 <h3>FILA {index+1}</h3>
+                <Label>NUMERACIÓN</Label>
+                <Select 
+                    value={rowData.numeration} 
+                    options={[{text:'CONTINUA',value:'sequencial'},{text:'PAR',value:'even'},{text:'IMPAR', value:'odd'}]} 
+                    onChange={(e) => this.updateRow( index, 'numeration', e.target.value )}
+                />
+                <Label>PRIMER NÚMERO</Label>
+                <Input
+                   type='number'
+                   value={rowData.firstSeat}
+                   onChange={(e) => this.updateRow( index, 'firstSeat', e.target.value, true )}
+                />
                 <Label>TIPO</Label>
                 <Select 
                     value={rowData.type} 
@@ -134,6 +151,12 @@ export default class SeatsEditor extends React.Component {
                 />
                 {rowData.type === 'line' && this.renderLineFields( index, rowData )}
                 {rowData.type === 'curve' && this.renderCurveFields( index, rowData )}
+                <Label>EMPIEZA EN</Label>
+                <Select 
+                    value={rowData.rowDirection} 
+                    options={[{text:'IZQUIERDA',value:'left'},{text:'DERECHA',value:'right'}]} 
+                    onChange={(e) => this.updateRow( index, 'rowDirection', e.target.value )}
+                />
                 <Label>MARGEN</Label>
                 <Input
                    type='number'
@@ -162,12 +185,28 @@ export default class SeatsEditor extends React.Component {
         )
     }
 
+    rowsAsSelectOptions( rows ) {
+        const options = [{text:'SELECCIONE', value: 0}]
+        rows.forEach( (row, index) => {
+            options.push({text: 'FILA ' + (index+1), value: (index+1) })
+        })
+
+        return options
+    }
+
     render() {
+        const { polygon } = this.props
         const { rows } = this.state
         return(
            <div>
-               <Button context="possitive" onClick={()=>this.addRow()}>+ AÑADIR FILA</Button>
-               {rows.map( (row, index) => this.renderRowForm( index ) )}
+               <Button disabled={!polygon} context="possitive" onClick={()=>this.addRow()}>+ AÑADIR FILA</Button>
+               <Label>EDITAR FILA</Label>
+               <Select
+                    value={this.state.selectedRow}
+                    onChange={(e) => this.setState({selectedRow:parseInt(e.target.value,10)})}
+                    options={this.rowsAsSelectOptions(rows)}
+               />
+               {this.state.selectedRow > 0 && this.renderRowForm( this.state.selectedRow - 1 )}
            </div> 
         )
     }

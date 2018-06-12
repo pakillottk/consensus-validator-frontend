@@ -41,6 +41,7 @@ export default class RecintRenderer extends React.Component {
                     rows={rows}
                     polygon={polygon}
                     showCurves={onEdit}
+                    showLines={onEdit}
                 />
             </div>
         )

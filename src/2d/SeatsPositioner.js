@@ -1,4 +1,4 @@
-import { quadraticBezier } from './utils';
+import { quadraticBezier, quadraticBezierArcLength } from './utils';
 
 function horizontalPositioner( polygon, rowOffset, rowDirection, seats, seatSize, seatSpacing, startMargin ) {
   const startX = (seatSize + startMargin) * ( rowDirection === "left" ? 1 : -1 ) + ( rowDirection === "left" ? polygon.bounds[ 0 ] : polygon.bounds[ 2 ] );
@@ -10,7 +10,10 @@ function horizontalPositioner( polygon, rowOffset, rowDirection, seats, seatSize
   for( let i = 0; i < seats; i++ ) {
     let currentX = startX + inrX * (i + adjustOffset );
     let point = { x: currentX, y: rowY };
-    while( !polygon.isInside( point ) && polygon.inBounds( point ) ) {
+    while( !polygon.isInside( point ) ) {
+      if( !polygon.inBounds( point ) ) {
+        return positions;
+      }
       currentX = startX + inrX * (i + ++adjustOffset );
       point = { x: currentX, y: rowY };
     }
@@ -31,7 +34,10 @@ function verticalPositioner( polygon, rowOffset, rowDirection, seats, seatSize, 
   for( let i = 0; i < seats; i++ ) {
     let currentY = startY + inrY * ( i + adjustOffset );
     let point = { x: rowX, y: currentY };
-    while( !polygon.isInside( point ) && polygon.inBounds( point ) ) {
+    while( !polygon.isInside( point ) ) {
+      if( !polygon.inBounds( point ) ) {
+        return positions;
+      }
       currentY = startY + inrY * (i + ++adjustOffset );
       point = { x: rowX, y: currentY };
     }
@@ -47,19 +53,32 @@ export function SeatsPositioner( polygon, rowOffset, rowDirection, orientation, 
                                         verticalPositioner( polygon, rowOffset, rowDirection, seats, seatSize, seatSpacing, startMargin );
 }
 
-export function SeatsPositionerCurve( curve, direction, seats, seatSize ) {
-  const seatLength = seatSize;
-  const totalLength = ( seats * seatLength ) - seatLength;
-
+export function SeatsPositionerCurve( polygon, curve, direction, offset, seats, seatSize, seatSpacing ) {
+  const arcLength = quadraticBezierArcLength( curve.p0, curve.p1, curve.p2 );
+  const unitaryT = 1.0 / arcLength;
+  const tOffset = offset * unitaryT;
+  let t = direction === 'left' ? ( 0 + tOffset ) : ( 1 -  tOffset ); 
+  
+  const spacingStep = unitaryT * seatSpacing; 
+  const seatStep = unitaryT * seatSize;
   const positions = [];
+  let step, point; 
+  let adjustOffset = 0;
   for( let i = 0; i < seats; i++ ) {
-    const currentLength = i * seatLength;
-    const t = totalLength === 0 ? 0.0 : ( currentLength / totalLength );
+    step = (direction === 'left' ? 1.0 : -1.0) * (i + adjustOffset) * (spacingStep + seatStep);
+    point = quadraticBezier( curve.p0, curve.p1, curve.p2, t + step );
+    
+    while( !polygon.isInside( point ) ) {
+      if( !polygon.inBounds( point ) ) {
+        return positions;
+      }
+      adjustOffset++;
+      step = (direction === 'left' ? 1.0 : -1.0) * (i + adjustOffset) * (spacingStep + seatStep);
+      point = quadraticBezier( curve.p0, curve.p1, curve.p2, t + step );
+    }
 
-    const curvePoint = quadraticBezier( curve.p0, curve.p1, curve.p2, direction === 'right' ? ( 1.0 - t ) : t  );
-    const point = { x: curvePoint.x - seatSize * 0.5, y: curvePoint.y - seatSize * 0.5 };
     positions.push( point );
-  }
+  } 
 
   return positions;
 }
