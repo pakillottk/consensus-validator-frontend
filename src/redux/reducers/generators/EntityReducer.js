@@ -16,7 +16,7 @@ export const onFetch = ( preprocessor, postprocessor ) => ( state, action ) => {
 
 export const onSingleFetch = ( preprocessor, postprocessor ) => ( state, action ) => {
     let data = state.data;
-    const item = action.payload.data;
+    const item = preprocessor( action.payload.data );
 
     let newState = {...state, data: data.set( item.id, item ) };
     if( postprocessor ) {

@@ -20,6 +20,7 @@ class RecintsFilters extends React.Component {
             <div>
                 <RecintFiltersComponent
                     title="BUSCAR RECINTOS"
+                    hidden={{recint_plane:true}}
                 />
             </div>
         )

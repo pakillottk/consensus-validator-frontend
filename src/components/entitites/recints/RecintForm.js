@@ -5,7 +5,7 @@ import EntityForm from '../EntityForm'
 
 import { crud } from '../../../redux/actions/recints'
 import RecintValidator from '../../forms/Validators/RecintValidator'
-//import RemovePaymentButton from './RemovePaymentButton'
+import RemoveRecintButton from './RemoveRecintButton'
 
 const Form = EntityForm( 'recints', crud, Schema, 'RECINTO', RecintValidator )
 export default class RecintForm extends React.Component {
@@ -14,6 +14,7 @@ export default class RecintForm extends React.Component {
         return(
             <div>
                 <Form id={this.props.id} multipart={true} dataTransformer={dataTransformer} />  
+                { this.props.id && <RemoveRecintButton id={this.props.id} /> }
             </div>
         ) 
     }

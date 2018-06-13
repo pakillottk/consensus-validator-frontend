@@ -48,7 +48,7 @@ export default class RecintRenderer extends React.Component {
     }
 
     render() {
-        const { plane, zones, onEdit, polygons, rows, getPlaneRef } = this.props
+        const { plane, zones, onEdit, showPolygons, polygons, rows, getPlaneRef } = this.props
         if( !plane ) {
             return null
         }
@@ -66,7 +66,7 @@ export default class RecintRenderer extends React.Component {
             zones.forEach( zone => {
                 const polygon = polygons[ zone.id ]
                 if( polygon ) {
-                    if( onEdit !== zone.id ) {
+                    if( onEdit !== zone.id && showPolygons ) {
                         polygonsRendered.push( this.renderPolygon( zone, polygon ) )
                     } 
                     if( rows ) {

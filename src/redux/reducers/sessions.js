@@ -9,6 +9,10 @@ const preprocessor = ( data ) => {
     if( data.logos_img ) {
         (new Image()).src = API.getFullPath(data.logos_img);
     }
+    if( data.recint ) {
+        data.location = data.recint.location + ( data.recint.address ? ` (${data.recint.address})` : "" );
+        data.recint = data.recint.recint;
+    }
     return data;
 }
 

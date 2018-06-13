@@ -21,7 +21,8 @@ class RecintEditor extends React.Component {
             editingZone: 0,
             polygons: {...props.polygons},
             rows: {...props.rows} || {},
-            planeContainer: null
+            planeContainer: null,
+            modified: false
         }
     }
 
@@ -44,13 +45,13 @@ class RecintEditor extends React.Component {
         } else {
             polygons[ this.state.editingZone ] = polygon 
         }
-        this.setState({polygons})
+        this.setState({polygons, modified: true})
     }
 
     updateSeatRows( rows ) {
         const newRows = {...this.state.rows}
         newRows[ this.state.editingZone ] = rows
-        this.setState({rows: newRows})
+        this.setState({rows: newRows, modified: true})
     }
 
     saveData() {
@@ -101,6 +102,8 @@ class RecintEditor extends React.Component {
                 }
             }
         })
+
+        this.setState({modified: false})
     }
 
     removePolygon( zoneId ) {
@@ -117,13 +120,14 @@ class RecintEditor extends React.Component {
 
     render() {
         const { plane, zones } = this.props
-        const { polygons, rows, editingZone } = this.state
+        const { polygons, rows, editingZone, modified } = this.state
         return(
             <div>
-                <Button full context="possitive" onClick={() => this.saveData()}>GUARDAR RECINTO</Button>
+                <Button disabled={!modified} full context="possitive" onClick={() => this.saveData()}>GUARDAR RECINTO</Button>
                 <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'top'}}>
                     <div>
                         <RecintRenderer
+                            showPolygons
                             onEdit={parseInt(editingZone,10)}
                             plane={plane}
                             zones={zones}
