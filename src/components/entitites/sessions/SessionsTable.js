@@ -19,7 +19,7 @@ class SessionsTable extends React.Component {
             <EntityTable 
                 schema={schema} 
                 items={sessions} 
-                hidden={{logos_img:true, company_id: true, sellers_locked_at: true, ticketoffice_closed_at: true}}
+                hidden={{ticketing_flow: true, recint_id: true, logos_img:true, company_id: true, sellers_locked_at: true, ticketoffice_closed_at: true}}
                 full 
                 onItemClick={ onItemClick ? onItemClick : ( () => {} ) }
             />

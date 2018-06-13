@@ -11,6 +11,7 @@ const preprocessor = ( data ) => {
     }
     if( data.recint ) {
         data.location = data.recint.location + ( data.recint.address ? ` (${data.recint.address})` : "" );
+        data.recint_plane = data.recint.recint_plane;
         data.recint = data.recint.recint;
     }
     return data;

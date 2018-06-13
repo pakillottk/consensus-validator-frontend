@@ -15,6 +15,7 @@ import NewScanGroupButton from '../components/entitites/scangroups/NewScanGroupB
 import ScanGroupsTable from '../components/entitites/scangroups/ScanGroupsTable'
 import ScanTypesTable from '../components/entitites/scantypes/ScanTypesTable'
 import UserScanGroupTable from '../components/entitites/userscangroups/UserScanGroupsTable'
+import RecintTicketsConfigurator from '../components/recintTicketsConfigurator/RecintTicketsConfigurator'
 
 import CodesFilter from '../components/entitites/codes/CodesFilters'
 import CodesTable from '../components/entitites/codes/CodesTable'
@@ -89,16 +90,20 @@ class SessionAdminPage extends React.Component {
                             <NewTypeButton sessionId={sessionId} />
                             <TypesTable sessionId={ sessionId } />
                         </div>
-                        <div>
+                        {session.ticketing_flow === 'by_types' && <div>
                             <h2 style={{textAlign: 'center'}}>ENTREGAS</h2>
                             <NewDeliverButton />
                             <DeliveriesTable sessionId={sessionId} />
-                        </div>
+                        </div>}                        
                         <div>
                             <h2 style={{textAlign: 'center'}}>GASTOS Y COMISIONES</h2>
                             <NewComissionButton sessionId={sessionId} />
                             <ComissionsTable sessionId={sessionId} />
                         </div>
+                        {session.ticketing_flow === 'by_zones' && <div>
+                            <h2 style={{textAlign: 'center'}}>ASIGNAR ZONAS/LOCALIDADES</h2>
+                            <RecintTicketsConfigurator sessionId={sessionId} plane={session.recint_plane} />
+                        </div>}
                     </div>
 
                     <Divider full />

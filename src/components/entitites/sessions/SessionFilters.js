@@ -51,7 +51,7 @@ class SessionFilters extends React.Component {
                     title="BUSCAR SESIÓN"
                     initialQuery={"from_date="+moment(initialFrom).toISOString()+"&to_date="+moment(initialTo).toISOString()}
                     fetchBaseQuery={''}
-                    hidden={{header_img: true, logos_img: true, date: true, sellers_locked_at: true, ticketoffice_closed_at: true}}
+                    hidden={{ticketing_flow: true, location:true, recint:true, header_img: true, logos_img: true, date: true, sellers_locked_at: true, ticketoffice_closed_at: true}}
                     selectors={{}}
                 />
             </div>

@@ -31,7 +31,7 @@ export default class SessionForm extends React.Component {
     render() {        
         return(
             <div>
-                <Form id={this.props.id} hidden={{company_id: true}} dataTransformer={ this.transformer.bind( this ) } />  
+                <Form id={this.props.id} hidden={{company_id: true, recint: true, location: true}} dataTransformer={ this.transformer.bind( this ) } />  
                 { this.props.id && <RemoveSessionButton id={this.props.id} /> }
             </div>
         ) 

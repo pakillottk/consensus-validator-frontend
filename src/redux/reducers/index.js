@@ -8,6 +8,7 @@ import recints from './recints'
 import recintzones from './recintzones'
 import zonepolygons from './zonepolygons'
 import seatrows from './seatrows'
+import seatprices from './seatprices'
 import codes from './codes'
 import deliveries from './deliveries'
 import sales from './sales'
@@ -32,6 +33,7 @@ const reducers = {
     recintzones,
     zonepolygons,
     seatrows,
+    seatprices,
     codes,
     deliveries,
     sales,

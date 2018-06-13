@@ -31,7 +31,6 @@ export default class SeatsRenderer extends React.Component {
                         row.seatSpacing
                     )   
                 }
-                
                 let seatInr 
                 switch (row.numeration) {
                     case 'even':
