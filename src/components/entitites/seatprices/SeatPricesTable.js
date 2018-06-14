@@ -23,7 +23,7 @@ class SeatPricesTable extends React.Component {
                 <EntityTable
                     schema={schema}
                     items={seatprices}
-                    hidden={{session_id: true}}
+                    hidden={{session_id: true, zone_id: true, type_id: true}}
                     formTitle="EDITAR ASIGNACIÓN PRECIOS"
                     Form={SeatPriceForm}
                     full

@@ -90,11 +90,11 @@ class SessionAdminPage extends React.Component {
                             <NewTypeButton sessionId={sessionId} />
                             <TypesTable sessionId={ sessionId } />
                         </div>
-                        {session.ticketing_flow === 'by_types' && <div>
+                        <div>
                             <h2 style={{textAlign: 'center'}}>ENTREGAS</h2>
                             <NewDeliverButton />
                             <DeliveriesTable sessionId={sessionId} />
-                        </div>}                        
+                        </div>                   
                         <div>
                             <h2 style={{textAlign: 'center'}}>GASTOS Y COMISIONES</h2>
                             <NewComissionButton sessionId={sessionId} />

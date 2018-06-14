@@ -1,5 +1,7 @@
+import React from 'react'
 import RecintZoneSelector from '../../forms/Controls/RecintZoneSelector/RecintZoneSelector'
 import TypeSelector from '../../forms/Controls/TypeSelector/TypeSelector'
+import YesNoSelector from '../../forms/Controls/YesNoSelector/YesNoSelector'
 
 const schema = [
     {
@@ -10,6 +12,15 @@ const schema = [
         component: RecintZoneSelector
     },
     {
+        name: 'zone',
+        label: 'ZONA',
+        type: 'input',
+        component: 'hidden',
+        displayFormat: ( zone ) => {
+            return <p style={{color: zone.color}}>{zone.zone}</p>
+        }
+    },
+    {
         name: 'type_id',
         label: 'TIPO',
         defaultValue: 0,
@@ -17,11 +28,32 @@ const schema = [
         component: TypeSelector
     },
     {
+        name: 'type',
+        label: 'TIPO',
+        type:'input',
+        component:'hidden',
+        displayFormat: ( type ) => {
+            return type.type + ` (${type.price}€)`
+        }
+    },
+    {
         name: 'numerated',
-        label: '¿NUMERADO?',
-        type: 'input',
-        defaultValue: false,
-        component: 'checkbox'
+        label: 'NUMERADO',
+        defaultValue: 'false',
+        type: 'custom',
+        component: YesNoSelector,
+        displayFormat: ( numerated ) => {
+            return numerated ? 'SÍ': 'NO'
+        },
+        tooltip: (
+            <div>
+                <p>
+                    Si elige no numerar, los campos: DESDE FILA, DESDE ASIENTO, HASTA FILA, HASTA ASIENTO
+                    serán ignorados. Las entradas se limitarán a las cantidades definidas en las entregas
+                    del tipo elegido.
+                </p>
+            </div> 
+        )
     },
     {
         name: 'from_row',

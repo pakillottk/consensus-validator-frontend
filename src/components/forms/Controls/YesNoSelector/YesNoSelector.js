@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from '../../../ui/form/Select/Select'
 
-export default class TicketingFlowSelector extends React.Component {
+export default class YesNoSelector extends React.Component {
     render() {
         const { name,  disabled, onChange, value } = this.props;
 
@@ -12,9 +12,8 @@ export default class TicketingFlowSelector extends React.Component {
                 onChange={onChange} 
                 value={value} 
                 options={[
-                    { value: 0, text:'SELECCIONE' },
-                    { value: 'by_types', text:'POR TIPOS' },
-                    { value: 'by_zones', text:'POR ZONAS' }
+                    { value: 'true', text:'SÍ' },
+                    { value: 'false', text:'NO' }
                 ]} 
             /> 
         )

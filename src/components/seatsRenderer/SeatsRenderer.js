@@ -3,7 +3,17 @@ import { SeatsPositioner, SeatsPositionerCurve } from '../../2d/SeatsPositioner'
 import { quadraticBezier } from '../../2d/utils'
 
 export default class SeatsRenderer extends React.Component {
-    renderSeats( color, polygon, rows ) {
+    constructor( props ) {
+        super( props )
+
+        this.state = {
+            hoveredSeat: null
+        }
+    }
+
+    renderSeats( zone, color, polygon, rows ) {
+        const onSeatHover = this.props.onSeatHover || ( () => {} )
+        const onSeatHoverExit = this.props.onSeatHoverExit || ( () => {} )
         const seats = []
         const seatSizes = []
         const seatPositions = []
@@ -43,7 +53,8 @@ export default class SeatsRenderer extends React.Component {
                     }
                 }
 
-                let seatNumber
+                let seatNumber 
+                let seatHovered = false
                 for( let i = 0; i < points.length; i++ ) {
                     seatPositions.push( points[i] )
                     
@@ -51,8 +62,24 @@ export default class SeatsRenderer extends React.Component {
                     seatNumbers.push( seatNumber )
                     seatSizes.push( row.seatSize )
 
+                    if( this.state.hoveredSeat ) {
+                        seatHovered = this.state.hoveredSeat.row === row && 
+                                      this.state.hoveredSeat.seat === i
+                    }
+
                     seats.push(
-                        <a key={seatCounter++} style={{cursor:'pointer', position:'relative', zIndex:15}}>
+                        <a 
+                            key={seatCounter++} 
+                            style={{
+                                cursor:'pointer', 
+                                position:'relative', 
+                                zIndex:15, 
+                                pointerEvents:'auto',
+                                opacity: seatHovered ? 0.7 : 1.0
+                            }}
+                            onMouseEnter={() => { this.setState({hoveredSeat:{row,seat:i}}); onSeatHover( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
+                            onMouseLeave={() => { this.setState({hoveredSeat:null}); onSeatHoverExit( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
+                        >
                             <circle                                                     
                                 cx={points[i].x} 
                                 cy={points[i].y} 
@@ -80,10 +107,11 @@ export default class SeatsRenderer extends React.Component {
                     key={i}
                     style={{
                         position:'absolute',
+                        zIndex:16,
                         top: position.y - halfSeatSize,
                         left: position.x - halfSeatSize,
                         fontSize: (seatData.sizes[ i ]) + 'px',
-                        color:'white',
+                        color:'white'
                     }}
                 >
                     {seatData.numeration[i]}
@@ -200,15 +228,15 @@ export default class SeatsRenderer extends React.Component {
     }
 
     render() {
-        const { rows, polygon, color, showCurves, showLines } = this.props
+        const { rows, polygon, zone, color, showCurves, showLines } = this.props
         if( !polygon || !rows ) {
             return null
         }
         const [ width, height ] = [ polygon.bounds[ 2 ], polygon.bounds[ 3 ] ]
-        const seatData = this.renderSeats( color, polygon, rows );
+        const seatData = this.renderSeats( zone, color, polygon, rows );
         return(
-            <div style={{width:'100%', height:'100%', pointerEvents:'none'}}>
-                <svg width={ width } height={ height } style={{position:'relative'}}>
+        <div style={{position:'relative', zIndex:5, pointerEvents:'none'}}>
+                <svg width={ width } height={ height } style={{position:'relative', zIndex: 10}}>
                     { seatData.rendered }                    
                     { showCurves && this.renderCurves( rows ) }
                     { showLines && this.renderLines( polygon, rows ) }

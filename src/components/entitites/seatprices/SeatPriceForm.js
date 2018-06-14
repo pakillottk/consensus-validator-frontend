@@ -12,7 +12,7 @@ export default class SeatPriceForm extends React.Component {
         const { id, defaultvalues, dataTransformer } = this.props
         return(
             <div>
-                <Form defaultvalues={defaultvalues} dataTransformer={dataTransformer} id={id} hidden={{session_id: true}}/>
+                <Form defaultvalues={defaultvalues} dataTransformer={dataTransformer} id={id} hidden={{zone:true,type:true,session_id: true}}/>
                 { this.props.id && <RemoveSeatPriceButton id={this.props.id} /> }
             </div>
         );

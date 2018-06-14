@@ -33,15 +33,19 @@ export default class RecintRenderer extends React.Component {
     }
 
     renderSeats( zone, polygon, rows, onEdit=false ) {
+        const { onSeatHover, onSeatHoverExit } = this.props
         const rgbZoneColor = hexToRGB( zone.color )
         return(
-            <div key={zone.id} style={{position:'absolute', top: 0, left: 0, zIndex:11}}>
+            <div key={zone.id} style={{pointerEvents:'none', position:'absolute', top: 0, left: 0, zIndex:11}}>
                 <SeatsRenderer
                     color={rgbZoneColor}
                     rows={rows}
+                    zone={zone}
                     polygon={polygon}
                     showCurves={onEdit}
                     showLines={onEdit}
+                    onSeatHover={onSeatHover}
+                    onSeatHoverExit={onSeatHoverExit}
                 />
             </div>
         )
@@ -96,7 +100,8 @@ export default class RecintRenderer extends React.Component {
                 >
                     <img alt={"Plano del recinto"} src={API.getFullPath(plane)} />                    
                     {polygonsRendered}      
-                    {seatsRendered}              
+                    {seatsRendered}  
+                    {this.props.children}            
                </div>
            </div> 
         )

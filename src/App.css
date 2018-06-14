@@ -36,6 +36,15 @@ body {
   to { transform: rotate(360deg); }
 }
 
+.appears-from-bottom {
+  animation-fill-mode: backwards;
+  animation: come-from-bottom 180ms ease-in-out; 
+}
+@keyframes come-from-bottom {
+  from { opacity: 0; transform: translateY(20px) scale(0.5); transform-origin: bottom; }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 .center-aligned {
   text-align: center;
 }

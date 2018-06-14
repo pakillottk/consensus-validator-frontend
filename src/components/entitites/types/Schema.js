@@ -28,7 +28,17 @@ const schema = [
         label: 'CANTIDAD',
         type: 'input',
         defaultValue: 0,
-        component: 'number'
+        component: 'number',
+        tooltip:(
+            <div>
+                <p>
+                    Este campo solo es relevante cuando use un flujo
+                    de ventas por tipos o vaya a asignar este tipo de
+                    entrada a una zona no numerada. En otro caso, será
+                    ignorado.
+                </p>
+            </div>
+        )
     },
     {
         name: 'session_id',
