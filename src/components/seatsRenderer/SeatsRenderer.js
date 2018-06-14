@@ -1,8 +1,11 @@
 import React from 'react'
 import { SeatsPositioner, SeatsPositionerCurve } from '../../2d/SeatsPositioner'
 import { quadraticBezier } from '../../2d/utils'
+import GetSeatState from '../../entities/SeatReserves/GetSeatState'
 
-export default class SeatsRenderer extends React.Component {
+import { connect } from 'react-redux'
+
+class SeatsRenderer extends React.Component {
     constructor( props ) {
         super( props )
 
@@ -11,9 +14,19 @@ export default class SeatsRenderer extends React.Component {
         }
     }
 
+    isSelected( seatsSelected, zoneId, row, seatIndex ) {
+        return seatsSelected.some( seat => {
+            return seat.zoneId === zoneId &&
+            seat.row === row &&
+            seat.seatIndex === seatIndex
+        })
+    }
+
     renderSeats( zone, color, polygon, rows ) {
+        const { seatreserves, showSeatState, seatsSelected } = this.props
         const onSeatHover = this.props.onSeatHover || ( () => {} )
         const onSeatHoverExit = this.props.onSeatHoverExit || ( () => {} )
+        const onSeatClick = this.props.onSeatClick || ( () => {} )
         const seats = []
         const seatSizes = []
         const seatPositions = []
@@ -67,6 +80,24 @@ export default class SeatsRenderer extends React.Component {
                                       this.state.hoveredSeat.seat === i
                     }
 
+                    const selected = this.isSelected( seatsSelected, zone.id, index+1, i+1 )
+                    let seatColor = color
+                    if( showSeatState ) {
+                        const seatState = GetSeatState( seatreserves, zone.id, index+1, i+1 )
+                        switch( seatState.state ) {
+                            case 'OCUPADO': {
+                                seatColor = { r: 0, g: 0, b: 0, a: 0.5 }
+                                break;
+                            }
+                            default: {
+                                seatColor = { ...color, a: 1.0 }
+                            }
+                        }
+                    }
+                    if( selected ) {
+                        seatColor = {...seatColor, r: 200, g: 150, b: 0 }
+                    }
+ 
                     seats.push(
                         <a 
                             key={seatCounter++} 
@@ -77,6 +108,7 @@ export default class SeatsRenderer extends React.Component {
                                 pointerEvents:'auto',
                                 opacity: seatHovered ? 0.7 : 1.0
                             }}
+                            onClick={()=> onSeatClick( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] )}
                             onMouseEnter={() => { this.setState({hoveredSeat:{row,seat:i}}); onSeatHover( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
                             onMouseLeave={() => { this.setState({hoveredSeat:null}); onSeatHoverExit( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
                         >
@@ -84,7 +116,7 @@ export default class SeatsRenderer extends React.Component {
                                 cx={points[i].x} 
                                 cy={points[i].y} 
                                 r={row.seatSize} 
-                                style={{fill:`rgba(${color.r},${color.g},${color.b},1.0)`}} 
+                                style={{fill:`rgba(${seatColor.r},${seatColor.g},${seatColor.b},${seatColor.a || 1.0})`}} 
                             />
                         </a>
                     )
@@ -246,3 +278,11 @@ export default class SeatsRenderer extends React.Component {
         )
     }
 }
+
+export default connect(
+    ( store ) => {
+        return {
+            seatreserves: store.seatreserves.data
+        }
+    }
+)(SeatsRenderer)
