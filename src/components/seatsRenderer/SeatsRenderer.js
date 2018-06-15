@@ -15,6 +15,9 @@ class SeatsRenderer extends React.Component {
     }
 
     isSelected( seatsSelected, zoneId, row, seatIndex ) {
+        if( !seatsSelected ) {
+            return false
+        }
         return seatsSelected.some( seat => {
             return seat.zoneId === zoneId &&
             seat.row === row &&
@@ -22,8 +25,21 @@ class SeatsRenderer extends React.Component {
         })
     }
 
+    isPriced( zoneId, row, seatIndex ) {
+        const { seatprices } = this.props
+        return seatprices.some(
+            price => {
+                return price.zone_id === zoneId &&
+                price.from_row <= row &&
+                price.to_row >= row &&
+                price.from_seat <= seatIndex &&
+                price.to_seat >= seatIndex
+            }
+        )
+    }
+
     renderSeats( zone, color, polygon, rows ) {
-        const { seatreserves, showSeatState, seatsSelected } = this.props
+        const { seatreserves, showOnlyPriced, showSeatState, seatsSelected } = this.props
         const onSeatHover = this.props.onSeatHover || ( () => {} )
         const onSeatHoverExit = this.props.onSeatHoverExit || ( () => {} )
         const onSeatClick = this.props.onSeatClick || ( () => {} )
@@ -68,7 +84,7 @@ class SeatsRenderer extends React.Component {
 
                 let seatNumber 
                 let seatHovered = false
-                for( let i = 0; i < points.length; i++ ) {
+                for( let i = 0; i < points.length; i++ ) {                    
                     seatPositions.push( points[i] )
                     
                     seatNumber = row.firstSeat + (seatInr * i)
@@ -87,7 +103,11 @@ class SeatsRenderer extends React.Component {
                         switch( seatState.state ) {
                             case 'OCUPADO': {
                                 seatColor = { r: 0, g: 0, b: 0, a: 0.5 }
-                                break;
+                                break
+                            }
+                            case 'BLOQUEADO': {
+                                seatColor = { r: 255, g: 110, b: 0, a: 1.0 }
+                                break
                             }
                             default: {
                                 seatColor = { ...color, a: 1.0 }
@@ -97,29 +117,57 @@ class SeatsRenderer extends React.Component {
                     if( selected ) {
                         seatColor = {...seatColor, r: 200, g: 150, b: 0 }
                     }
- 
-                    seats.push(
-                        <a 
-                            key={seatCounter++} 
-                            style={{
-                                cursor:'pointer', 
-                                position:'relative', 
-                                zIndex:15, 
-                                pointerEvents:'auto',
-                                opacity: seatHovered ? 0.7 : 1.0
-                            }}
-                            onClick={()=> onSeatClick( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] )}
-                            onMouseEnter={() => { this.setState({hoveredSeat:{row,seat:i}}); onSeatHover( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
-                            onMouseLeave={() => { this.setState({hoveredSeat:null}); onSeatHoverExit( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
-                        >
-                            <circle                                                     
-                                cx={points[i].x} 
-                                cy={points[i].y} 
-                                r={row.seatSize} 
-                                style={{fill:`rgba(${seatColor.r},${seatColor.g},${seatColor.b},${seatColor.a || 1.0})`}} 
-                            />
-                        </a>
-                    )
+
+                    let usableSeat = true
+                    if( showOnlyPriced ) {
+                        if( !this.isPriced( zone.id, index+1, i+1 ) ) {
+                            usableSeat = false
+                            seatColor = { r: 200, g: 200, b: 200, a:1.0 }
+                        }
+                    }
+                    if( usableSeat ) {
+                        seats.push(
+                            <a 
+                                key={seatCounter++} 
+                                style={{
+                                    cursor:'pointer', 
+                                    position:'relative', 
+                                    zIndex:15, 
+                                    pointerEvents:'auto',
+                                    opacity: seatHovered ? 0.7 : 1.0
+                                }}
+                                onClick={()=> onSeatClick( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] )}
+                                onMouseEnter={() => { this.setState({hoveredSeat:{row,seat:i}}); onSeatHover( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
+                                onMouseLeave={() => { this.setState({hoveredSeat:null}); onSeatHoverExit( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
+                            >
+                                <circle                                                     
+                                    cx={points[i].x} 
+                                    cy={points[i].y} 
+                                    r={row.seatSize} 
+                                    style={{fill:`rgba(${seatColor.r},${seatColor.g},${seatColor.b},${seatColor.a || 1.0})`}} 
+                                />
+                            </a>
+                        )    
+                    } else {
+                        seats.push(
+                            <a 
+                                key={seatCounter++} 
+                                style={{
+                                    cursor:'pointer', 
+                                    position:'relative', 
+                                    zIndex:15, 
+                                    pointerEvents:'none',
+                                }}
+                            >
+                                <circle                                                     
+                                    cx={points[i].x} 
+                                    cy={points[i].y} 
+                                    r={row.seatSize} 
+                                    style={{fill:`rgba(200, 200, 200, 1.0)`}} 
+                                />
+                            </a>
+                        )
+                    }
                 }
             }
         )
@@ -282,7 +330,8 @@ class SeatsRenderer extends React.Component {
 export default connect(
     ( store ) => {
         return {
-            seatreserves: store.seatreserves.data
+            seatreserves: store.seatreserves.data,
+            seatprices: store.seatprices.data
         }
     }
 )(SeatsRenderer)
