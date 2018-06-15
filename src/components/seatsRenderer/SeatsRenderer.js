@@ -32,8 +32,10 @@ class SeatsRenderer extends React.Component {
                 return price.zone_id === zoneId &&
                 price.from_row <= row &&
                 price.to_row >= row &&
-                price.from_seat <= seatIndex &&
-                price.to_seat >= seatIndex
+                (
+                    row < price.to_row || 
+                    (price.to_row === row &&  price.to_seat >= seatIndex)
+                )
             }
         )
     }
