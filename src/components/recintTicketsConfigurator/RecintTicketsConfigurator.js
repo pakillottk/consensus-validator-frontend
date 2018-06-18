@@ -4,7 +4,6 @@ import RecintRenderer from '../recintRenderer/RecintRenderer'
 import SeatPricesTable from '../entitites/seatprices/SeatPricesTable'
 import SeatPriceRenderer from '../seatPriceRenderer/SeatPriceRenderer'
 import Segment from '../ui/segment/Segment'
-import Table from '../ui/table/Table'
 import Button from '../ui/button/Button'
 
 import { connect } from 'react-redux'
@@ -60,6 +59,8 @@ class RecintTicketsConfigurator extends React.Component {
                 seatFound = seat
                 return true
             }
+
+            return false
         })
 
         return seatFound

@@ -8,7 +8,7 @@ class SeatPriceRenderer extends React.Component {
     renderTypes( types ) {
         const rendered = []
         types.forEach( type => rendered.push((
-            <p>{type.type} ({type.price}€)</p>
+            <p key={type.id}>{type.type} ({type.price}€)</p>
         )))
 
         return rendered

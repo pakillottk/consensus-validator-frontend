@@ -41,7 +41,7 @@ class SeatsRenderer extends React.Component {
     }
 
     renderSeats( zone, color, polygon, rows ) {
-        const { seatreserves, showOnlyPriced, showSeatState, seatsSelected } = this.props
+        const { me, seatreserves, showOnlyPriced, showSeatState, seatsSelected } = this.props
         const onSeatHover = this.props.onSeatHover || ( () => {} )
         const onSeatHoverExit = this.props.onSeatHoverExit || ( () => {} )
         const onSeatClick = this.props.onSeatClick || ( () => {} )
@@ -99,7 +99,7 @@ class SeatsRenderer extends React.Component {
                     }
 
                     const selected = this.isSelected( seatsSelected, zone.id, index+1, i+1 )
-                    const seatState = GetSeatState( seatreserves, zone.id, index+1, i+1 )
+                    const seatState = GetSeatState( seatreserves, zone.id, index+1, i+1, me.id )
                     let seatColor = color
                     if( showSeatState ) {
                         switch( seatState.state ) {
@@ -109,6 +109,10 @@ class SeatsRenderer extends React.Component {
                             }
                             case 'BLOQUEADO': {
                                 seatColor = { r: 255, g: 110, b: 0, a: 1.0 }
+                                break
+                            }
+                            case 'RESERVADO': {
+                                seatColor = { r: 100, g: 0, b: 255, a: 1.0 }
                                 break
                             }
                             default: {
@@ -332,6 +336,7 @@ class SeatsRenderer extends React.Component {
 export default connect(
     ( store ) => {
         return {
+            me: store.auth.me,
             seatreserves: store.seatreserves.data,
             seatprices: store.seatprices.data
         }

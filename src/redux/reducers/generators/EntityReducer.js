@@ -62,9 +62,14 @@ export const onUpdate = ( preprocessor, postprocessor ) => ( state, action ) => 
     return newState;
 }
 
-export const onDelete = ( state, action ) => {
+export const onDelete = ( preprocessor, postprocessor ) => ( state, action ) => {
     let data = state.data.delete( parseInt(action.meta.deleted_id, 10) );
-    return {...state, data };
+    let newState = {...state, data };
+    if( postprocessor ) {
+        newState = postprocessor( 'delete', newState, state, action )
+    }
+
+    return newState
 }
 
 export const onBulkDelete = ( state, action ) => {
@@ -88,7 +93,7 @@ const builder = ( entity, validActions, preprocessor, postprocessor ) => {
     validTypes[ prefix + '_SINGLE_FETCH_FULFILLED' ]   = onSingleFetch( preprocessor, postprocessor )
     validTypes[ prefix + '_CREATE_FULFILLED' ]         = onCreation( preprocessor, postprocessor );
     validTypes[ prefix + '_UPDATE_FULFILLED' ]         = onUpdate( preprocessor, postprocessor );
-    validTypes[ prefix + '_DELETE_FULFILLED' ]         = onDelete;
+    validTypes[ prefix + '_DELETE_FULFILLED' ]         = onDelete( preprocessor, postprocessor );
     validTypes[ prefix + '_BULK_DELETE_FULFILLED' ]    = onBulkDelete;
     validTypes[ prefix + '_FLUSH' ]                    = flushData;
     validTypes[ 'LOGOUT' ]                             = flushData;

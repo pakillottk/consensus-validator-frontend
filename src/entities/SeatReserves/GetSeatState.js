@@ -11,13 +11,17 @@ export default function( seatreserves, zoneId, row, seatIndex, meId=null ) {
                 return true
             }
         }
+
+        return false
     })
-    if( reserve ){
-        if( !reserve.expires_at || moment(reserve.expires_at).isBefore( moment() ) ) {
-            if( reserve.user_id === null || reserve.user_id === meId ) {
-                return {state: 'BLOQUEADO', color:'rgb(255,150,150)'}    
+    if( reserve ) {
+        if( !reserve.expires_at || moment().isBefore( moment( reserve.expires_at ) ) ) {
+            if( reserve.user_id === null || parseInt(reserve.user_id,10) !== parseInt(meId,10) ) {
+                return {reserve_id: reserve.id, state: 'BLOQUEADO', color:'rgb(255,150,150)', reservedBy: reserve.user_id}    
+            } else if( parseInt(reserve.user_id,10) === parseInt(meId,10) ) {
+                return {reserve_id: reserve.id, state: 'RESERVADO', color:'yellow', reservedBy: reserve.user_id}
             }
-            return {state: 'OCUPADO', color:'rgb(255,150,150)'}
+            return {reserve_id: reserve.id, state: 'OCUPADO', color:'rgb(255,150,150)', reservedBy: reserve.user_id}
         } 
     }
     
