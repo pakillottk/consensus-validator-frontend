@@ -99,9 +99,9 @@ class SeatsRenderer extends React.Component {
                     }
 
                     const selected = this.isSelected( seatsSelected, zone.id, index+1, i+1 )
+                    const seatState = GetSeatState( seatreserves, zone.id, index+1, i+1 )
                     let seatColor = color
                     if( showSeatState ) {
-                        const seatState = GetSeatState( seatreserves, zone.id, index+1, i+1 )
                         switch( seatState.state ) {
                             case 'OCUPADO': {
                                 seatColor = { r: 0, g: 0, b: 0, a: 0.5 }
@@ -138,7 +138,7 @@ class SeatsRenderer extends React.Component {
                                     pointerEvents:'auto',
                                     opacity: seatHovered ? 0.7 : 1.0
                                 }}
-                                onClick={()=> onSeatClick( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] )}
+                                onClick={()=> onSeatClick( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i], seatState )}
                                 onMouseEnter={() => { this.setState({hoveredSeat:{row,seat:i}}); onSeatHover( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
                                 onMouseLeave={() => { this.setState({hoveredSeat:null}); onSeatHoverExit( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
                             >

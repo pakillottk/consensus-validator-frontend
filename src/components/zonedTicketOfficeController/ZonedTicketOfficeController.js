@@ -18,7 +18,8 @@ class ZonedTicketOfficeController extends React.Component {
         super( props )
 
         this.state = {
-            seatInfo: null
+            seatInfo: null,
+            selectedSeats: []
         }
     }
     componentWillMount() {
@@ -36,6 +37,54 @@ class ZonedTicketOfficeController extends React.Component {
         fetchSeats( '?session='+sessionId )
         fetchReserves( '?session='+sessionId )
         fetchSeatPrices( '?session='+sessionId )
+    }
+
+    isSeatInArray( seatsArray, seatData ) {
+        let seatFound = null
+        seatsArray.some( seat => {
+            if(    
+                seat.zoneId === seatData.zoneId &&
+                seat.row === seatData.row &&
+                seat.seatIndex === seatData.seatIndex
+            ) {
+                seatFound = seat
+                return true
+            }
+        })
+
+        return seatFound
+    }
+
+    deselectSeat( index ) {
+        let selectedSeats = [...this.state.selectedSeats]
+        selectedSeats.splice( index, 1 )
+        for( let i = index; i < selectedSeats.length; i++ ) {
+            selectedSeats[ i ].index--
+        }
+        this.setState({selectedSeats})
+    }
+
+    clickedSeat( zoneId, row, seatIndex, seatNumber, position, seatState ) {
+        const selectedSeats = [...this.state.selectedSeats]
+        const seatData = {
+            index: selectedSeats.length,
+            zoneId,
+            zone: this.props.zones.get( parseInt(zoneId,10) ).zone,
+            row,
+            seatIndex,
+            seatNumber,
+            position
+        }
+        const seatStored = this.isSeatInArray( selectedSeats, seatData ) 
+        if( seatStored === null ) {
+            if( seatState.state === 'LIBRE' ) {
+                selectedSeats.push( seatData )
+            }
+        } else {
+            return this.deselectSeat( seatStored.index )
+        }
+        
+        this.setState({selectedSeats})
     }
 
     showSeatPrice( zoneId, row, seatIndex, seatNumber, position ) {
@@ -67,6 +116,8 @@ class ZonedTicketOfficeController extends React.Component {
                         showOnlyPriced
                         onSeatHover={ this.showSeatPrice.bind(this) }
                         onSeatHoverExit={()=>this.setState({seatInfo:null})}
+                        onSeatClick={this.clickedSeat.bind(this)}
+                        seatsSelected={this.state.selectedSeats}
                 >
                     {this.state.seatInfo}
                 </RecintRenderer>

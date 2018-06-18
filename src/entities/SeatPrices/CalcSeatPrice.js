@@ -1,21 +1,20 @@
 /*
-    Get price for the seat at row ( 1-based ) and
+    Get prices for the seat at row ( 1-based ) and
     with seatIndex (1-based).
 
-    Returns it's TicketType
+    Returns it's TicketTypes
 */
 export default function( zoneId, seatprices, row, seatIndex ) {
-    let type = null
-    seatprices.filter( seatprice => seatprice.zone_id === zoneId && seatprice.numerated ).some( seatprice => {
+    const types = []
+    seatprices.filter( seatprice => seatprice.zone_id === zoneId && seatprice.numerated ).forEach( seatprice => {
         //Check if seat it's on the correct row
         if( seatprice.from_row <= row && seatprice.to_row >= row ) {
             //Check if seat it's on the correct column
             if( row < seatprice.to_row || (seatprice.to_row === row &&  seatprice.to_seat >= seatIndex) ) {
-                type = seatprice.type
-                return true
+                types.push( seatprice.type )
             }
         }
     })
 
-    return type
+    return types
 }

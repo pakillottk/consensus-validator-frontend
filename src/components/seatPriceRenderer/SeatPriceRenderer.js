@@ -5,6 +5,15 @@ import CalcSeatPrice from '../../entities/SeatPrices/CalcSeatPrice'
 import GetSeatState from '../../entities/SeatReserves/GetSeatState'
 
 class SeatPriceRenderer extends React.Component {
+    renderTypes( types ) {
+        const rendered = []
+        types.forEach( type => rendered.push((
+            <p>{type.type} ({type.price}€)</p>
+        )))
+
+        return rendered
+    }
+    
     render() {
         const { 
             me,
@@ -21,7 +30,7 @@ class SeatPriceRenderer extends React.Component {
             return null
         }
 
-        const type = CalcSeatPrice( zoneId, seatprices, row, seatIndex )
+        const types = CalcSeatPrice( zoneId, seatprices, row, seatIndex )
         const seatState = GetSeatState(seatreserves, zoneId, row, seatIndex, me.id )
         return (
             <div 
@@ -40,17 +49,17 @@ class SeatPriceRenderer extends React.Component {
                     fontSize:'0.6rem'
                 }}
             >
-                { type === null && (
+                { types.length === 0 && (
                     <div style={{pointerEvents:'none'}}>
                         <p>FILA:{row} ASIENTO:{seatNumber}</p>
                         <p>SIN PRECIO ASIGNADO</p>
                         <p style={{color:'yellow'}}>NO ESTÁ EN VENTA</p>
                     </div>) 
                 }
-                { type && (
+                { types.length > 0 && (
                     <div style={{pointerEvents:'none'}}>
                         <p>FILA: <b>{row}</b> ASIENTO: <b>{seatNumber}</b></p>
-                        <p>{type.type} ({type.price}€)</p>
+                        {this.renderTypes( types )}
                         <p style={{color:seatState.color}}>{seatState.state}</p>
                     </div>)
                 }

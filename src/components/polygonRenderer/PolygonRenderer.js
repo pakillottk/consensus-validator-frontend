@@ -18,7 +18,7 @@ export default class PolygonRenderer extends React.Component {
         vertices.forEach(
             ( vertex, index ) => {
                 verticesRendered.push(
-                    <a key={index} style={{cursor:'pointer', position:'relative', zIndex:15}} onClick={() => {clickHandler( index, vertex )}}>
+                    <a key={index} style={{cursor:'pointer', position:'relative', pointerEvents:'all', zIndex:20}} onClick={() => {clickHandler( index, vertex )}}>
                         <circle                                                     
                             cx={vertex.x} 
                             cy={vertex.y} 
@@ -48,15 +48,15 @@ export default class PolygonRenderer extends React.Component {
         }
 
         return(
-            <div style={{width:'100%', height:'100%'}}>
+            <div style={{width:'100%', height:'100%', pointerEvents:'none'}}>
                 <svg width={ width } height={ height } style={{position:'relative', pointerEvents:'all'}}>
-                    { drawVertices && this.renderVertices( vertexColor, polygon.points ) }
                     <a style={{cursor:'pointer', position:'relative', zIndex:14}} onClick={() => onClick()}>
                         <polygon
                             points={formattedPoints}
                             style={{ fill: fill, stroke: stroke, strokeWidth: strokeSize }}
-                        />
+                            />
                     </a>
+                    { drawVertices && this.renderVertices( vertexColor, polygon.points ) }
                 </svg>
             </div>
         )
