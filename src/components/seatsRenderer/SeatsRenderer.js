@@ -27,21 +27,40 @@ class SeatsRenderer extends React.Component {
 
     isPriced( zoneId, row, seatIndex ) {
         const { seatprices } = this.props
-        return seatprices.some(
+        let seatPrice = null
+        seatprices.some(
             price => {
-                return price.zone_id === zoneId &&
-                price.from_row <= row &&
-                price.to_row >= row &&
-                (
-                    row < price.to_row || 
-                    (price.to_row === row &&  price.to_seat >= seatIndex)
-                )
+                if( 
+                    price.zone_id === zoneId &&
+                    price.from_row <= row &&
+                    price.to_row >= row &&
+                    (
+                        row < price.to_row || 
+                        (price.to_row === row &&  price.to_seat >= seatIndex)
+                    )
+                ) {
+                    seatPrice = price
+                    return true
+                }
+
+                return false
             }
         )
+
+        return seatPrice
+    }
+
+    isSold( zoneId, row, seatIndex ) {
+        const { sales } = this.props
+        return sales.some( sale => {
+            return sale.code.zone_id === zoneId &&
+            sale.code.row_index === row &&
+            sale.code.seat_index === seatIndex
+        })
     }
 
     renderSeats( zone, color, polygon, rows ) {
-        const { me, seatreserves, showOnlyPriced, showSeatState, seatsSelected } = this.props
+        const { me, seatreserves, lockSold, showOnlyPriced, showSeatState, seatsSelected } = this.props
         const onSeatHover = this.props.onSeatHover || ( () => {} )
         const onSeatHoverExit = this.props.onSeatHoverExit || ( () => {} )
         const onSeatClick = this.props.onSeatClick || ( () => {} )
@@ -125,12 +144,20 @@ class SeatsRenderer extends React.Component {
                     }
 
                     let usableSeat = true
+                    const seatPrice = this.isPriced( zone.id, index+1, i+1 );
                     if( showOnlyPriced ) {
-                        if( !this.isPriced( zone.id, index+1, i+1 ) ) {
+                        if( !seatPrice ) {
                             usableSeat = false
                             seatColor = { r: 200, g: 200, b: 200, a:1.0 }
                         }
                     }
+                    if( lockSold  ) {
+                        if( this.isSold( zone.id, index+1, i+1 ) ) {
+                            usableSeat = false
+                            seatColor = { r:200, g:200, b:200, a:1.0 }
+                        }
+                    }                    
+
                     if( usableSeat ) {
                         seats.push(
                             <a 
@@ -142,7 +169,7 @@ class SeatsRenderer extends React.Component {
                                     pointerEvents:'auto',
                                     opacity: seatHovered ? 0.7 : 1.0
                                 }}
-                                onClick={()=> onSeatClick( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i], seatState )}
+                                onClick={()=> onSeatClick( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i], seatState, seatPrice )}
                                 onMouseEnter={() => { this.setState({hoveredSeat:{row,seat:i}}); onSeatHover( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
                                 onMouseLeave={() => { this.setState({hoveredSeat:null}); onSeatHoverExit( zone.id, index+1, i+1, row.firstSeat + (seatInr * i), points[i] ) }}
                             >
@@ -338,7 +365,8 @@ export default connect(
         return {
             me: store.auth.me,
             seatreserves: store.seatreserves.data,
-            seatprices: store.seatprices.data
+            seatprices: store.seatprices.data,
+            sales: store.sales.data
         }
     }
 )(SeatsRenderer)

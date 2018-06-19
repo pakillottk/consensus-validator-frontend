@@ -3,6 +3,7 @@ import React from 'react'
 import RecintRenderer from '../recintRenderer/RecintRenderer'
 import SeatPriceRenderer from '../seatPriceRenderer/SeatPriceRenderer'
 import Button from '../ui/button/Button'
+import PrintTicket from '../printTicket/PrintTicket'
 
 import { connect } from 'react-redux'
 import  { bindActionCreators } from 'redux'
@@ -11,6 +12,8 @@ import { crud as PolygonActions } from '../../redux/actions/zonepolygons'
 import { crud as SeatActions } from '../../redux/actions/seatrows'
 import { crud as ReservesActions } from '../../redux/actions/seatreserves'
 import { crud as SeatPricesActions } from '../../redux/actions/seatprices'
+import { crud as SalesActions } from '../../redux/actions/sales'
+import { crud as TypeActions } from '../../redux/actions/types'
 
 import ExtractRecintDataFromStore from '../../entities/Recints/ExtractRecintDataFromStore'
 import moment from 'moment'
@@ -31,7 +34,9 @@ class ZonedTicketOfficeController extends React.Component {
             fetchPolygons, 
             fetchSeats, 
             fetchReserves, 
-            fetchSeatPrices 
+            fetchSeatPrices,
+            fetchSales,
+            fetchTypes 
         } = this.props
 
         fetchZones( '?session='+sessionId )
@@ -39,6 +44,8 @@ class ZonedTicketOfficeController extends React.Component {
         fetchSeats( '?session='+sessionId )
         fetchReserves( '?session='+sessionId )
         fetchSeatPrices( '?session='+sessionId )
+        fetchSales( '?session='+sessionId )
+        fetchTypes( '?session='+sessionId )
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -50,7 +57,8 @@ class ZonedTicketOfficeController extends React.Component {
                     nextProps.toSelection.seatIndex,
                     nextProps.toSelection.seatNumber,
                     nextProps.toSelection.position,
-                    nextProps.toSelection.seatState
+                    nextProps.toSelection.seatState,
+                    nextProps.toSelection.seatPrice
                 )
             }
         }
@@ -94,7 +102,7 @@ class ZonedTicketOfficeController extends React.Component {
         this.setState({selectedSeats})
     }
 
-    selectSeat( zoneId, row, seatIndex, seatNumber, position, seatState ) {
+    selectSeat( zoneId, row, seatIndex, seatNumber, position, seatState, seatPrice ) {
         const selectedSeats = [...this.state.selectedSeats]
         const seatData = {
             index: selectedSeats.length,
@@ -104,18 +112,10 @@ class ZonedTicketOfficeController extends React.Component {
             seatIndex,
             seatNumber,
             position,
-            seatState
-        }
-        //const seatStored = this.isSeatInArray( selectedSeats, seatData ) 
+            seatState,
+            seatPrice
+        } 
         selectedSeats.push( seatData )
-        /*
-        if( seatStored === null ) {
-            if( seatState.state === 'LIBRE' ) {
-            }
-        } else {
-            return this.deselectSeat( seatStored.index )
-        }*/
-        
         this.setState({selectedSeats})
     }
 
@@ -125,7 +125,7 @@ class ZonedTicketOfficeController extends React.Component {
         })
     }
 
-    clickedSeat( zoneId, row, seatIndex, seatNumber, position, seatState ) {
+    clickedSeat( zoneId, row, seatIndex, seatNumber, position, seatState, seatPrice ) {
         const { createReserve, sessionId, me } = this.props
         const seatData = {
             zoneId,
@@ -133,10 +133,11 @@ class ZonedTicketOfficeController extends React.Component {
             seatIndex,
             seatNumber,
             position,
-            seatState
+            seatState,
+            seatPrice
         }
         const seatStored = this.isSeatInArray( this.state.selectedSeats, seatData )         
-        if( seatState.state === 'LIBRE' && !seatStored ) {
+        if( seatState.state === 'LIBRE' && !seatStored ) { //Free and not selected
             createReserve(
                 {
                     session_id: sessionId,
@@ -151,18 +152,20 @@ class ZonedTicketOfficeController extends React.Component {
                     toSelection: seatData
                 }
             )
-        } else {
+        } else { //Not free
+            //if reserved by me, else ignore click
             if( parseInt(seatState.reservedBy, 10) === parseInt(me.id, 10) ) {
-                if( seatStored ) { //deselect and void reserve
+                if( seatStored ) { //already reserved and selected: deselect and void reserve
                     this.voidReserve( seatState.reserve_id, seatStored )
-                } else { //add to selection, already reserved
+                } else { //already reserved but no selected: add to selection
                     this.selectSeat(
                         seatData.zoneId,
                         seatData.row,
                         seatData.seatIndex,
                         seatData.seatNumber,
                         seatData.position,
-                        seatState
+                        seatState,
+                        seatPrice
                     )
                 }
             }
@@ -181,33 +184,59 @@ class ZonedTicketOfficeController extends React.Component {
         })
     }
 
+    buySelectedSeats() {
+        const { selectedSeats } = this.state
+        const { me, createSale, sessionId } = this.props
+
+        let seat
+        for( let i = 0; i < selectedSeats.length; i++ ) {
+            seat = selectedSeats[ i ]            
+            createSale({
+                type_id: seat.seatPrice.type_id, 
+                zone_id: seat.zoneId,
+                row_index: seat.row,
+                seat_index: seat.seatIndex,
+                seat_number: seat.seatNumber,
+                name: me.username 
+            }, 
+            '',  
+            {current: (i+1), total: parseInt(selectedSeats.length, 10)})
+        }
+
+        this.setState({selectedSeats:[]})
+    }
+
     render() {
-        const { plane, zones, polygons, seats } = this.props
+        const { sessionId, plane, zones, polygons, seats } = this.props
         if( !zones || !plane ) {
             return null
         }
 
         return(
-            <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'center'}}>
-                <div>
-                    <RecintRenderer
-                            plane={plane}
-                            zones={zones}
-                            polygons={polygons}
-                            rows={seats}
-                            showSeatState
-                            showOnlyPriced
-                            onSeatHover={ this.showSeatPrice.bind(this) }
-                            onSeatHoverExit={()=>this.setState({seatInfo:null})}
-                            onSeatClick={this.clickedSeat.bind(this)}
-                            seatsSelected={this.state.selectedSeats}
-                    >
-                        {this.state.seatInfo}
-                    </RecintRenderer>
-                </div>
-                <div>
-                    <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.deselectAll()} context="negative">DESELECCIONAR</Button>
-                    <Button disabled={this.state.selectedSeats.length === 0} context="possitive">COMPRAR</Button>
+            <div>
+                <PrintTicket sessionId={sessionId} />
+                <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'center'}}>
+                    <div>
+                        <RecintRenderer
+                                plane={plane}
+                                zones={zones}
+                                polygons={polygons}
+                                rows={seats}
+                                lockSold
+                                showSeatState
+                                showOnlyPriced
+                                onSeatHover={ this.showSeatPrice.bind(this) }
+                                onSeatHoverExit={()=>this.setState({seatInfo:null})}
+                                onSeatClick={this.clickedSeat.bind(this)}
+                                seatsSelected={this.state.selectedSeats}
+                        >
+                            {this.state.seatInfo}
+                        </RecintRenderer>
+                    </div>
+                    <div>
+                        <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.deselectAll()} context="negative">DESELECCIONAR</Button>
+                        <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.buySelectedSeats()} context="possitive">COMPRAR</Button>
+                    </div>
                 </div>
             </div>
         )
@@ -236,8 +265,11 @@ export default connect(
             fetchSeats: bindActionCreators( SeatActions.fetch, dispatch ),
             fetchReserves: bindActionCreators( ReservesActions.fetch, dispatch ),
             fetchSeatPrices: bindActionCreators( SeatPricesActions.fetch, dispatch ),
+            fetchSales: bindActionCreators( SalesActions.fetch, dispatch ) ,
+            fetchTypes: bindActionCreators( TypeActions.fetch, dispatch ),
             createReserve: bindActionCreators( ReservesActions.create, dispatch ),
-            removeReserve: bindActionCreators( ReservesActions.delete, dispatch )
+            removeReserve: bindActionCreators( ReservesActions.delete, dispatch ),
+            createSale: bindActionCreators( SalesActions.create, dispatch )
         }
     }
 )(ZonedTicketOfficeController)

@@ -12,6 +12,7 @@ import { crud as ZoneActions } from '../../redux/actions/recintzones'
 import { crud as PolygonActions } from '../../redux/actions/zonepolygons'
 import { crud as SeatActions } from '../../redux/actions/seatrows'
 import { crud as ReservesActions } from '../../redux/actions/seatreserves'
+import { crud as SaleActions } from '../../redux/actions/sales'
 import ReserveSeatsButton from '../reserveSeatsButton/ReserveSeatsButton'
 import FreeSeatsButton from '../freeSeatsButton/FreeSeatsButton'
 
@@ -28,12 +29,20 @@ class RecintTicketsConfigurator extends React.Component {
     }
 
     componentWillMount() {
-        const { sessionId, fetchZones, fetchPolygons, fetchSeats, fetchReserves } = this.props
+        const { 
+            sessionId, 
+            fetchZones, 
+            fetchPolygons, 
+            fetchSeats, 
+            fetchReserves, 
+            fetchSales 
+        } = this.props
 
         fetchZones( '?session='+sessionId )
         fetchPolygons( '?session='+sessionId )
         fetchSeats( '?session='+sessionId )
         fetchReserves( '?session='+sessionId )
+        fetchSales( '?session='+sessionId )
     }
 
     showSeatPrice( zoneId, row, seatIndex, seatNumber, position ) {
@@ -136,6 +145,7 @@ class RecintTicketsConfigurator extends React.Component {
                         onSeatHover={ this.showSeatPrice.bind(this) }
                         onSeatHoverExit={()=>this.setState({seatInfo:null})}
                         onSeatClick={ this.seatSelected.bind( this ) }
+                        lockSold
                         showSeatState
                         seatsSelected={this.state.selectedSeats}
                     >
@@ -165,7 +175,8 @@ export default connect(
             fetchZones: bindActionCreators( ZoneActions.fetch, dispatch ),
             fetchPolygons: bindActionCreators( PolygonActions.fetch, dispatch ),
             fetchSeats: bindActionCreators( SeatActions.fetch, dispatch ),
-            fetchReserves: bindActionCreators( ReservesActions.fetch, dispatch )
+            fetchReserves: bindActionCreators( ReservesActions.fetch, dispatch ),
+            fetchSales: bindActionCreators( SaleActions.fetch, dispatch )
         }
     }
 )(RecintTicketsConfigurator)

@@ -33,7 +33,7 @@ export default class RecintRenderer extends React.Component {
     }
 
     renderSeats( zone, polygon, rows, onEdit=false ) {
-        const { showOnlyPriced, showSeatState, seatsSelected, onSeatHover, onSeatHoverExit, onSeatClick } = this.props
+        const { lockSold, showOnlyPriced, showSeatState, seatsSelected, onSeatHover, onSeatHoverExit, onSeatClick } = this.props
         const rgbZoneColor = hexToRGB( zone.color )
         return(
             <div key={zone.id} style={{pointerEvents:'none', position:'absolute', top: 0, left: 0, zIndex:11}}>
@@ -43,6 +43,7 @@ export default class RecintRenderer extends React.Component {
                     zone={zone}
                     polygon={polygon}
                     seatsSelected={seatsSelected}
+                    lockSold={lockSold}
                     showCurves={onEdit}
                     showLines={onEdit}
                     showOnlyPriced={showOnlyPriced}
