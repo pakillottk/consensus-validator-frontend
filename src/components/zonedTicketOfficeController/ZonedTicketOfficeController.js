@@ -186,7 +186,7 @@ class ZonedTicketOfficeController extends React.Component {
 
     buySelectedSeats() {
         const { selectedSeats } = this.state
-        const { me, createSale, sessionId } = this.props
+        const { me, createSale } = this.props
 
         let seat
         for( let i = 0; i < selectedSeats.length; i++ ) {

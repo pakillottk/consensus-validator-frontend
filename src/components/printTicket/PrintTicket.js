@@ -115,6 +115,12 @@ class PrintTicket extends React.Component {
               <div style={{width:'100%', display:'flex', justifyContent:'flex-end'}}>
                 <h2 style={{fontSize: '15pt', width:'40mm', paddingRight: '1mm'}}>{ type.type } </h2>
               </div>
+              {ticketData.code.zone && <div style={{width:'100%', display:'flex', justifyContent:'flex-end'}}>
+                <h4 style={{margin: 0, fontSize: '12pt', width:'40mm', paddingRight: '1mm'}}>{ticketData.code.zone.zone}</h4>
+              </div>}
+              {ticketData.code.row_index && ticketData.code.seat_number && <div style={{width:'100%', display:'flex', justifyContent:'flex-end'}}>
+                <p style={{margin: 0, fontSize: '10pt', width:'40mm', paddingRight: '1mm'}}>FILA: {ticketData.code.row_index} ASIENTO:{ticketData.code.seat_number} </p>
+              </div>}
               <div id={ ticketData.id } className="qrcode">
               </div>
               <p className="ticket-price" style={{fontSize: '8pt', margin: 0, marginTop: '1mm'}}> 
@@ -144,8 +150,8 @@ class PrintTicket extends React.Component {
           </div>
         </div>
 
-          <div>
-        <div className="ticket-conditions page-row" style={{fontSize:'9pt'}}>
+        <div>
+          <div className="ticket-conditions page-row" style={{fontSize:'9pt'}}>
             <h5 className="centered"> LA ADQUISICIÓN DE ESTA ENTRADA REPRESENTA LA ACEPTACIÓN DE LAS SIGUIENTES CONDICIONES: </h5>
             <p>- La organización no garantiza la autenticidad de las entradas adquiridas fuera de los puntos de venta oficiales. </p>
             <p>
