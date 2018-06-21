@@ -39,7 +39,7 @@ class SeatPriceRenderer extends React.Component {
                     pointerEvents:'none',
                     position: 'absolute', 
                     top: position.y - 50, 
-                    left: position.x - 50,
+                    left: position.x + 10,
                     maxWidth:'100px',
                     padding:'5px',
                     color:'white', 

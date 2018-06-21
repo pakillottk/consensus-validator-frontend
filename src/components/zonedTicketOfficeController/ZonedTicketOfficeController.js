@@ -2,8 +2,13 @@ import React from 'react'
 
 import RecintRenderer from '../recintRenderer/RecintRenderer'
 import SeatPriceRenderer from '../seatPriceRenderer/SeatPriceRenderer'
-import Button from '../ui/button/Button'
 import PrintTicket from '../printTicket/PrintTicket'
+import Button from '../ui/button/Button'
+import ConfirmModal from '../confirmModal/ConfirmModal'
+import Input from '../ui/form/Input/Input'
+import Select from '../ui/form/Select/Select'
+import Label from '../ui/form/Label/Label'
+import Currency from 'react-currency-formatter'
 
 import { connect } from 'react-redux'
 import  { bindActionCreators } from 'redux'
@@ -14,8 +19,10 @@ import { crud as ReservesActions } from '../../redux/actions/seatreserves'
 import { crud as SeatPricesActions } from '../../redux/actions/seatprices'
 import { crud as SalesActions } from '../../redux/actions/sales'
 import { crud as TypeActions } from '../../redux/actions/types'
+import { crud as ComissionActions } from '../../redux/actions/comissions'
 
 import ExtractRecintDataFromStore from '../../entities/Recints/ExtractRecintDataFromStore'
+import ApplyComission from '../../entities/comissions/ApplyComission'
 import moment from 'moment'
 
 class ZonedTicketOfficeController extends React.Component {
@@ -24,7 +31,10 @@ class ZonedTicketOfficeController extends React.Component {
 
         this.state = {
             seatInfo: null,
-            selectedSeats: []
+            selectedSeats: [],
+            showBuyDialog: false,
+            selectedPrice: -1,
+            name: ''
         }
     }
     componentWillMount() {
@@ -36,7 +46,8 @@ class ZonedTicketOfficeController extends React.Component {
             fetchReserves, 
             fetchSeatPrices,
             fetchSales,
-            fetchTypes 
+            fetchTypes,
+            fetchComissions
         } = this.props
 
         fetchZones( '?session='+sessionId )
@@ -46,6 +57,9 @@ class ZonedTicketOfficeController extends React.Component {
         fetchSeatPrices( '?session='+sessionId )
         fetchSales( '?session='+sessionId )
         fetchTypes( '?session='+sessionId )
+        fetchComissions( '?session='+sessionId )
+
+        this.setState({selectedSeats:[], seatInfo: null})
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -134,8 +148,25 @@ class ZonedTicketOfficeController extends React.Component {
             seatNumber,
             position,
             seatState,
-            seatPrice
+            seatPrice: seatPrice.sort( (price, otherPrice) => {
+                return price.price < otherPrice.price;
+            })
         }
+
+        //if seats selected, ensure same types, else ignore click
+        if( this.state.selectedSeats.length > 0 ) {
+            if( seatData.seatPrice.length !== this.state.selectedSeats[ 0 ].seatPrice.length ) {
+                return;
+            } else {
+                const filteredTypes = seatData.seatPrice.filter( (price, index) => {
+                    return price.id === this.state.selectedSeats[ 0 ].seatPrice[ index ].id
+                })
+                if( filteredTypes.length !== this.state.selectedSeats[ 0 ].seatPrice.length ) {
+                    return;
+                }
+            }
+        }
+
         const seatStored = this.isSeatInArray( this.state.selectedSeats, seatData )         
         if( seatState.state === 'LIBRE' && !seatStored ) { //Free and not selected
             createReserve(
@@ -190,20 +221,118 @@ class ZonedTicketOfficeController extends React.Component {
 
         let seat
         for( let i = 0; i < selectedSeats.length; i++ ) {
-            seat = selectedSeats[ i ]            
-            createSale({
-                type_id: seat.seatPrice.type_id, 
-                zone_id: seat.zoneId,
-                row_index: seat.row,
-                seat_index: seat.seatIndex,
-                seat_number: seat.seatNumber,
-                name: me.username 
-            }, 
-            '',  
-            {current: (i+1), total: parseInt(selectedSeats.length, 10)})
+            seat = selectedSeats[ i ]  
+            createSale(
+                {
+                    type_id: seat.seatPrice[ this.state.selectedPrice ].id, 
+                    zone_id: seat.zoneId,
+                    row_index: seat.row,
+                    seat_index: seat.seatIndex,
+                    seat_number: seat.seatNumber,
+                    name: this.state.name !== '' ? this.state.name : me.username 
+                }, 
+                '',  
+                {current: (i+1), total: parseInt(selectedSeats.length, 10)}
+            )
         }
 
-        this.setState({selectedSeats:[]})
+        this.setState({selectedSeats:[], selectedPrice:-1, name:'', showBuyDialog:false})
+    }
+
+    computeCurrentPrice() {
+        const { types, comissionByUser, me } = this.props
+        const type = types.get( 
+            parseInt(
+                this.state.selectedSeats[0].seatPrice[this.state.selectedPrice].id, 10
+            ) 
+        )
+        if( !type ) {
+            return;
+        }
+        let realPrice = type.price
+        if( comissionByUser[ me.id ] ) {
+            realPrice = ApplyComission( type, comissionByUser[ me.id ][ type.session_id ] )
+        }
+
+        return realPrice * this.state.selectedSeats.length
+    }
+
+    renderPriceSelect() {
+        if( this.state.selectedSeats.length === 0 ) {
+            return null
+        }
+
+        const prices = this.state.selectedSeats[0].seatPrice
+        const priceOptions = prices.map( (price, index) => {
+            return {
+                text: price.type + '(' + price.price + '€)',
+                value: index
+            }
+        })
+        priceOptions.unshift({text:'SELECCIONE', value:-1})
+
+        return (
+            <Select
+                options={priceOptions}
+                value={this.state.selectedPrice}
+                onChange={(e)=>this.setState({selectedPrice:e.target.value})}
+            />
+        )
+    }
+
+    renderBuyDialog() {
+        let singlePrice = false
+        if( this.state.showBuyDialog && this.state.selectedSeats[0].seatPrice.length === 1 ) {
+            singlePrice = true
+            if( this.state.selectedPrice !== 0 ) {
+                this.setState({ selectedPrice: 0 })
+            }
+        }
+        return(
+            <ConfirmModal
+                open={this.state.showBuyDialog}
+                title={'COMPRAR LOCALIDADES'}
+                message=''
+                onConfirm={()=>{
+                    this.buySelectedSeats()
+                }}
+                onCancel={()=>{
+                    this.deselectAll()
+                    this.setState({selectedPrice:-1, name:'', showBuyDialog:false})
+                }}
+            >
+                <div>
+                    <h3 style={{color:'red'}}> 
+                        Una vez confirmada la venta, no se podrá deshacer/eliminar.
+                        Asegúrese de recaudar el importe antes de confirmar. 
+                    </h3>
+                    <div>
+                        <Label>NOMBRE</Label>
+                        <Input 
+                            value={this.state.name} 
+                            onChange={(e) => this.setState({name: e.target.value})}
+                        />
+                    </div>
+                    {!singlePrice && <div>
+                        <Label>PRECIO</Label>
+                        {this.renderPriceSelect()}
+                    </div>}
+                    {this.state.selectedSeats.length > 0 && this.state.selectedPrice >= 0 && 
+                        <div style={{textAlign:'center'}}>
+                            <h3>
+                                TOTAL A PAGAR:  
+                                <span style={{color:'red'}}>
+                                    <Currency
+                                        currency='EUR'
+                                        quantity={this.computeCurrentPrice()}
+                                    />
+                                </span>
+                            </h3>
+                        </div>
+                    }
+                </div>
+            </ConfirmModal>
+        )
     }
 
     render() {
@@ -215,6 +344,7 @@ class ZonedTicketOfficeController extends React.Component {
         return(
             <div>
                 <PrintTicket sessionId={sessionId} />
+                {this.renderBuyDialog()}
                 <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'center'}}>
                     <div>
                         <RecintRenderer
@@ -235,7 +365,7 @@ class ZonedTicketOfficeController extends React.Component {
                     </div>
                     <div>
                         <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.deselectAll()} context="negative">DESELECCIONAR</Button>
-                        <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.buySelectedSeats()} context="possitive">COMPRAR</Button>
+                        <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.setState({showBuyDialog:true})} context="possitive">COMPRAR</Button>
                     </div>
                 </div>
             </div>
@@ -247,15 +377,36 @@ export default connect(
     ( store ) => {
         const recintData = ExtractRecintDataFromStore( store )
 
+        const companyCache = store.imgcache.cache.get( 'company_logo' )
+        const headerCache = store.imgcache.cache.get( 'header_img' )
+        const logosCache = store.imgcache.cache.get( 'logos_img' )
+
+        const comissionsMap = store.comissions.data
+        const comissionByUser = {}
+        comissionsMap.forEach( comission => {
+            let sessionComission = {}
+            if( !comissionByUser[ comission.user_id ] ) {
+                sessionComission[ comission.session_id ] = comission
+                comissionByUser[ comission.user_id ] = sessionComission
+            } else {
+                sessionComission = comissionByUser[ comission.user_id ]
+                sessionComission[ comission.session_id ] = comission
+                comissionByUser[ comission.user_id ] = sessionComission
+            }
+        })
+
         return {
             me: store.auth.me,
+            types: store.types.data,
             zones: store.recintzones.data,
             polygons: recintData.polygons,
             seats: recintData.seats,
             seatprices: store.seatprices.data,
             seatreserves: store.seatreserves.data,
             toSelection: store.seatreserves.toSelection,
-            toDeselect: store.seatreserves.toDeselect
+            toDeselect: store.seatreserves.toDeselect,
+            comissionByUser,
+            imgsCached: headerCache && logosCache && companyCache
         }
     },
     ( dispatch ) => {
@@ -267,6 +418,7 @@ export default connect(
             fetchSeatPrices: bindActionCreators( SeatPricesActions.fetch, dispatch ),
             fetchSales: bindActionCreators( SalesActions.fetch, dispatch ) ,
             fetchTypes: bindActionCreators( TypeActions.fetch, dispatch ),
+            fetchComissions: bindActionCreators( ComissionActions.fetch, dispatch ),
             createReserve: bindActionCreators( ReservesActions.create, dispatch ),
             removeReserve: bindActionCreators( ReservesActions.delete, dispatch ),
             createSale: bindActionCreators( SalesActions.create, dispatch )

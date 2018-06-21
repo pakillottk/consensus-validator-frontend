@@ -2,6 +2,7 @@ import React from 'react'
 import { SeatsPositioner, SeatsPositionerCurve } from '../../2d/SeatsPositioner'
 import { quadraticBezier } from '../../2d/utils'
 import GetSeatState from '../../entities/SeatReserves/GetSeatState'
+import CalcSeatPrice from '../../entities/SeatPrices/CalcSeatPrice'
 
 import { connect } from 'react-redux'
 
@@ -27,27 +28,9 @@ class SeatsRenderer extends React.Component {
 
     isPriced( zoneId, row, seatIndex ) {
         const { seatprices } = this.props
-        let seatPrice = null
-        seatprices.some(
-            price => {
-                if( 
-                    price.zone_id === zoneId &&
-                    price.from_row <= row &&
-                    price.to_row >= row &&
-                    (
-                        row < price.to_row || 
-                        (price.to_row === row &&  price.to_seat >= seatIndex)
-                    )
-                ) {
-                    seatPrice = price
-                    return true
-                }
-
-                return false
-            }
-        )
-
-        return seatPrice
+        const prices = CalcSeatPrice( zoneId, seatprices, row, seatIndex )
+        
+        return prices.length > 0 ? prices : null
     }
 
     isSold( zoneId, row, seatIndex ) {

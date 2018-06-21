@@ -11,6 +11,7 @@ class ConfirmModal extends React.Component {
             <Modal hideClose open={open} title={title}>
                 <div>
                     <h3>{message}</h3>
+                    {this.props.children}
                     <Divider />
                     <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
                         <Button context="possitive" onClick={onConfirm}>ACEPTAR</Button>
