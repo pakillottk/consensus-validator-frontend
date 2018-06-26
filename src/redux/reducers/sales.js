@@ -4,6 +4,11 @@ import { Map } from 'immutable'
 const preproccessor = ( sale ) => {
     if( sale.code ) {
         sale.type_id = sale.code.type_id;
+        if( sale.code.zone ) {
+            sale.zone = sale.code.zone.zone;
+        }
+        sale.seat_row = sale.code.row_index;
+        sale.seat_number = sale.code.seat_number;
     }
     if( sale.user ) {
         sale.username = sale.user.username;

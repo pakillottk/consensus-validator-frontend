@@ -45,6 +45,16 @@ body {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+.appears-from-top {
+  animation-fill-mode: backwards;
+  animation: come-from-top 400ms ease-in-out; 
+}
+
+@keyframes come-from-top {
+  from { opacity: 0; transform: translateY(-40px); transform-origin: top; }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .center-aligned {
   text-align: center;
 }

@@ -14,6 +14,9 @@ const fields = [
     {label: 'TIPO', name:'type' },
     {label: 'PRECIO', name:'price'},
     {label:'CÓDIGO', name:'codeStr'},
+    {label:'ZONA', name:'zone'},
+    {label:'FILA', name:'seat_row'},
+    {label:'ASIENTO', name:'seat_number'},
     {label:'NOMBRE', name:'name'},
     {label:'EMAIL', name: 'email'},
 ]

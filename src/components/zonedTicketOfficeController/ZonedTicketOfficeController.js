@@ -8,7 +8,17 @@ import ConfirmModal from '../confirmModal/ConfirmModal'
 import Input from '../ui/form/Input/Input'
 import Select from '../ui/form/Select/Select'
 import Label from '../ui/form/Label/Label'
+import Segment from '../ui/segment/Segment'
+import Table from '../ui/table/Table'
+import Tabs from '../ui/tabs/Tabs'
 import Currency from 'react-currency-formatter'
+
+import SalesFilters from '../entitites/sales/SalesFilters'
+import SalesTable from '../entitites/sales/SalesTable'
+
+import PaymentFilters from '../entitites/payments/PaymentFilters'
+import NewPaymentButton from '../entitites/payments/NewPaymentButton'
+import PaymentsTable from '../entitites/payments/PaymentsTable'
 
 import { connect } from 'react-redux'
 import  { bindActionCreators } from 'redux'
@@ -20,9 +30,11 @@ import { crud as SeatPricesActions } from '../../redux/actions/seatprices'
 import { crud as SalesActions } from '../../redux/actions/sales'
 import { crud as TypeActions } from '../../redux/actions/types'
 import { crud as ComissionActions } from '../../redux/actions/comissions'
+import { crud as PaymentActions } from '../../redux/actions/payments'
 
 import ExtractRecintDataFromStore from '../../entities/Recints/ExtractRecintDataFromStore'
 import ApplyComission from '../../entities/comissions/ApplyComission'
+import CalculateSellerComission from '../../entities/comissions/CalculateSellerComission'
 import moment from 'moment'
 
 class ZonedTicketOfficeController extends React.Component {
@@ -47,7 +59,8 @@ class ZonedTicketOfficeController extends React.Component {
             fetchSeatPrices,
             fetchSales,
             fetchTypes,
-            fetchComissions
+            fetchComissions,
+            fetchPayments
         } = this.props
 
         fetchZones( '?session='+sessionId )
@@ -58,6 +71,7 @@ class ZonedTicketOfficeController extends React.Component {
         fetchSales( '?session='+sessionId )
         fetchTypes( '?session='+sessionId )
         fetchComissions( '?session='+sessionId )
+        fetchPayments( '?session='+sessionId )
 
         this.setState({selectedSeats:[], seatInfo: null})
     }
@@ -319,6 +333,9 @@ class ZonedTicketOfficeController extends React.Component {
                     </div>}
                     {this.state.selectedSeats.length > 0 && this.state.selectedPrice >= 0 && 
                         <div style={{textAlign:'center'}}>
+                            <h4>
+                                {this.state.selectedSeats.length} ENTRADAS DE {this.state.selectedSeats[0].seatPrice[this.state.selectedPrice].type}
+                            </h4>
                             <h3>
                                 TOTAL A PAGAR:  
                                 <span style={{color:'red'}}>
@@ -335,39 +352,167 @@ class ZonedTicketOfficeController extends React.Component {
         )
     }
 
+    renderSummaryList() {
+        const { types, salesByType, revenueByType, comissionsByType, totalComission } = this.props
+        const items = []
+        let revenue = 0
+        let ticketsSold = 0
+        Object.keys( salesByType ).forEach( typeId => {
+            const type = types.get( parseInt(typeId, 10) )
+            if( !type ) {
+                return
+            }
+            items.push({
+                type: type.type,
+                price: type.price,
+                sold: salesByType[ typeId ] || 0,
+                revenue: (revenueByType[ typeId ] || 0),
+                comission: comissionsByType[ typeId ] || 0,
+            })
+
+            revenue += (revenueByType[ typeId ] || 0)
+            ticketsSold += (salesByType[ typeId ] || 0)
+        })
+
+        return(
+            <div>
+                <Table           
+                    fields={[
+                        { label: "TIPO", name: 'type' },
+                        { label: "PRECIO", name: 'price', displayFormat: ( price) => <Currency currency="EUR" quantity={price}/> },
+                        { label: "VENDIDAS", name: 'sold' },
+                        { label: "RECAUDADO", name: 'revenue', displayFormat: ( reven ) => <Currency currency="EUR" quantity={reven}/> },
+                        { label: "COMISIÓN", name: 'comission', displayFormat: ( com ) =>  <Currency currency="EUR" quantity={com}/> },
+                    ]}                             
+                    items={items}
+                    full
+                    calculateTotals={( items ) => {
+                        return {
+                            type: 'TOTAL',
+                            sold: ticketsSold,
+                            revenue: (<Currency currency="EUR" quantity={revenue}/>),
+                            comission: (<Currency currency="EUR" quantity={totalComission}/>),
+                        }
+                    }}
+                />
+            </div>
+        )
+    }
+
+    renderSales( sessionId ) {
+        return(
+            <div>
+                <Segment secondary>
+                    <h2 style={{textAlign: 'center'}}>VENTAS</h2>
+                </Segment>
+                <SalesFilters sessionId={sessionId} />
+                <SalesTable />
+            </div>
+        )
+    }
+
+    renderPayments( sessionId ) {
+        return(
+            <div>
+                <Segment secondary>
+                    <h2 style={{textAlign: 'center'}}>PAGOS</h2>
+                </Segment>
+                <PaymentFilters sessionId={sessionId} />
+                <NewPaymentButton sessionId={sessionId} />
+                <PaymentsTable sessionId={sessionId} />
+            </div>
+        )
+    }
+
     render() {
-        const { sessionId, plane, zones, polygons, seats } = this.props
+        const { imgsCached, sessionId, plane, zones, polygons, seats } = this.props
         if( !zones || !plane ) {
             return null
         }
 
+        const SummaryList = this.renderSummaryList()
+        const tabs = [
+            {
+                label:'VENDER ENTRADAS',
+                content:(
+                    <div>                        
+                        {this.renderBuyDialog()}
+                        <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'center'}}>
+                            <div>
+                                <RecintRenderer
+                                        plane={plane}
+                                        zones={zones}
+                                        polygons={polygons}
+                                        rows={seats}
+                                        lockSold
+                                        showSeatState
+                                        showOnlyPriced
+                                        onSeatHover={ this.showSeatPrice.bind(this) }
+                                        onSeatHoverExit={()=>this.setState({seatInfo:null})}
+                                        onSeatClick={this.clickedSeat.bind(this)}
+                                        seatsSelected={this.state.selectedSeats}
+                                >
+                                    {this.state.seatInfo}
+                                </RecintRenderer>
+                            </div>
+                            <div>
+                                <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.deselectAll()} context="negative">DESELECCIONAR</Button>
+                                <Button disabled={this.state.selectedSeats.length === 0 || !imgsCached} onClick={()=>this.setState({showBuyDialog:true})} context="possitive">COMPRAR</Button>
+                            </div>                    
+                        </div>
+                        <div>
+                            <Segment>
+                                <Segment secondary>
+                                    <h2 style={{textAlign: 'center'}}>RESUMEN</h2>
+                                </Segment>
+                                {SummaryList}
+                            </Segment>
+                        </div>
+                    </div>
+                )
+            },
+            {
+                label:'LISTADO VENTAS',
+                content:(
+                    <div>
+                        <div>
+                            <Segment>
+                                <Segment secondary>
+                                    <h2 style={{textAlign: 'center'}}>RESUMEN</h2>
+                                </Segment>
+                                {SummaryList}
+                            </Segment>
+                        </div>
+                        <div>
+                            <Segment>
+                                {this.renderSales( sessionId )}
+                            </Segment>
+                        </div>
+                    </div>
+                )
+            },
+            {
+                label:'LISTADO PAGOS',
+                content:(
+                    <div>
+                        <div>
+                            <Segment>
+                                <Segment secondary>
+                                    <h2 style={{textAlign: 'center'}}>RESUMEN</h2>
+                                </Segment>
+                                {SummaryList}
+                            </Segment>
+                        </div>
+                        {this.renderPayments( sessionId )}
+                    </div>
+                )
+            }
+        ]
+
         return(
             <div>
                 <PrintTicket sessionId={sessionId} />
-                {this.renderBuyDialog()}
-                <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'center'}}>
-                    <div>
-                        <RecintRenderer
-                                plane={plane}
-                                zones={zones}
-                                polygons={polygons}
-                                rows={seats}
-                                lockSold
-                                showSeatState
-                                showOnlyPriced
-                                onSeatHover={ this.showSeatPrice.bind(this) }
-                                onSeatHoverExit={()=>this.setState({seatInfo:null})}
-                                onSeatClick={this.clickedSeat.bind(this)}
-                                seatsSelected={this.state.selectedSeats}
-                        >
-                            {this.state.seatInfo}
-                        </RecintRenderer>
-                    </div>
-                    <div>
-                        <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.deselectAll()} context="negative">DESELECCIONAR</Button>
-                        <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.setState({showBuyDialog:true})} context="possitive">COMPRAR</Button>
-                    </div>
-                </div>
+                <Tabs tabs={tabs} />
             </div>
         )
     }
@@ -375,6 +520,7 @@ class ZonedTicketOfficeController extends React.Component {
 
 export default connect(
     ( store ) => {
+        const types = store.types.data
         const recintData = ExtractRecintDataFromStore( store )
 
         const companyCache = store.imgcache.cache.get( 'company_logo' )
@@ -394,6 +540,41 @@ export default connect(
                 comissionByUser[ comission.user_id ] = sessionComission
             }
         })
+        
+        const salesByType = {}
+        const comissionsByType = {}
+        const revenueByType = {}
+        let totalComission = 0
+        store.sales.data.forEach( sale => {
+            if( sale.refund ) {
+                return
+            }
+            const type = types.get( parseInt(sale.type_id, 10) )
+            let comission = null
+            if( type && comissionByUser[ sale.user_id ] ) {
+                comission = comissionByUser[ sale.user_id ][ type.session_id ]
+            }
+            const realPrice = ApplyComission( type, comission )
+            const currentComission = CalculateSellerComission( type, comission )
+
+            if( !salesByType[ sale.type_id ] ) {
+                salesByType[ sale.type_id ] = 1
+            } else {
+                salesByType[ sale.type_id ] += 1
+            }
+            if( !revenueByType[ sale.type_id ] ) {
+                revenueByType[ sale.type_id ] = realPrice
+            } else {
+                revenueByType[ sale.type_id ] += realPrice
+            }
+            if( !comissionsByType[ sale.type_id ] ) {
+                comissionsByType[ sale.type_id ] = parseFloat(currentComission)
+            } else {
+                comissionsByType[ sale.type_id ] += parseFloat(currentComission)
+            }
+
+            totalComission += parseFloat(currentComission)
+        }) 
 
         return {
             me: store.auth.me,
@@ -406,7 +587,11 @@ export default connect(
             toSelection: store.seatreserves.toSelection,
             toDeselect: store.seatreserves.toDeselect,
             comissionByUser,
-            imgsCached: headerCache && logosCache && companyCache
+            imgsCached: headerCache && logosCache && companyCache,
+            salesByType,
+            comissionsByType,
+            revenueByType,
+            totalComission
         }
     },
     ( dispatch ) => {
@@ -419,6 +604,7 @@ export default connect(
             fetchSales: bindActionCreators( SalesActions.fetch, dispatch ) ,
             fetchTypes: bindActionCreators( TypeActions.fetch, dispatch ),
             fetchComissions: bindActionCreators( ComissionActions.fetch, dispatch ),
+            fetchPayments: bindActionCreators( PaymentActions.fetch, dispatch ),
             createReserve: bindActionCreators( ReservesActions.create, dispatch ),
             removeReserve: bindActionCreators( ReservesActions.delete, dispatch ),
             createSale: bindActionCreators( SalesActions.create, dispatch )

@@ -3,6 +3,7 @@ import React from 'react'
 import RecintRenderer from '../recintRenderer/RecintRenderer'
 import SeatPricesTable from '../entitites/seatprices/SeatPricesTable'
 import SeatPriceRenderer from '../seatPriceRenderer/SeatPriceRenderer'
+import SeatReservesTable from '../entitites/seatreserves/SeatReservesTable'
 import Segment from '../ui/segment/Segment'
 import Button from '../ui/button/Button'
 
@@ -17,6 +18,7 @@ import ReserveSeatsButton from '../reserveSeatsButton/ReserveSeatsButton'
 import FreeSeatsButton from '../freeSeatsButton/FreeSeatsButton'
 
 import ExtractRecintDataFromStore from '../../entities/Recints/ExtractRecintDataFromStore'
+
 
 class RecintTicketsConfigurator extends React.Component {
     constructor( props ) {
@@ -110,7 +112,6 @@ class RecintTicketsConfigurator extends React.Component {
         if( !zones || !plane ) {
             return null
         }
-
         return(
             <div>
                 <div>                       
@@ -153,6 +154,7 @@ class RecintTicketsConfigurator extends React.Component {
                     </RecintRenderer>
                     <div>
                         <SeatPricesTable sessionId={this.props.sessionId} />
+                        <SeatReservesTable sessionId={this.props.sessionId} />
                     </div>
                 </div>
             </div>
