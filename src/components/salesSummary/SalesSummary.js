@@ -138,7 +138,7 @@ class SalesSummary extends React.Component {
                     comission: sellerComission,
                     distributionCost: distCost, 
                     payment: ( realPrice - sellerComission ),
-                    proffit: ( realPrice - sellerComission - distCost ),
+                    proffit: ( realPrice - distCost ),
                     paid: '-',
                     toPay: '-'
                 }
@@ -149,7 +149,7 @@ class SalesSummary extends React.Component {
                 data[ sale.type_id ].comission += sellerComission
                 data[ sale.type_id ].distributionCost += distCost
                 data[ sale.type_id ].payment += ( realPrice - sellerComission )
-                data[ sale.type_id ].proffit += ( realPrice - sellerComission - distCost )
+                data[ sale.type_id ].proffit += ( realPrice - distCost )
             }
         })
 

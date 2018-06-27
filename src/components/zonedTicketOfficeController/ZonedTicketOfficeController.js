@@ -353,7 +353,7 @@ class ZonedTicketOfficeController extends React.Component {
     }
 
     renderSummaryList() {
-        const { types, salesByType, revenueByType, comissionsByType, totalComission } = this.props
+        const { types, totalPaid, salesByType, revenueByType, comissionsByType, totalComission } = this.props
         const items = []
         let revenue = 0
         let ticketsSold = 0
@@ -368,6 +368,8 @@ class ZonedTicketOfficeController extends React.Component {
                 sold: salesByType[ typeId ] || 0,
                 revenue: (revenueByType[ typeId ] || 0),
                 comission: comissionsByType[ typeId ] || 0,
+                paid: '-',
+                toPay:'-'
             })
 
             revenue += (revenueByType[ typeId ] || 0)
@@ -383,6 +385,8 @@ class ZonedTicketOfficeController extends React.Component {
                         { label: "VENDIDAS", name: 'sold' },
                         { label: "RECAUDADO", name: 'revenue', displayFormat: ( reven ) => <Currency currency="EUR" quantity={reven}/> },
                         { label: "COMISIÓN", name: 'comission', displayFormat: ( com ) =>  <Currency currency="EUR" quantity={com}/> },
+                        { label: 'PAGADO', name: 'paid' },
+                        { label: 'A PAGAR', name:'toPay' }
                     ]}                             
                     items={items}
                     full
@@ -392,6 +396,8 @@ class ZonedTicketOfficeController extends React.Component {
                             sold: ticketsSold,
                             revenue: (<Currency currency="EUR" quantity={revenue}/>),
                             comission: (<Currency currency="EUR" quantity={totalComission}/>),
+                            paid: (<Currency currency="EUR" quantity={totalPaid}/>),
+                            toPay: (<Currency currency="EUR" quantity={ revenue - totalComission - totalPaid}/>)
                         }
                     }}
                 />
@@ -576,6 +582,11 @@ export default connect(
             totalComission += parseFloat(currentComission)
         }) 
 
+        let totalPaid = 0
+        store.payments.data.forEach( payment => {
+            totalPaid += parseFloat(payment.ammount)
+        })      
+
         return {
             me: store.auth.me,
             types: store.types.data,
@@ -591,7 +602,8 @@ export default connect(
             salesByType,
             comissionsByType,
             revenueByType,
-            totalComission
+            totalComission,
+            totalPaid
         }
     },
     ( dispatch ) => {

@@ -29,9 +29,10 @@ class SaleCharts extends React.Component {
 }
 export default connect( store => {
     const salesMap = store.sales.data
-    
+    const sortedSales = salesMap.sort( (a,b) => moment( b.created_at ).isBefore( moment(a.created_at) ) )
+
     const salesByDate = {}
-    salesMap.forEach( sale => {
+    sortedSales.forEach( sale => {
         const saleDay = moment( sale.created_at ).format('DD/MM/YYYY');
         if( !salesByDate[ saleDay ] ) {
             salesByDate[ saleDay ] = 1;
