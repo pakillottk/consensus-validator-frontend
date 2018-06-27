@@ -32,7 +32,11 @@ import { crud as TypeActions } from '../../redux/actions/types'
 import { crud as ComissionActions } from '../../redux/actions/comissions'
 import { crud as PaymentActions } from '../../redux/actions/payments'
 
+import SetFuncs from '../../utils/SetFuncs'
+import BuildZoneTables from '../../entities/SeatPrices/BuildZoneTables'
+import BuildSalesTables from '../../entities/SeatPrices/BuildSalesTables'
 import ExtractRecintDataFromStore from '../../entities/Recints/ExtractRecintDataFromStore'
+import CountSeatsByType from '../../entities/SeatPrices/CountSeatsByType'
 import ApplyComission from '../../entities/comissions/ApplyComission'
 import CalculateSellerComission from '../../entities/comissions/CalculateSellerComission'
 import moment from 'moment'
@@ -115,6 +119,15 @@ class ZonedTicketOfficeController extends React.Component {
         return seatFound
     }
 
+    extractTypesIds( seatPrices ) {
+        const ids = []
+        seatPrices.forEach( price => {
+            ids.push( price.id )
+        }) 
+
+        return ids
+    }
+
     deselectAll() {
         this.state.selectedSeats.forEach( selected => {
             this.voidReserve( selected.seatState.reserve_id, selected )
@@ -167,17 +180,15 @@ class ZonedTicketOfficeController extends React.Component {
             })
         }
 
-        //if seats selected, ensure same types, else ignore click
+        //if seats selected, ensure that share types
         if( this.state.selectedSeats.length > 0 ) {
-            if( seatData.seatPrice.length !== this.state.selectedSeats[ 0 ].seatPrice.length ) {
-                return;
-            } else {
-                const filteredTypes = seatData.seatPrice.filter( (price, index) => {
-                    return price.id === this.state.selectedSeats[ 0 ].seatPrice[ index ].id
-                })
-                if( filteredTypes.length !== this.state.selectedSeats[ 0 ].seatPrice.length ) {
-                    return;
-                }
+            const commonTypes = SetFuncs.intersect(
+                this.extractTypesIds( this.state.selectedSeats[0].seatPrice ),
+                this.extractTypesIds( seatPrice )
+            )
+            //if no common types, ignore click
+            if( commonTypes.length === 0 ) {
+                return
             }
         }
 
@@ -271,12 +282,34 @@ class ZonedTicketOfficeController extends React.Component {
         return realPrice * this.state.selectedSeats.length
     }
 
-    renderPriceSelect() {
+    getSelectionCommonPrices() {
+        let prices = []
         if( this.state.selectedSeats.length === 0 ) {
-            return null
+            return []
+        } else if ( this.state.selectedSeats.length === 1 ) {
+            prices = this.state.selectedSeats[0].seatPrice
+        } else {
+            //get intersection between all selected seats
+            let validIds = this.extractTypesIds( this.state.selectedSeats[ 0 ].seatPrice )
+            for( let i = 1; i < this.state.selectedSeats.length; i++ ) {
+                validIds = SetFuncs.intersect( 
+                    validIds, 
+                    this.extractTypesIds( this.state.selectedSeats[i].seatPrice ) 
+                )
+            }
+
+            validIds.forEach( id =>  {
+                prices.push( this.props.types.get( parseInt( id, 10 ) ) )
+            })
         }
 
-        const prices = this.state.selectedSeats[0].seatPrice
+        return prices
+    }
+
+    renderPriceSelect( prices ) {
+        if( !prices ) {
+            return null
+        }
         const priceOptions = prices.map( (price, index) => {
             return {
                 text: price.type + '(' + price.price + '€)',
@@ -296,7 +329,8 @@ class ZonedTicketOfficeController extends React.Component {
 
     renderBuyDialog() {
         let singlePrice = false
-        if( this.state.showBuyDialog && this.state.selectedSeats[0].seatPrice.length === 1 ) {
+        let commonPrices = this.getSelectionCommonPrices()
+        if( this.state.showBuyDialog && commonPrices.length === 1 ) {
             singlePrice = true
             if( this.state.selectedPrice !== 0 ) {
                 this.setState({ selectedPrice: 0 })
@@ -329,12 +363,12 @@ class ZonedTicketOfficeController extends React.Component {
                     </div>
                     {!singlePrice && <div>
                         <Label>PRECIO</Label>
-                        {this.renderPriceSelect()}
+                        {this.renderPriceSelect(commonPrices)}
                     </div>}
-                    {this.state.selectedSeats.length > 0 && this.state.selectedPrice >= 0 && 
+                    {commonPrices.length > 0 && this.state.selectedPrice >= 0 && 
                         <div style={{textAlign:'center'}}>
                             <h4>
-                                {this.state.selectedSeats.length} ENTRADAS DE {this.state.selectedSeats[0].seatPrice[this.state.selectedPrice].type}
+                                {this.state.selectedSeats.length} ENTRADAS DE {commonPrices[this.state.selectedPrice].type}
                             </h4>
                             <h3>
                                 TOTAL A PAGAR:  
@@ -352,8 +386,38 @@ class ZonedTicketOfficeController extends React.Component {
         )
     }
 
+    renderSummaryByZones() {
+        const { zones, salesByZone, seatsByZone } = this.props
+
+        const items = []
+        zones.forEach( zone => {
+            items.push({
+                zone: zone.zone,
+                seats: seatsByZone[ zone.id ] || 0,
+                sold: salesByZone[ zone.id ] || 0,
+                left: ( seatsByZone[ zone.id ] || 0 ) - ( salesByZone[ zone.id ] || 0 )
+            })
+        })
+
+        return(
+            <div>
+                <Table           
+                    fields={[
+                        { label: "ZONA", name: 'zone' },
+                        { label: "DISPONIBLES", name: 'seats' },
+                        { label: "VENDIDOS", name: 'sold' },
+                        { label: "QUEDAN", name: 'left' },
+                    ]}                             
+                    items={items}
+                    full
+                />
+            </div>
+        )
+
+    }
+
     renderSummaryList() {
-        const { types, totalPaid, salesByType, revenueByType, comissionsByType, totalComission } = this.props
+        const { types, seatsByType, totalPaid, salesByType, revenueByType, comissionsByType, totalComission } = this.props
         const items = []
         let revenue = 0
         let ticketsSold = 0
@@ -364,6 +428,8 @@ class ZonedTicketOfficeController extends React.Component {
             }
             items.push({
                 type: type.type,
+                ammount: seatsByType[ type.id ],
+                left: seatsByType[ type.id ] - (salesByType[ typeId ] || 0),
                 price: type.price,
                 sold: salesByType[ typeId ] || 0,
                 revenue: (revenueByType[ typeId ] || 0),
@@ -382,6 +448,8 @@ class ZonedTicketOfficeController extends React.Component {
                     fields={[
                         { label: "TIPO", name: 'type' },
                         { label: "PRECIO", name: 'price', displayFormat: ( price) => <Currency currency="EUR" quantity={price}/> },
+                        { label: "ASIENTOS", name: 'ammount' },
+                        { label: "QUEDAN", name: 'left' },
                         { label: "VENDIDAS", name: 'sold' },
                         { label: "RECAUDADO", name: 'revenue', displayFormat: ( reven ) => <Currency currency="EUR" quantity={reven}/> },
                         { label: "COMISIÓN", name: 'comission', displayFormat: ( com ) =>  <Currency currency="EUR" quantity={com}/> },
@@ -443,6 +511,14 @@ class ZonedTicketOfficeController extends React.Component {
                 content:(
                     <div>                        
                         {this.renderBuyDialog()}
+                        <div>
+                            <Segment>
+                                <Segment secondary>
+                                    <h2 style={{textAlign: 'center'}}>RESUMEN LOCALIDADES</h2>
+                                </Segment>
+                                {this.renderSummaryByZones()}
+                            </Segment>
+                        </div>
                         <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', alignItems:'center'}}>
                             <div>
                                 <RecintRenderer
@@ -465,7 +541,7 @@ class ZonedTicketOfficeController extends React.Component {
                                 <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.deselectAll()} context="negative">DESELECCIONAR</Button>
                                 <Button disabled={this.state.selectedSeats.length === 0 || !imgsCached} onClick={()=>this.setState({showBuyDialog:true})} context="possitive">COMPRAR</Button>
                             </div>                    
-                        </div>
+                        </div>                        
                         <div>
                             <Segment>
                                 <Segment secondary>
@@ -587,6 +663,43 @@ export default connect(
             totalPaid += parseFloat(payment.ammount)
         })      
 
+        const seatsByType = {};
+        types.forEach( type => {
+            seatsByType[ type.id ] = CountSeatsByType( store.seatrows.data, store.seatprices.data, type.id );
+        })
+
+        const zoneTables = BuildZoneTables( store.seatrows.data, store.seatprices.data );
+        const seatsByZone = {}
+        Object.keys( zoneTables ).forEach( zoneId => {
+            const zoneSeats = zoneTables[ zoneId ];
+            if( seatsByZone[ zoneId ] === undefined ) {
+                seatsByZone[ zoneId ] = 0;
+            }
+            for( let i = 0; i < zoneSeats.length; i++ ) {
+                for( let j = 0; j < zoneSeats[i].length; j++ ) {
+                    if( zoneSeats[i][j].length > 0 ) {
+                        seatsByZone[ zoneId ]++;
+                    }
+                }
+            }
+        })
+
+        const salesTables = BuildSalesTables( store.seatrows.data, store.sales.data );
+        const salesByZone = {}
+        Object.keys( salesTables ).forEach( zoneId => {
+            const zoneSeats = salesTables[ zoneId ];
+            if( salesByZone[ zoneId ] === undefined ) {
+                salesByZone[ zoneId ] = 0;
+            }
+            for( let i = 0; i < zoneSeats.length; i++ ) {
+                for( let j = 0; j < zoneSeats[i].length; j++ ) {
+                    if( zoneSeats[i][j] !== null ) {
+                        salesByZone[ zoneId ]++;
+                    }
+                }
+            }
+        })
+
         return {
             me: store.auth.me,
             types: store.types.data,
@@ -603,7 +716,10 @@ export default connect(
             comissionsByType,
             revenueByType,
             totalComission,
-            totalPaid
+            totalPaid,
+            seatsByType,
+            seatsByZone,
+            salesByZone
         }
     },
     ( dispatch ) => {

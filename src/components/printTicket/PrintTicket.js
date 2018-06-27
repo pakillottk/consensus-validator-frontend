@@ -10,7 +10,6 @@ import qrgenerator from 'qrcode-generator';
 import moment from 'moment'
 import Currency from 'react-currency-formatter';
 import ApplyComission from '../../entities/comissions/ApplyComission';
-import GetDistributionCost from '../../entities/comissions/GetDistributionCost';
 
 class PrintTicket extends React.Component {
   componentDidUpdate() {
@@ -65,9 +64,10 @@ class PrintTicket extends React.Component {
   renderTicket( ticketData ) {
     const { types, company, session, comissionsByUser } = this.props
     const type = types.get( ticketData.type_id )
+    const sellPrice = ApplyComission( type, comissionsByUser[ ticketData.user_id ] )
     const basePrice = <Currency currency="EUR" quantity={type.price} />
-    const gd = <Currency currency="EUR" quantity={GetDistributionCost( type, comissionsByUser[ ticketData.user_id ] )} />
-    const price = <Currency currency='EUR' quantity={ApplyComission( type, comissionsByUser[ ticketData.user_id ] )} />
+    const gd = <Currency currency="EUR" quantity={sellPrice - type.price} />
+    const price = <Currency currency='EUR' quantity={sellPrice} />
     return (
       <div 
         key={ ticketData.id } 
