@@ -10,7 +10,7 @@ export default class SetFuncs {
     }
 
     //given array a and b, returns the union of both arrays
-    //(union !== concatenation, equal elements won't repeat)
+    //(union != concatenation, equal elements won't repeat)
     static union( a, b ) {
         const output = [];
 

@@ -15,12 +15,12 @@ class SeatReservesTable extends React.Component {
     }
 
     render() {
-        const { seatreserves } = this.props
+        const { seatreserves, onlyInfinites } = this.props
         return(
             <div>
                 <EntityTable
                     schema={schema}
-                    items={seatreserves}
+                    items={onlyInfinites ? seatreserves.filter( reserve => reserve.user_id === null && reserve.expires_at === null) : seatreserves}
                     hidden={{user_id: true, session_id: true, zone_id: true, type_id: true}}
                     formTitle="EDITAR RESERVA"
                     Form={SeatReserveForm}

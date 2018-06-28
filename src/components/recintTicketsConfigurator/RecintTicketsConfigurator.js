@@ -6,6 +6,7 @@ import SeatPriceRenderer from '../seatPriceRenderer/SeatPriceRenderer'
 import SeatReservesTable from '../entitites/seatreserves/SeatReservesTable'
 import Segment from '../ui/segment/Segment'
 import Button from '../ui/button/Button'
+import Table from '../ui/table/Table'
 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -18,7 +19,7 @@ import ReserveSeatsButton from '../reserveSeatsButton/ReserveSeatsButton'
 import FreeSeatsButton from '../freeSeatsButton/FreeSeatsButton'
 
 import ExtractRecintDataFromStore from '../../entities/Recints/ExtractRecintDataFromStore'
-
+import BuildZoneTables from '../../entities/SeatPrices/BuildZoneTables'
 
 class RecintTicketsConfigurator extends React.Component {
     constructor( props ) {
@@ -107,6 +108,65 @@ class RecintTicketsConfigurator extends React.Component {
         this.setState({selectedSeats})
     }
 
+    renderZoneSummary() {
+        const { zones, zoneTables } = this.props
+        const items = []
+        const totals = {
+            zone: 0,
+            rows: 0,
+            seats: 0,
+            assigned: 0,
+            left: 0
+        }
+        zones.forEach( zone => {
+            if( !zoneTables[ zone.id ] ) {
+                return
+            }
+            const zoneData = zoneTables[ zone.id ]
+            const rows = zoneData.length
+            let seats = 0
+            let assigned = 0
+            for( let i = 0; i < rows; i++ ) {
+                const rowSeats = zoneData[ i ].length
+                seats += rowSeats
+                for( let j = 0; j < rowSeats; j++ ) {
+                    if( zoneData[i][j].length > 0 ) {
+                        assigned++;
+                    }
+                }
+            }
+
+            items.push({
+                zone: zone.zone,
+                rows,
+                seats,
+                assigned,
+                left: seats - assigned
+            })
+
+            totals.zone++
+            totals.rows += rows
+            totals.seats += seats
+            totals.assigned += assigned
+            totals.left += ( seats - assigned )
+        })
+
+        return(
+            <Table
+                fields={[
+                    {label:'ZONA', name:'zone'},
+                    {label:'FILAS', name:'rows'},
+                    {label:'ASIENTOS', name:'seats'},
+                    {label:'CON PRECIO', name:'assigned'},
+                    {label:'SIN USAR', name:'left'},
+                ]}
+                items={items}
+                full
+                calculateTotals={ items => totals }
+            />
+        )
+    }
+
     render() {
         const { sessionId, plane, zones, polygons, seats } = this.props
         if( !zones || !plane ) {
@@ -114,28 +174,11 @@ class RecintTicketsConfigurator extends React.Component {
         }
         return(
             <div>
-                <div>                       
+                <div>
                     <Segment secondary>
-                        <h2 style={{textAlign:'center'}}>ASIENTOS SELECCIONADOS</h2>
-                    </Segment>       
-                    <div style={{display:'flex', justifyContent:'center', width:'100%', flexWrap:'wrap'}}>
-                        <ReserveSeatsButton 
-                            sessionId={sessionId} 
-                            seatData={this.state.selectedSeats}     
-                            onDone={()=>this.setState({selectedSeats:[]})}                            
-                        />
-                        <FreeSeatsButton 
-                            seatData={this.state.selectedSeats} 
-                            onDone={()=>this.setState({selectedSeats:[]})}
-                        />
-                        <Button 
-                            context="dark" 
-                            onClick={()=>this.setState({selectedSeats:[]})}
-                            disabled={this.state.selectedSeats.length === 0}
-                        >
-                            DESELECCIONAR TODO
-                        </Button>
-                    </div>
+                        <h2 style={{textAlign:'center'}}>AFORO</h2>
+                    </Segment>
+                    {this.renderZoneSummary()}
                 </div>
                 <div style={{display:'flex', flexWrap:'wrap', alignItems:'flex-start'}}>
                     <RecintRenderer
@@ -153,8 +196,34 @@ class RecintTicketsConfigurator extends React.Component {
                         {this.state.seatInfo}
                     </RecintRenderer>
                     <div>
+                        <div style={{marginTop:'50%', display:'flex', flexDirection: 'column', alignItems:'center', justifyContent:'center', width:'100%', flexWrap:'wrap'}}>
+                            <ReserveSeatsButton 
+                                sessionId={sessionId} 
+                                seatData={this.state.selectedSeats}     
+                                onDone={()=>this.setState({selectedSeats:[]})}                            
+                            />
+                            <FreeSeatsButton 
+                                seatData={this.state.selectedSeats} 
+                                onDone={()=>this.setState({selectedSeats:[]})}
+                            />
+                            <Button 
+                                context="dark" 
+                                onClick={()=>this.setState({selectedSeats:[]})}
+                                disabled={this.state.selectedSeats.length === 0}
+                            >
+                                DESELECCIONAR TODO
+                            </Button>
+                        </div>
+                    </div>
+                    <div>
+                        <Segment secondary>
+                            <h2 style={{textAlign:'center'}}>PRECIOS ASIGNADOS</h2>
+                        </Segment>
                         <SeatPricesTable sessionId={this.props.sessionId} />
-                        <SeatReservesTable sessionId={this.props.sessionId} />
+                        <Segment secondary>
+                            <h2 style={{textAlign:'center'}}>ASIGNAR RESERVAS</h2>
+                        </Segment>
+                        <SeatReservesTable onlyInfinites sessionId={this.props.sessionId} />
                     </div>
                 </div>
             </div>
@@ -169,7 +238,8 @@ export default connect(
         return {
             zones: store.recintzones.data,
             polygons: recintData.polygons,
-            seats: recintData.seats
+            seats: recintData.seats,
+            zoneTables: BuildZoneTables( store.seatrows.data, store.seatprices.data )
         }
     },
     ( dispatch ) => {

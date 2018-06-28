@@ -102,6 +102,10 @@ class ZonedTicketOfficeController extends React.Component {
                 this.props.removeReserveLocal( data.id );
             }
         })
+
+        this.io.on( 'sale_added', ( data ) => {
+            this.props.createSaleLocal( data )
+        })
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -780,7 +784,8 @@ export default connect(
             createReserveLocal: bindActionCreators( ReservesActions.create_local, dispatch ),
             updateReserveLocal: bindActionCreators( ReservesActions.update_local, dispatch ),
             removeReserveLocal: bindActionCreators( ReservesActions.delete_local, dispatch ),
-            createSale: bindActionCreators( SalesActions.create, dispatch )
+            createSale: bindActionCreators( SalesActions.create, dispatch ),
+            createSaleLocal: bindActionCreators( SalesActions.create_local, dispatch )
         }
     }
 )(ZonedTicketOfficeController)
