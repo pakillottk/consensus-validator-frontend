@@ -41,6 +41,9 @@ import ApplyComission from '../../entities/comissions/ApplyComission'
 import CalculateSellerComission from '../../entities/comissions/CalculateSellerComission'
 import moment from 'moment'
 
+import io from 'socket.io-client'
+import SocketConnection from '../../API/SocketConnection'
+
 class ZonedTicketOfficeController extends React.Component {
     constructor( props ) {
         super( props )
@@ -55,6 +58,7 @@ class ZonedTicketOfficeController extends React.Component {
     }
     componentWillMount() {
         const { 
+            me,
             sessionId, 
             fetchZones, 
             fetchPolygons, 
@@ -78,6 +82,26 @@ class ZonedTicketOfficeController extends React.Component {
         fetchPayments( '?session='+sessionId )
 
         this.setState({selectedSeats:[], seatInfo: null})
+
+        this.io = io( SocketConnection.basePath() )
+        this.io.emit( 'join', {room: sessionId + '-session'} )
+        this.io.on( 'seatreserve_created', ( data ) => {
+            if( data.user_id !== me.user_id ) {
+                this.props.createReserveLocal( data )
+            }
+        })
+
+        this.io.on( 'seatreserve_updated', ( data ) => {
+            if( data.user_id !== me.user_id ) {
+                this.props.updateReserveLocal( data.id, data )
+            }
+        })
+
+        this.io.on( 'seatreserve_deleted', ( data ) => {
+            if( data.user_id !== me.user_id ) {
+                this.props.removeReserveLocal( data.id );
+            }
+        })
     }
 
     componentWillReceiveProps( nextProps ) {
@@ -99,6 +123,10 @@ class ZonedTicketOfficeController extends React.Component {
                 this.deselectSeat( nextProps.toDeselect.index )
             }
         }
+    }
+
+    componentWillUnmount() {
+        this.io.disconnect()
     }
 
     isSeatInArray( seatsArray, seatData ) {
@@ -390,6 +418,12 @@ class ZonedTicketOfficeController extends React.Component {
         const { zones, salesByZone, seatsByZone } = this.props
 
         const items = []
+        const totals = {
+            zone: 0,
+            seats: 0,
+            sold: 0,
+            left: 0
+        }
         zones.forEach( zone => {
             items.push({
                 zone: zone.zone,
@@ -397,6 +431,11 @@ class ZonedTicketOfficeController extends React.Component {
                 sold: salesByZone[ zone.id ] || 0,
                 left: ( seatsByZone[ zone.id ] || 0 ) - ( salesByZone[ zone.id ] || 0 )
             })
+
+            totals.zone++;
+            totals.seats += seatsByZone[ zone.id ] || 0
+            totals.sold += salesByZone[ zone.id ] || 0
+            totals.left += ( seatsByZone[ zone.id ] || 0 ) - ( salesByZone[ zone.id ] || 0 )
         })
 
         return(
@@ -410,6 +449,9 @@ class ZonedTicketOfficeController extends React.Component {
                     ]}                             
                     items={items}
                     full
+                    calculateTotals={(items) => {
+                        return totals
+                    }}
                 />
             </div>
         )
@@ -735,6 +777,9 @@ export default connect(
             fetchPayments: bindActionCreators( PaymentActions.fetch, dispatch ),
             createReserve: bindActionCreators( ReservesActions.create, dispatch ),
             removeReserve: bindActionCreators( ReservesActions.delete, dispatch ),
+            createReserveLocal: bindActionCreators( ReservesActions.create_local, dispatch ),
+            updateReserveLocal: bindActionCreators( ReservesActions.update_local, dispatch ),
+            removeReserveLocal: bindActionCreators( ReservesActions.delete_local, dispatch ),
             createSale: bindActionCreators( SalesActions.create, dispatch )
         }
     }

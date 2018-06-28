@@ -58,6 +58,27 @@ const builder = ( Entity, connection, paths ) => {
             return {
                 type: prefix + '_FLUSH'
             }
+        },
+        create_local: ( data, query, meta ) => {
+            return {
+                type: prefix + '_CREATE_FULFILLED',
+                payload: {data},
+                meta
+            }
+        },
+        update_local: ( id, data, meta ) => {
+            return {
+                type: prefix + '_UPDATE_FULFILLED',
+                payload: {data},
+                meta
+            }
+        },
+        delete_local: (id, meta ) => {
+            return {
+                type: prefix + '_DELETE_FULFILLED',
+                payload: {},
+                meta: {...meta, deleted_id: id}
+            }
         }
     }
 };
