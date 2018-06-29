@@ -51,6 +51,7 @@ class SessionPage extends React.Component {
                     <AdminButton onClick={() => this.props.history.push('/sesiones/' + id + '/analizador')} context="dark" full> ANALIZADOR </AdminButton>
                     <SupervisorButton onClick={() => this.props.history.push('/sesiones/' + id + '/monitor')} context="relevant" full> MONITOR </SupervisorButton>
                     <SellerButton onClick={() => this.props.history.push('/sesiones/' + id + '/taquilla')} context="possitive" full> TAQUILLA </SellerButton> 
+                    {session.ticketing_flow === 'by_zones' && <Button onClick={() => this.props.history.push('/sesiones/' + id + '/recinto')} context="relevant" full>ESTADO DEL RECINTO</Button> } 
                 </Segment>
             </div>
         );

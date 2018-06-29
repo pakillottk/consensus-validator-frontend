@@ -31,6 +31,7 @@ import { crud as SalesActions } from '../../redux/actions/sales'
 import { crud as TypeActions } from '../../redux/actions/types'
 import { crud as ComissionActions } from '../../redux/actions/comissions'
 import { crud as PaymentActions } from '../../redux/actions/payments'
+import { crud as DeliverActions } from '../../redux/actions/deliveries'
 
 import SetFuncs from '../../utils/SetFuncs'
 import BuildZoneTables from '../../entities/SeatPrices/BuildZoneTables'
@@ -52,8 +53,12 @@ class ZonedTicketOfficeController extends React.Component {
             seatInfo: null,
             selectedSeats: [],
             showBuyDialog: false,
+            showNoNumBuyDialog: false,
             selectedPrice: -1,
-            name: ''
+            name: '',
+            selectedNoNumerated: -1,
+            noNumeratedName:'',
+            ammount:1
         }
     }
     componentWillMount() {
@@ -68,7 +73,8 @@ class ZonedTicketOfficeController extends React.Component {
             fetchSales,
             fetchTypes,
             fetchComissions,
-            fetchPayments
+            fetchPayments,
+            fetchDeliveries
         } = this.props
 
         fetchZones( '?session='+sessionId )
@@ -78,6 +84,7 @@ class ZonedTicketOfficeController extends React.Component {
         fetchSeatPrices( '?session='+sessionId )
         fetchSales( '?session='+sessionId )
         fetchTypes( '?session='+sessionId )
+        fetchDeliveries( '?session='+sessionId )
         fetchComissions( '?session='+sessionId )
         fetchPayments( '?session='+sessionId )
 
@@ -296,6 +303,30 @@ class ZonedTicketOfficeController extends React.Component {
         this.setState({selectedSeats:[], selectedPrice:-1, name:'', showBuyDialog:false})
     }
 
+    buyNoNumerated() {
+        const { me, noNumerated, createSale } = this.props
+        const { selectedNoNumerated, noNumeratedName, ammount } = this.state
+        
+        const price = noNumerated.get( parseInt( selectedNoNumerated, 10 ) );
+        if( !price ) {
+            return;
+        }
+        for( let i = 0; i < ammount; i++ ) {
+            createSale(
+                {
+                    type_id: price.type.id,
+                    zone_id: price.zone_id,
+                    user_id: me.id,
+                    name: noNumeratedName !== '' ? noNumeratedName : me.username
+                },
+                '',
+                {current: (i+1), total: parseInt(ammount, 10)}
+            );
+        }
+
+        this.setState({selectedNoNumerated:-1, noNumeratedName:'', ammount: 1, showNoNumBuyDialog:false})
+    }
+
     computeCurrentPrice() {
         const { types, comissionByUser, me } = this.props
         const type = types.get( 
@@ -345,7 +376,7 @@ class ZonedTicketOfficeController extends React.Component {
         const priceOptions = prices.map( (price, index) => {
             return {
                 text: price.type + '(' + price.price + '€)',
-                value: index
+                value: price.id
             }
         })
         priceOptions.unshift({text:'SELECCIONE', value:-1})
@@ -356,6 +387,50 @@ class ZonedTicketOfficeController extends React.Component {
                 value={this.state.selectedPrice}
                 onChange={(e)=>this.setState({selectedPrice:e.target.value})}
             />
+        )
+    }
+
+    renderBuyDialogNoNum() {
+        const { noNumerated, comissionByUser, me } = this.props
+        const price = noNumerated.get( parseInt( this.state.selectedNoNumerated, 10 ) )
+        if( !price ) {
+            return null
+        }
+
+        const sellPrice = ApplyComission( price.type, comissionByUser[ me.id ] )
+        return(
+            <ConfirmModal
+                open={this.state.showNoNumBuyDialog}
+                title={'COMPRAR ENTRADAS'}
+                message=''
+                onConfirm={()=>{
+                    this.buyNoNumerated()
+                }}
+                onCancel={()=>{
+                    this.setState({selectedNoNumerated:-1, noNumeratedName:'', ammount: 1, showNoNumBuyDialog:false})
+                }}
+            >
+                <div>
+                    <h3 style={{color:'red'}}> 
+                        Una vez confirmada la venta, no se podrá deshacer/eliminar.
+                        Asegúrese de recaudar el importe antes de confirmar. 
+                    </h3>
+                    <div style={{textAlign:'center'}}>
+                        <h4>
+                            {this.state.ammount} ENTRADAS DE {price.type.type}
+                        </h4>
+                        <h3>
+                            TOTAL A PAGAR:  
+                            <span style={{color:'red'}}>
+                                <Currency
+                                    currency='EUR'
+                                    quantity={ sellPrice * parseInt( this.state.ammount, 10 ) }
+                                />
+                            </span>
+                        </h3>
+                    </div>
+                </div>
+            </ConfirmModal>
         )
     }
 
@@ -494,7 +569,7 @@ class ZonedTicketOfficeController extends React.Component {
                     fields={[
                         { label: "TIPO", name: 'type' },
                         { label: "PRECIO", name: 'price', displayFormat: ( price) => <Currency currency="EUR" quantity={price}/> },
-                        { label: "ASIENTOS", name: 'ammount' },
+                        { label: "A LA VENTA", name: 'ammount' },
                         { label: "QUEDAN", name: 'left' },
                         { label: "VENDIDAS", name: 'sold' },
                         { label: "RECAUDADO", name: 'revenue', displayFormat: ( reven ) => <Currency currency="EUR" quantity={reven}/> },
@@ -544,6 +619,25 @@ class ZonedTicketOfficeController extends React.Component {
         )
     }
 
+    renderNoNumeratedSelector() {
+        const priceOptions = [] 
+        this.props.noNumerated.forEach( (price, index) => {
+            priceOptions.push({
+                text: price.zone.zone + ' - ' + price.type.type + '(' + price.type.price + '€)',
+                value: index
+            })
+        })
+        priceOptions.unshift({text:'SELECCIONE', value: -1})
+
+        return (
+            <Select
+                options={priceOptions}
+                value={this.state.selectedNoNumerated}
+                onChange={(e)=>this.setState({selectedNoNumerated:e.target.value})}
+            />
+        )
+    }
+
     render() {
         const { imgsCached, sessionId, plane, zones, polygons, seats } = this.props
         if( !zones || !plane ) {
@@ -557,6 +651,7 @@ class ZonedTicketOfficeController extends React.Component {
                 content:(
                     <div>                        
                         {this.renderBuyDialog()}
+                        {this.renderBuyDialogNoNum()}
                         <div>
                             <Segment>
                                 <Segment secondary>
@@ -584,6 +679,18 @@ class ZonedTicketOfficeController extends React.Component {
                                 </RecintRenderer>
                             </div>
                             <div>
+                                {this.props.noNumerated.size > 0 && <div>
+                                    <Segment secondary>
+                                        <h3 style={{textAlign:'center'}}>VENTA NO NUMERADA</h3>
+                                        <Label>TIPO</Label>
+                                        {this.renderNoNumeratedSelector()}
+                                        <Label>NOMBRE</Label>
+                                        <Input value={this.state.noNumeratedName} onChange={(e)=>this.setState({noNumeratedName:e.target.value})}/>
+                                        <Label>CANTIDAD</Label>
+                                        <Input type='number' value={this.state.ammount} onChange={(e)=>this.setState({ammount:e.target.value})}/>
+                                        <Button onClick={()=>this.setState({showNoNumBuyDialog:true})} disabled={this.state.selectedNoNumerated === -1} context='possitive'>VENDER</Button>
+                                    </Segment>
+                                </div>}
                                 <Button disabled={this.state.selectedSeats.length === 0} onClick={()=>this.deselectAll()} context="negative">DESELECCIONAR</Button>
                                 <Button disabled={this.state.selectedSeats.length === 0 || !imgsCached} onClick={()=>this.setState({showBuyDialog:true})} context="possitive">COMPRAR</Button>
                             </div>                    
@@ -711,9 +818,10 @@ export default connect(
 
         const seatsByType = {};
         types.forEach( type => {
-            seatsByType[ type.id ] = CountSeatsByType( store.seatrows.data, store.seatprices.data, type.id );
+            seatsByType[ type.id ] = CountSeatsByType( store.seatrows.data, store.seatprices.data.filter( price => price.numerated ) , type.id );
         })
-
+        
+        
         const zoneTables = BuildZoneTables( store.seatrows.data, store.seatprices.data );
         const seatsByZone = {}
         Object.keys( zoneTables ).forEach( zoneId => {
@@ -727,6 +835,19 @@ export default connect(
                         seatsByZone[ zoneId ]++;
                     }
                 }
+            }
+        })
+        
+        const noNumeratePrices = store.seatprices.data.filter( price => !price.numerated )
+        const noNumeratedTypes = {} 
+        noNumeratePrices.forEach( price => {
+            seatsByType[ price.type_id ] += price.type.ammount
+            seatsByZone[ price.zone_id ] += price.type.ammount
+
+            if( !noNumeratedTypes[ price.type_id ] ) {
+                noNumeratedTypes[ price.type_id ] = [ price.zone_id ]
+            } else {
+                noNumeratedTypes[ price.type_id ].push( price.zone_id )
             }
         })
 
@@ -743,6 +864,24 @@ export default connect(
                         salesByZone[ zoneId ]++;
                     }
                 }
+            }
+        })
+
+        const noNumeratedSales = store.sales.data.filter( sale => noNumeratedTypes[ sale.code.type_id ] ? noNumeratedTypes[ sale.code.type_id ].includes( sale.code.zone_id ) : false )
+        noNumeratedSales.forEach( sale => {
+            if( !salesByZone[ sale.code.zone_id ] ) {
+                salesByZone[ sale.code.zone_id ] = 1
+            } else {
+                salesByZone[ sale.code.zone_id ]++
+            }
+        })
+
+        const deliverByType = {}
+        store.deliveries.data.forEach( delivery => {
+            if( !deliverByType[ delivery.type_id ] ) {
+                deliverByType[ delivery.type_id ] = delivery.ammount
+            } else {
+                deliverByType[ delivery.type_id ] += delivery.ammount
             }
         })
 
@@ -765,7 +904,9 @@ export default connect(
             totalPaid,
             seatsByType,
             seatsByZone,
-            salesByZone
+            salesByZone,
+            deliverByType,
+            noNumerated: store.seatprices.data.filter( price => !price.numerated )
         }
     },
     ( dispatch ) => {
@@ -779,6 +920,7 @@ export default connect(
             fetchTypes: bindActionCreators( TypeActions.fetch, dispatch ),
             fetchComissions: bindActionCreators( ComissionActions.fetch, dispatch ),
             fetchPayments: bindActionCreators( PaymentActions.fetch, dispatch ),
+            fetchDeliveries: bindActionCreators( DeliverActions.fetch, dispatch ),
             createReserve: bindActionCreators( ReservesActions.create, dispatch ),
             removeReserve: bindActionCreators( ReservesActions.delete, dispatch ),
             createReserveLocal: bindActionCreators( ReservesActions.create_local, dispatch ),
