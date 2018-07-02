@@ -2,7 +2,6 @@ import React from 'react'
 
 import RecintRenderer from '../components/recintRenderer/RecintRenderer'
 import Segment from '../components/ui/segment/Segment'
-import Divider from '../components/ui/divider/Divider'
 
 import { connect } from 'react-redux'
 import  { bindActionCreators } from 'redux'
@@ -29,7 +28,7 @@ class RecintStateMonitorPage extends React.Component {
             fetchReserves,
             fetchSeatPrices
         } = this.props
-        const sessionId = parseInt( this.props.match.params.id )
+        const sessionId = parseInt( this.props.match.params.id, 10 )
 
         fetchSession( sessionId )
         fetchZones( '?session='+sessionId )
@@ -92,7 +91,7 @@ class RecintStateMonitorPage extends React.Component {
 }
 export default connect(
     ( store, props ) => {
-        const sessionId = parseInt( props.match.params.id )
+        const sessionId = parseInt( props.match.params.id, 10 )
         const recintData = ExtractRecintDataFromStore( store )
         return {
             session: store.sessions.data.get( sessionId ),

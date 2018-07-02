@@ -2,13 +2,20 @@ import { Map } from 'immutable';
 
 export const onFetch = ( preprocessor, postprocessor ) => ( state, action ) => {
     let data = Map();
-    action.payload.data.forEach( item => {
-        data = data.set( item.id, preprocessor( item ) );
-    });
+    //if iterable
+    let newState = {...state};
+    if( action.payload.data.forEach ) {
+        action.payload.data.forEach( item => {
+            data = data.set( item.id, preprocessor( item ) );
+        });
+        
+        newState.data = data
 
-    let newState = {...state, data };
-    if( postprocessor ) {
-        newState = postprocessor( 'fetch', newState, state, action, action.payload.data )
+        if( postprocessor ) {
+            newState = postprocessor( 'fetch', newState, state, action, action.payload.data )
+        }
+    } else {
+        console.log( action )
     }
 
     return newState;

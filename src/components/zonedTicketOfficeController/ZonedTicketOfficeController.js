@@ -542,6 +542,7 @@ class ZonedTicketOfficeController extends React.Component {
         const items = []
         let revenue = 0
         let ticketsSold = 0
+        let totalAmmount = 0
         Object.keys( salesByType ).forEach( typeId => {
             const type = types.get( parseInt(typeId, 10) )
             if( !type ) {
@@ -558,7 +559,7 @@ class ZonedTicketOfficeController extends React.Component {
                 paid: '-',
                 toPay:'-'
             })
-
+            totalAmmount += seatsByType[ type.id ] || 0
             revenue += (revenueByType[ typeId ] || 0)
             ticketsSold += (salesByType[ typeId ] || 0)
         })
@@ -583,6 +584,8 @@ class ZonedTicketOfficeController extends React.Component {
                         return {
                             type: 'TOTAL',
                             sold: ticketsSold,
+                            ammount: totalAmmount,
+                            left: totalAmmount - ticketsSold,
                             revenue: (<Currency currency="EUR" quantity={revenue}/>),
                             comission: (<Currency currency="EUR" quantity={totalComission}/>),
                             paid: (<Currency currency="EUR" quantity={totalPaid}/>),

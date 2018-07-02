@@ -52,7 +52,7 @@ class App extends Component {
                   <Route exact path="/sesiones/:id/analizador" component={Admin(AnalyzerPage)} />
                   <Route exact path="/resumen" component={Seller(SummaryPage)} />
                   <Route exact path="/companias" component={Super(CompaniesPage)} />
-                  <Route exact path="/usuarios" component={Admin(UsersPage)} />
+                  <Route exact path="/usuarios" component={Super(UsersPage)} />
                 </Layout>
             </div>
           </ConnectedRouter>
