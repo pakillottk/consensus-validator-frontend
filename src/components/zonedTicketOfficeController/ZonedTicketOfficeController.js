@@ -376,7 +376,7 @@ class ZonedTicketOfficeController extends React.Component {
         const priceOptions = prices.map( (price, index) => {
             return {
                 text: price.type + '(' + price.price + '€)',
-                value: price.id
+                value: index
             }
         })
         priceOptions.unshift({text:'SELECCIONE', value:-1})
@@ -495,7 +495,6 @@ class ZonedTicketOfficeController extends React.Component {
 
     renderSummaryByZones() {
         const { zones, salesByZone, seatsByZone } = this.props
-
         const items = []
         const totals = {
             zone: 0,

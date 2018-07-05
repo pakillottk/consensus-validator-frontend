@@ -33,7 +33,7 @@ export default function( seatrows, seatprices ) {
                 } else if( seatprice.to_row === rowIndex ) {
                     //This is the last row
                     from_seat = 0;
-                    to_seat = seatrow.to_seat - 1;      
+                    to_seat = seatprice.to_seat - 1;      
                 } 
             }
 

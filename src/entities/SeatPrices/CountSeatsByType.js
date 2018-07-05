@@ -24,11 +24,11 @@ export default function( seatrows, seatprices, typeId ) {
                     } else if( seatprice.from_row === rowIndex ) {
                         //if this is the first row   
                         //substract the from_seat
-                        ammount += seatrow.seats - seatprice.from_seat - 1;    
+                        ammount += seatrow.seats - seatprice.from_seat;    
                     } else if( seatprice.to_row === rowIndex ) {
                         //if this is the last row                        
                         //substract the seats not taken
-                        ammount += seatrow.seats - (seatrow.seats - seatprice.to_seat);
+                        ammount += seatrow.seats - (seatrow.seats - seatprice.to_seat) + 1;
                     }                   
                 }                
             }
