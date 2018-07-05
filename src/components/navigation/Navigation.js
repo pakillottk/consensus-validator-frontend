@@ -6,7 +6,7 @@ import List from '../ui/list/List'
 
 export default class Navigation extends React.Component {
     renderLink( pathData ) {
-        const AuthLink = pathData.Auth( Link, false, <div className="disabled">{pathData.label}</div> )
+        const AuthLink = pathData.Auth( Link, false, <div className="disabled">NO AUTORIZADO</div> )
         return( 
             <AuthLink 
                 style={{ color: 'black', textDecoration: 'none' }}

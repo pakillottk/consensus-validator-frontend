@@ -45,7 +45,7 @@ class App extends Component {
                   <Route exact path="/recintos/:id" component={Super(RecintEditorPage)} />
                   <Route exact path="/sesiones" component={Any(SessionsPage)} />
                   <Route exact path="/sesiones/:id" component={Any(SessionPage)} />
-                  <Route exact path="/sesiones/:id/administrar" component={Supervisor(SessionAdminPage)} />
+                  <Route exact path="/sesiones/:id/administrar" component={Super(SessionAdminPage)} />
                   <Route exact path="/sesiones/:id/taquilla" component={Seller(TicketOfficePage)} />
                   <Route exact path="/sesiones/:id/recinto" component={Any(RecintStateMonitorPage)} />
                   <Route exact path="/sesiones/:id/monitor" component={Supervisor(MonitorPage)} />
