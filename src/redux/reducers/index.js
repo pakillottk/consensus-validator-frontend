@@ -4,6 +4,7 @@ import roles from './roles'
 import users from './users'
 import sessions from './sessions'
 import types from './types'
+import sessionsupervisors from './sessionsupervisors'
 import recints from './recints'
 import recintzones from './recintzones'
 import zonepolygons from './zonepolygons'
@@ -30,6 +31,7 @@ const reducers = {
     users,
     sessions,
     types,
+    sessionsupervisors,
     recints,
     recintzones,
     zonepolygons,

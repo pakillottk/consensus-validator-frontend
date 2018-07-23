@@ -45,6 +45,7 @@ class SessionPage extends React.Component {
             targetTTL: 1000,
             autoEnabled: false,
             autoAdjustMode:"conservative",
+            epsilonDelay: 100,
             selectedRooms: {}
         }
     }
@@ -115,6 +116,7 @@ class SessionPage extends React.Component {
 
     calcTTL() {
         const { avgDelay, maxDelay, minDelay } = this.state
+        const epsilonT = parseInt( this.state.epsilonDelay, 10 )
         let newTTL
         switch( this.state.autoAdjustMode ) {
             case "conservative": {
@@ -130,13 +132,13 @@ class SessionPage extends React.Component {
                 break;
             }
             default: {
-                newTTL = 500
+                newTTL = epsilonT
             }
         }
 
-        this.changeTTL( newTTL+500 )
+        this.changeTTL( newTTL+epsilonT )
         if( this.state.autoEnabled ) {
-            setTimeout(() => this.calcTTL(), newTTL+500)
+            setTimeout(() => this.calcTTL(), newTTL+epsilonT)
         }
     }
 
@@ -203,6 +205,15 @@ class SessionPage extends React.Component {
                     
                     <Segment secondary>
                         <div style={{display:'flex', alignItems:'flex-start', justifyContent:'center'}}>
+                            <Segment secondary>
+                                <p style={{textAlign:'center'}}>AJUSTAR &epsilon;T(ms)</p> 
+                                <Input 
+                                    disabled={this.state.autoEnabled}
+                                    value={this.state.epsilonDelay} 
+                                    onChange={(event) => this.setState({epsilonDelay: event.target.value})} 
+                                    type="number"
+                                />                               
+                            </Segment>
                             <Segment secondary styles={this.state.measuring ? {pointerEvents:'none', opacity:0.7}: {}}>
                                 <p style={{textAlign:'center'}}>AJUSTAR SALA</p>
                                 <Table
@@ -224,9 +235,9 @@ class SessionPage extends React.Component {
                                 {!this.state.autoEnabled && !this.state.measuring && <Button context="relevant" onClick={() => this.enableAuto()}> AUTO </Button>}
                                 {this.state.autoEnabled && <Button context="relevant" onClick={() => this.disableAuto()}> PARAR </Button>}
                                 <p style={{fontSize:'0.65rem'}}> 
-                                    <b>CONSERVADOR: </b> Máximo retardo registrado + 500ms. <br />
-                                    <b>OPTIMISTA: </b> Mínimo retardo registrado + media + 500ms. <br />
-                                    <b>A MEDIA: </b> Media de retardos registrados + 500ms.
+                                    <b>CONSERVADOR: </b> Máximo retardo registrado + {this.state.epsilonDelay}ms. <br />
+                                    <b>OPTIMISTA: </b> Mínimo retardo registrado + media + {this.state.epsilonDelay}ms. <br />
+                                    <b>A MEDIA: </b> Media de retardos registrados + {this.state.epsilonDelay}ms.
                                 </p>                                
                             </Segment>
                             <Segment secondary>
@@ -239,7 +250,7 @@ class SessionPage extends React.Component {
                                 />
                                 {!this.state.autoEnabled && <Button context="dark" onClick={()=>this.changeTTL(this.state.targetTTL)}> MANUAL </Button>}
                                 <p style={{fontSize:'0.65rem'}}> 
-                                    El tiempo mínimo (por el procesado), debe ser de unos 500ms 
+                                    El tiempo mínimo (por el procesado), debe ser de {this.state.epsilonDelay}ms 
                                 </p>                                
                             </Segment>
                         </div>

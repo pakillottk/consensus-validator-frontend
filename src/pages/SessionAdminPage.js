@@ -5,6 +5,8 @@ import Divider from '../components/ui/divider/Divider'
 import SessionForm from '../components/entitites/sessions/SessionForm'
 import RefundsModeButton from '../components/entitites/sessions/RefundsModeButton'
 
+import NewSessionSupervisorButton from '../components/entitites/sessionsupervisors/NewSessionSupervisorButton'
+import SessionSupervisorsTable from '../components/entitites/sessionsupervisors/SessionSupervisorsTable'
 import NewTypeButton from '../components/entitites/types/NewTypeButton'
 import TypesTable from '../components/entitites/types/TypesTable'
 import NewDeliverButton from '../components/entitites/deliveries/NewDeliverButton'
@@ -78,6 +80,14 @@ class SessionAdminPage extends React.Component {
                             <CodesTable sessionId={ sessionId } />                            
                         </div>
                     </div>
+
+                    <Divider full />
+
+                    <Segment secondary styles={{border:'none'}}>
+                        <h1 className="center-aligned">SUPERVISORES DEL EVENTO</h1>
+                    </Segment>
+                    <NewSessionSupervisorButton sessionId={ sessionId } />
+                    <SessionSupervisorsTable sessionId={ sessionId } />
 
                     <Divider full />
                     

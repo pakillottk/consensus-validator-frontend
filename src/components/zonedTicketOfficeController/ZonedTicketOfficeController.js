@@ -21,7 +21,7 @@ import NewPaymentButton from '../entitites/payments/NewPaymentButton'
 import PaymentsTable from '../entitites/payments/PaymentsTable'
 
 import { connect } from 'react-redux'
-import  { bindActionCreators } from 'redux'
+import { bindActionCreators } from 'redux'
 import { crud as ZoneActions } from '../../redux/actions/recintzones'
 import { crud as PolygonActions } from '../../redux/actions/zonepolygons'
 import { crud as SeatActions } from '../../redux/actions/seatrows'
@@ -233,6 +233,7 @@ class ZonedTicketOfficeController extends React.Component {
 
         const seatStored = this.isSeatInArray( this.state.selectedSeats, seatData )         
         if( seatState.state === 'LIBRE' && !seatStored ) { //Free and not selected
+            //Reserve and select
             createReserve(
                 {
                     session_id: sessionId,
