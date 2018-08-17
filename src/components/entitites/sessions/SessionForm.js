@@ -11,10 +11,6 @@ import moment from 'moment'
 const Form = EntityForm( 'sessions', crud, Schema, 'SESIÓN', SessionValidator )
 export default class SessionForm extends React.Component {
     transformer( data, isUpdate ) {
-        if( !isUpdate ) {
-            delete data.company_id;
-        }
-
         if( data.date ) {
             data.date = moment.isMoment(data.date) ? data.date.toISOString() : data.date;
         }
@@ -31,7 +27,7 @@ export default class SessionForm extends React.Component {
     render() {        
         return(
             <div>
-                <Form id={this.props.id} hidden={{company_id: true, recint: true, location: true}} dataTransformer={ this.transformer.bind( this ) } />  
+                <Form id={this.props.id} hidden={{recint: true, location: true}} dataTransformer={ this.transformer.bind( this ) } />  
                 { this.props.id && <RemoveSessionButton id={this.props.id} /> }
             </div>
         ) 

@@ -128,7 +128,7 @@ class ZonedTicketOfficeController extends React.Component {
                     nextProps.toSelection.seatPrice
                 )
             }
-        }
+        } 
         if( nextProps.toDeselect ) {
             if( this.isSeatInArray( this.state.selectedSeats, nextProps.toDeselect ) ) {
                 this.deselectSeat( nextProps.toDeselect.index )

@@ -7,9 +7,9 @@ import ConfirmModal from '../../confirmModal/ConfirmModal'
 import { crud, print } from '../../../redux/actions/sales'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Supervisor } from '../../auth/authLevels'
+import { Admin } from '../../auth/authLevels'
 
-const AdminButton = Supervisor(Button, true)
+const AdminButton = Admin(Button, true)
 
 class SalesActions extends React.Component {
     constructor( props ) {
