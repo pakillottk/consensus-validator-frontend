@@ -25,6 +25,8 @@ import CSVInput from '../components/forms/Controls/CSVInput/CSVInput'
 import CSVTable from '../components/CSVPreview/CSVPreview'
 import CSVUploadButton from '../components/CSVUploadButton/CSVUploadButton'
 
+import CodeGenerator from '../components/entitites/codes/CodeGenerator'
+
 import { crud } from '../redux/actions/sessions'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -77,6 +79,10 @@ class SessionAdminPage extends React.Component {
                         <div>
                             <h2 style={{textAlign: 'center'}}>CÓDIGOS</h2>
                             <CodesFilter sessionId={ sessionId } hidden={{type: true, updated_at: true}}/>
+                            <Segment secondary>
+                                <h3 style={{textAlign: 'center'}}>GENERAR CÓDIGOS</h3>
+                            </Segment>
+                            <CodeGenerator sessionId={ sessionId } />
                             <CodesTable sessionId={ sessionId } />                            
                         </div>
                     </div>

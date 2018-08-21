@@ -138,7 +138,7 @@ class CodesActions extends React.Component {
                             context='negative' 
                             onClick={() => this.switchConfirmDialog( true )}
                         >
-                        ELIMINAR
+                            ELIMINAR
                         </Button>             
                     </div>       
                 </Segment>                
