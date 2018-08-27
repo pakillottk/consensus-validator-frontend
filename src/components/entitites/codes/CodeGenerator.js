@@ -39,7 +39,7 @@ class CodeGenerator extends React.Component {
                 <Label>CANTIDAD</Label>
                 <Input type="number" value={this.state.ammount} onChange={(event)=>this.setState({ammount:event.target.value})} />
                 <Button 
-                    disabled={this.state.type_id==0||this.state.ammount==0} 
+                    disabled={parseInt(this.state.type_id,10)===0||parseInt(this.state.ammount,10)===0} 
                     context="possitive"
                     onClick={()=>this.dispatchGenerator()}
                 >

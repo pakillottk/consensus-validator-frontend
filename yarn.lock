@@ -5353,6 +5353,10 @@ react-chartjs-2@^2.7.0:
     lodash "^4.17.4"
     prop-types "^15.5.8"
 
+react-csv@^1.0.15:
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-1.0.15.tgz#21b5a9bb08bfdea1ffb46c8a5f437477f306dc9a"
+
 react-currency-formatter@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-currency-formatter/-/react-currency-formatter-1.1.0.tgz#69296c82efd6ef7a9e74bcae52414a5e23bcdba2"

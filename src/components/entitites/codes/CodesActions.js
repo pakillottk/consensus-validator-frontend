@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import { Admin } from '../../auth/authLevels'
 
 import SplitUploader from '../../../utils/SplitUploader'
+import { CSVLink } from 'react-csv'
 
 class CodesActions extends React.Component {
     constructor( props ) {
@@ -109,6 +110,18 @@ class CodesActions extends React.Component {
         }
     }
 
+    codesAsArray( codes, removeId=false ) {
+        const array = [] 
+        for( let codeId in codes ) {
+            let code = {...codes[ codeId ]}
+            if( removeId ) {
+                delete code.id
+            }
+            array.push( code )
+        }
+        return array
+    }
+
     render() {   
         const { codes } = this.props
         const codesCount = Object.keys( codes ).length  
@@ -126,6 +139,18 @@ class CodesActions extends React.Component {
                         <Button disabled={codesCount === 0} context="dark" onClick={() => this.resetCodes()}> REINICIAR </Button>  
                         <Button disabled={codesCount === 0} context="dark" onClick={() => this.switchCodesOut()}> CAMBIAR FUERA/DENTRO </Button>                    
                         <Button disabled={codesCount === 0} context="negative" onClick={() => this.disableCodes()}> DESACTIVAR </Button>
+                        <CSVLink 
+                            data={this.codesAsArray( codes, true )}
+                            style={{
+                                background:'#666', 
+                                textAlign:'center', 
+                                color:'white', 
+                                textDecoration:'none',
+                                padding:'10px'
+                            }}
+                        > 
+                            EXPORTAR CSV 
+                        </CSVLink>
                         <ConfirmModal 
                             open={this.state.openConfirm}
                             title="Confirmar eliminación"
