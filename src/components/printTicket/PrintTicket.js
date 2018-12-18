@@ -151,7 +151,7 @@ class PrintTicket extends React.Component {
         </div>
 
         <div>
-          <div className="ticket-conditions page-row" style={{fontSize:'9pt'}}>
+          <div className="ticket-conditions page-row" style={{fontSize:'8pt'}}>
             <h5 className="centered"> LA ADQUISICIÓN DE ESTA ENTRADA REPRESENTA LA ACEPTACIÓN DE LAS SIGUIENTES CONDICIONES: </h5>
             <p>- La organización no garantiza la autenticidad de las entradas adquiridas fuera de los puntos de venta oficiales. </p>
             <p>
