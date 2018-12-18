@@ -176,10 +176,16 @@ class PrintTicket extends React.Component {
               autorizará al organizador a privar la entrada al recinto.
             </p>
             <p>
-              - En ningún caso esta misma entrada permitirá la salida y posterior entrada al recinto.
+              - Todos los menores de 16 años deberán de ir acompañados de un adulto.
             </p>
             <p>
-              - Toda persona (independientemente de su edad) debe ser poseedora de una entrada para acceder al recinto.
+              - Una vez validada la entrada, esta no podrá usarse para volver a acceder al recinto.
+            </p>
+            <p>
+              - En caso de falsificación de una entrada, prevalecerá la primera que haya sido validada.
+            </p>
+            <p>
+              - Todos los asistentes al evento, independientemente de la edad, deben ser poseedores de una entrada válida.
             </p>
           </div>
         </div>
