@@ -10,8 +10,9 @@ import moment from 'moment'
 import DatePicker from '../../forms/Controls/DatePicker/DatePicker'
 
 const now = new Date()
-const initialFrom = new Date(now.getFullYear(), 0, 1, 0, 0)
-const initialTo = new Date(now.getFullYear(), 11, 31, 23, 59)
+//const initialFrom = new Date(now.getFullYear(), 0, 1, 0, 0)
+const initialFrom = now;
+const initialTo = (new Date()).setFullYear(now.getFullYear()+1);//new Date(now.getFullYear(), 11, 31, 23, 59)
 const modifiedSchema = [
     ...schema,
     {
