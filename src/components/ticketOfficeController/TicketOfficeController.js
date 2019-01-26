@@ -22,6 +22,8 @@ import PaymentFilters from '../entitites/payments/PaymentFilters'
 import NewPaymentButton from '../entitites/payments/NewPaymentButton'
 import PaymentsTable from '../entitites/payments/PaymentsTable'
 
+import PrinterSelector from '../printTicket/printers/PrinterSelector'
+import Printers from '../printTicket/printers/TicketPrinterIndex'
 import PrintTicket from '../printTicket/PrintTicket'
 import { crud as saleActions } from '../../redux/actions/sales'
 import { crud as typeActions } from '../../redux/actions/types'
@@ -46,7 +48,8 @@ class TicketOfficeController extends React.Component {
         this.state = {
             values: {...this.inititalValues},
             errors: {},
-            openConfirmSale: false
+            openConfirmSale: false,
+            selectedPrinter: 'A4'
         }
 
         this.handleFieldChange = this.handleFieldChange.bind( this )
@@ -260,13 +263,19 @@ class TicketOfficeController extends React.Component {
         const sellAmmountAllowed = ( parseInt((salesByType[ typeId ] || 0), 10) + parseInt(values.ammount, 10) > parseInt(deliverByType[ typeId ], 10) ) || typeId <= 0
         return(
             <div>
-                <PrintTicket sessionId={sessionId} />
+                <PrintTicket sessionId={sessionId} TicketPrinter={Printers[this.state.selectedPrinter]}/>
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'stretch', flexWrap: 'wrap'}}>
                     <Segment>
                         <Segment secondary>
                             <Segment>
                                 <h2 style={{textAlign: 'center'}}>TAQUILLA</h2>
                             </Segment>
+                            
+                            <Label>TAMAÑO DEL PAPEL:</Label>
+                            <PrinterSelector 
+                                value={this.state.selectedPrinter}
+                                onChange={(e) => this.setState({selectedPrinter: e.target.value})}
+                            /> 
                             {!refunds && <Form onSubmit={this.handleSubmit.bind(this)}>
                                 <div style={{color:'red'}}>
                                     { Object.keys( errors ).map( ( key, index ) => <p key={index}>{key}: {errors[key]} </p> ) }
