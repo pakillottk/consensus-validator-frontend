@@ -19,7 +19,9 @@ export default (ticketData, props) => {
         <div key={ ticketData.id } style={{
             width:'6in',
             height:'2.3in',
-            transform:'rotate(180deg)'
+            maxHeight:'2.5in',
+            position:'relative',
+            pageBreakAfter:'always'
         }}> 
             {/*LOGO MARKER*/}
             <div style={{height:'2.54cm', width:'5.08cm'}}></div>
@@ -27,7 +29,7 @@ export default (ticketData, props) => {
             <div style={{position:'absolute', top:'5.08cm',left:0, width:'12.7cm', height:'1.27cm'}}></div>
 
             {/*QR Code*/}
-            <div style={{position:'absolute', top:'2cm', left:'0.15cm'}}>
+            <div style={{position:'absolute', top:'2cm', left:'0.5cm'}}>
                 <div id={ ticketData.id } className="qrcode"></div>
             </div>
 
@@ -38,15 +40,17 @@ export default (ticketData, props) => {
             </div>
 
             {/*SESSION AND TYPE DATA*/}
-            <div style={{position:'absolute', width:'9cm', height:'2.45cm', top:'1.5cm', left:'2.7cm'}}>
+            <div style={{position:'absolute', width:'9cm', height:'2.45cm', top:'1.75cm', left:'2.7cm'}}>
                 <div style={{color:'black', fontWeight:'bold', fontSize:'11pt', textAlign:'center'}}>{ session.name }</div>
                 <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>
                     { moment(session.date).format( 'DD MMMM YYYY HH:mm' ) } H.
                 </div>
-                <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ session.location }</div>
-                <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ session.recint }</div>
+                <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ session.recint } ({ session.location })</div>
                 <div style={{color:'black', fontWeight:'bold', fontSize:'10pt', textAlign:'center'}}>{ ticketData.type }</div>
-                <div style={{color:'black', fontSize:'10pt', textAlign:'center'}}>{ ticketData.price }</div>
+                <div style={{color:'black', fontSize:'10pt', textAlign:'center'}}>
+                    { price } 
+                    <span style={{fontSize:'7pt'}}> (Base: {basePrice} +  G.D.: {gd})</span> 
+                </div>
             </div>
 
             {/*BARCODE*/}
