@@ -18,9 +18,11 @@ export default (ticketData, props) => {
     return (
         <div key={ ticketData.id } style={{
             width:'6in',
-            height:'2.3in',
-            maxHeight:'2.5in',
+            height:'2.25in',
+            maxHeight:'2.25in',
             position:'relative',
+            //top: '0.25in',
+            margin: 0,
             pageBreakAfter:'always'
         }}> 
             {/*LOGO MARKER*/}
@@ -29,18 +31,18 @@ export default (ticketData, props) => {
             <div style={{position:'absolute', top:'5.08cm',left:0, width:'12.7cm', height:'1.27cm'}}></div>
 
             {/*QR Code*/}
-            <div style={{position:'absolute', top:'2cm', left:'0.5cm'}}>
+            <div style={{position:'absolute', top:'0.75in', left:'0.5cm'}}>
                 <div id={ ticketData.id } className="qrcode"></div>
             </div>
 
             {/*SALE DATA*/}
-            <div style={{position:'absolute', padding:'0.2cm',top:'0cm', left:'5.2cm', width:'7.1cm', height:'2.34cm'}}>
+            <div style={{position:'absolute', padding:'0.2cm',top:'0.25in', left:'5.2cm', width:'7.1cm', height:'2.34cm'}}>
                 <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ moment(ticketData.created_at).format( 'DD/MM/YYYY HH:mm' ) }</div>
                 <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ ticketData.name }</div>
             </div>
 
             {/*SESSION AND TYPE DATA*/}
-            <div style={{position:'absolute', width:'9cm', height:'2.45cm', top:'1.75cm', left:'2.7cm'}}>
+            <div style={{position:'absolute', width:'9cm', height:'2.45cm', top:'0.75in', left:'2.7cm'}}>
                 <div style={{color:'black', fontWeight:'bold', fontSize:'11pt', textAlign:'center'}}>{ session.name }</div>
                 <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>
                     { moment(session.date).format( 'DD MMMM YYYY HH:mm' ) } H.
@@ -54,9 +56,9 @@ export default (ticketData, props) => {
             </div>
 
             {/*BARCODE*/}
-            <div style={{position:'absolute', top: 0, left:'13.2cm', width:'2.54cm', height:'6.35cm'}}>
+            <div style={{position:'absolute', top:'0.15in', right:'0cm', width:'0.75cm', height:'6cm'}}>
                 <div 
-                    style={{transform:"translate(0,2.8cm) rotate(-90deg)"}}
+                    style={{transform:"translate(0.15in, 2.8cm) rotate(-90deg)"}}
                 >
                     <svg id={ ticketData.id } width='1' height='50' className="barcode" />
                 </div>

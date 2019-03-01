@@ -57,6 +57,7 @@ class PrintTicket extends React.Component {
     const wrapper = document.getElementById("tickets-wrapper");
     const printWindow = this.iframe;
     const printDocument = printWindow.contentDocument;
+    printDocument.body.setAttribute("style", "margin: 0; padding: 0;")
     printDocument.body.innerHTML = wrapper.innerHTML;
     if( forcePrint ) {
       const tid = setInterval( () => {

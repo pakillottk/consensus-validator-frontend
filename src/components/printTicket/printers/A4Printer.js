@@ -18,10 +18,12 @@ export default (ticketData, props) => {
             key={ ticketData.id } 
             className="ticket" 
             style={{
-            width: '210mm',
-            height: '297mm',
-            pageBreakAfter: 'always',
-            overflow: 'show'
+                width: '210mm',
+                height: '297mm',
+                margin: 0,
+                padding: 0,
+                pageBreakAfter: 'always',
+                overflow: 'show'
             }}
         >
             <div className="page-row" style={{display: 'flex', justifyContent: 'space-between', textAlign: 'center', alignItems:'stretch'}}>
