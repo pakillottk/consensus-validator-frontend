@@ -17,12 +17,13 @@ class Input extends React.Component {
     }
 
     render() {
-        const { disabled, onClick, checked, type, name, value, onChange, full, theme, styles } = this.props
+        const { noAutocomplete, disabled, onClick, checked, type, name, value, onChange, full, theme, styles } = this.props
         const inputStyle = this.applyThemeStyles( full, theme )
         const checkboxStyle = type === 'checkbox' ? {transform: 'scale(2.0)'} : {}
         return(
             <div className={disabled ? 'disabled' : ''} style={{ textAlign: 'center', width: full ? '100%' : 'auto' }}>
                 <input  
+                    autoComplete={noAutocomplete ? "off" : "on"}
                     onClick={onClick}
                     checked={checked}
                     type={type} 

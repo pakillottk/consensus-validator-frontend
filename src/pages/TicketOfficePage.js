@@ -54,31 +54,31 @@ class TicketOfficePage extends React.Component {
         this.cacheSessionImgs( session );
         this.cacheLogoImg( session.company );
 
-        const meRole = this.props.meRole;
-        const now = new Date();
-        const sellers_locked_at = new Date( session.sellers_locked_at );
-        const ticketoffice_closed_at = new Date( session.ticketoffice_closed_at );
-        if( 
-            ( meRole === 'seller' && now > sellers_locked_at ) || 
-            ( now > ticketoffice_closed_at )
-        ) {
-            return(
-                <div>
-                    <Segment secondary styles={{border:'none'}}>
-                        <h1 className="center-aligned">TAQUILLA</h1>
-                    </Segment>
-                    <Segment secondary styles={{padding: 0}}>
-                        { session && <h1 style={{textAlign: 'center'}}> { session.name } </h1> }
-                        { session && <h3 style={{textAlign: 'center'}}> { moment( session.date ).locale('es').format( 'DD MMMM YYYY HH:mm' ) } H. </h3> }
-                        { session && <h3 style={{textAlign: 'center'}}> { session.location }, {session.recint} </h3> }
+        // const meRole = this.props.meRole;
+        // const now = new Date();
+        // const sellers_locked_at = new Date( session.sellers_locked_at );
+        // const ticketoffice_closed_at = new Date( session.ticketoffice_closed_at );
+        // if( 
+        //     ( meRole === 'seller' && now > sellers_locked_at ) || 
+        //     ( now > ticketoffice_closed_at )
+        // ) {
+        //     return(
+        //         <div>
+        //             <Segment secondary styles={{border:'none'}}>
+        //                 <h1 className="center-aligned">TAQUILLA</h1>
+        //             </Segment>
+        //             <Segment secondary styles={{padding: 0}}>
+        //                 { session && <h1 style={{textAlign: 'center'}}> { session.name } </h1> }
+        //                 { session && <h3 style={{textAlign: 'center'}}> { moment( session.date ).locale('es').format( 'DD MMMM YYYY HH:mm' ) } H. </h3> }
+        //                 { session && <h3 style={{textAlign: 'center'}}> { session.location }, {session.recint} </h3> }
 
-                        <Divider full/>
+        //                 <Divider full/>
 
-                        <h1 style={{color:'red', textAlign:'center'}}>LA VENTA ESTÁ CERRADA</h1>
-                    </Segment>
-                </div>
-            );
-        }
+        //                 <h1 style={{color:'red', textAlign:'center'}}>LA VENTA ESTÁ CERRADA</h1>
+        //             </Segment>
+        //         </div>
+        //     );
+        // }
         
         return(
             <div>

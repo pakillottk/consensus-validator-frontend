@@ -11,11 +11,22 @@ import moment from 'moment'
 import DatePicker from '../../forms/Controls/DatePicker/DatePicker'
 
 const filterSchema = [
+    // {
+    //     name: 'user_id',
+    //     label: 'VENDIDO POR',
+    //     type:'custom',
+    //     component: UserSelector
+    // },
     {
         name: 'user_id',
         label: 'VENDIDO POR',
-        type:'custom',
-        component: UserSelector
+        type:'autocomplete',
+        props: {
+            requestPath: 'users',
+            queryFieldOverride: 'username',
+            displayFormatter: (item) => item.username,
+            valueSelector: item => item.id
+        }
     },
     {
         name: 'from_sale_date',

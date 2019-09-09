@@ -7,6 +7,7 @@ import Input from '../ui/form/Input/Input';
 import Select from '../ui/form/Select/Select';
 import Button from '../ui/button/Button'
 import Tooltip from '../ui/tooltip/Tooltip'
+import AutoComplete from '../autocomplete/AutoComplete'
 import UIThemeable from '../ui/UIThemeable';
 
 class FormBuilder extends React.Component {
@@ -104,6 +105,44 @@ class FormBuilder extends React.Component {
         );
     }
 
+    renderAutoCompleteField( index, field, props, disabled, vertical )
+    {
+        return(
+            <div key={index}>
+                <AutoComplete                 
+                    {...props}
+                    full={!vertical}
+                    // onChange={this.handleFieldChange}
+                    initialValue={this.getValue(field)}   
+                    disabled={disabled}
+                    name={field.name}
+                    itemSelected={(item, value) => {
+                        if(item === null || item === undefined)
+                        {
+                            const values = {...this.state.values}
+                            const changedValues = {...this.state.changedValues}
+                            delete values[field.name]
+                            delete changedValues[field.name]
+
+                            this.setState({ values, changedValues })
+                        }
+                        else
+                        {
+                            this.handleFieldChange({target:{
+                                name: field.name,
+                                value: value
+                            }})
+                        }
+                        if(this.props.autoCompleteConfirmed)
+                        {
+                            this.props.autoCompleteConfirmed(field, item)
+                        }
+                    }} 
+                />
+            </div>
+        )
+    }
+
     renderCustomField( index, field, Component, disabled ) {
         return(
             <div key={index}>
@@ -142,6 +181,8 @@ class FormBuilder extends React.Component {
                 output.push(
                     this.renderSelect( index, field, disabled[ field.name ] )
                 )
+            } else if( field.type === 'autocomplete' ) {
+                output.push( this.renderAutoCompleteField( index, field, field.props, disabled[ field.name ], vertical ) )
             } else {
                 output.push( this.renderCustomField( index, field, field.component, disabled[ field.name ] ) );
             }

@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 
 import Segment from '../ui/segment/Segment'
 import Table from '../ui/table/Table'
@@ -202,14 +203,14 @@ class TicketOfficeController extends React.Component {
         )
     }
 
-    renderSales( sessionId ) {
+    renderSales( sessionId, salesClosed = false ) {
         return(
             <div>
                 <Segment secondary>
                     <h2 style={{textAlign: 'center'}}>VENTAS</h2>
                 </Segment>
                 <SalesFilters sessionId={sessionId} />
-                <SalesTable enableRefunds={this.props.refunds} />
+                <SalesTable hideActions={salesClosed}  enableRefunds={this.props.refunds} />
             </div>
         )
     }
@@ -241,11 +242,18 @@ class TicketOfficeController extends React.Component {
 
     render() {
         const { errors, values } = this.state
-        const { me, sessionId, refunds, salesByType, deliverByType } = this.props
+        const { me, sessionId, session, refunds, salesByType, deliverByType } = this.props
         const typeId = values.type_id
 
+        const meRole = this.props.meRole;
+        const now = new Date();
+        const sellers_locked_at = new Date( session.sellers_locked_at );
+        const ticketoffice_closed_at = new Date( session.ticketoffice_closed_at );
+        const sales_closed =  ( meRole === 'seller' && now > sellers_locked_at ) || ( now > ticketoffice_closed_at )
+        const close_date = meRole === 'seller' ? moment(sellers_locked_at).format("DD/mm/YYYY HH:mm") : moment(ticketoffice_closed_at).format("DD/mm/YYYY HH:mm")
+
         const tabs = [
-            {label:'VENTAS', content:this.renderSales( sessionId )},            
+            {label:'VENTAS', content:this.renderSales( sessionId, sales_closed )},            
             {label:'PAGOS', content:this.renderPayments( sessionId )}
         ];
         if( refunds ) {
@@ -266,41 +274,53 @@ class TicketOfficeController extends React.Component {
                 <PrintTicket sessionId={sessionId} TicketPrinter={Printers[this.state.selectedPrinter]}/>
                 <div style={{display: 'flex', justifyContent: 'center', alignItems: 'stretch', flexWrap: 'wrap'}}>
                     <Segment>
-                        <Segment secondary>
-                            <Segment>
-                                <h2 style={{textAlign: 'center'}}>TAQUILLA</h2>
+                        {
+                            /*WHEN SALES ARE OPEN*/
+                            !sales_closed && <Segment secondary>
+                                <Segment>
+                                    <h2 style={{textAlign: 'center'}}>TAQUILLA</h2>
+                                </Segment>
+                                
+                                <Label>TAMAÑO DEL PAPEL:</Label>
+                                <PrinterSelector 
+                                    value={this.state.selectedPrinter}
+                                    onChange={(e) => this.setState({selectedPrinter: e.target.value})}
+                                /> 
+                                {!refunds && <Form onSubmit={this.handleSubmit.bind(this)}>
+                                    <div style={{color:'red'}}>
+                                        { Object.keys( errors ).map( ( key, index ) => <p key={index}>{key}: {errors[key]} </p> ) }
+                                    </div>
+
+                                    <Label>NOMBRE</Label>
+                                    <Input type="text" name="name" value={this.state.values.name} onChange={this.handleFieldChange} />
+                                    <Label>EMAIL</Label>
+                                    <Input type="text" name="email" value={this.state.values.email} onChange={this.handleFieldChange} />
+                                    <Label>TIPO</Label>
+                                    <TypeSelector name="type_id" value={this.state.values.type_id} onChange={this.handleFieldChange} />
+                                    <Label>CANTIDAD</Label>
+                                    <Input styles={{textAlign:'right'}} type="number" name="ammount" value={this.state.values.ammount} onChange={this.handleFieldChange}/>
+
+                                    <Button disabled={ sellAmmountAllowed || !this.props.imgsCached } context="possitive" type="submit">VENDER</Button>
+                                </Form>}
+                                {refunds && <h2>VENTAS DESACTIVADAS.</h2>}
+                                <ConfirmModal
+                                    open={this.state.openConfirmSale}
+                                    onConfirm={() => this.sellTickets()}
+                                    onCancel={() => this.switchConfirmSale(false)}
+                                    title="¿CONFIRMAR VENTA?"
+                                    message={this.getConfirmSaleMessage()}
+                                />
                             </Segment>
-                            
-                            <Label>TAMAÑO DEL PAPEL:</Label>
-                            <PrinterSelector 
-                                value={this.state.selectedPrinter}
-                                onChange={(e) => this.setState({selectedPrinter: e.target.value})}
-                            /> 
-                            {!refunds && <Form onSubmit={this.handleSubmit.bind(this)}>
-                                <div style={{color:'red'}}>
-                                    { Object.keys( errors ).map( ( key, index ) => <p key={index}>{key}: {errors[key]} </p> ) }
-                                </div>
-
-                                <Label>NOMBRE</Label>
-                                <Input type="text" name="name" value={this.state.values.name} onChange={this.handleFieldChange} />
-                                <Label>EMAIL</Label>
-                                <Input type="text" name="email" value={this.state.values.email} onChange={this.handleFieldChange} />
-                                <Label>TIPO</Label>
-                                <TypeSelector name="type_id" value={this.state.values.type_id} onChange={this.handleFieldChange} />
-                                <Label>CANTIDAD</Label>
-                                <Input styles={{textAlign:'right'}} type="number" name="ammount" value={this.state.values.ammount} onChange={this.handleFieldChange}/>
-
-                                <Button disabled={ sellAmmountAllowed || !this.props.imgsCached } context="possitive" type="submit">VENDER</Button>
-                            </Form>}
-                            {refunds && <h2>VENTAS DESACTIVADAS.</h2>}
-                            <ConfirmModal
-                                open={this.state.openConfirmSale}
-                                onConfirm={() => this.sellTickets()}
-                                onCancel={() => this.switchConfirmSale(false)}
-                                title="¿CONFIRMAR VENTA?"
-                                message={this.getConfirmSaleMessage()}
-                            />
-                        </Segment>
+                            /*!WHEN SALES ARE OPEN*/
+                        }
+                        {
+                            /* WHEN SALES ARE CLOSED */
+                            sales_closed && <Segment>
+                                <h1 style={{color:'red', textAlign:'center'}}>LA VENTA ESTÁ CERRADA</h1>
+                                <h2 style={{color:'red', textAlign:'center'}}>{close_date}</h2>
+                            </Segment>
+                            /* !WHEN SALES ARE CLOSED */
+                        }
                     </Segment>
                     <Segment>
                         <Segment secondary>
@@ -394,6 +414,8 @@ export default connect(
         }
         return {
             me: store.auth.me,
+            meRole: store.auth.me.role,
+            session,
             refunds,
             types,
             deliverByType,

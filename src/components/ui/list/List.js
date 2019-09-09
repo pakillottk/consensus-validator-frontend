@@ -21,18 +21,20 @@ class List extends React.Component {
     }
 
     render() {
-        const { horizontal, header, items, renderItem, secondary, theme } = this.props
+        const { horizontal, header, items, renderItem, itemClicked, secondary, theme } = this.props
         const listStyles = ListStyles( horizontal )
         const styles = this.props.styles || {wrapper: {}, container: {}, items: {}}
         const themeStyles = this.applyThemeStyles( secondary, theme )
 
+        const clickable = itemClicked != null && itemClicked != undefined
+        const clickHandler = clickable ? itemClicked : () => {};
         return(
             <div style={{...themeStyles.wrapper, ...listStyles.wrapper, ...styles.wrapper}}>
                 { header && <h2 style={{textAlign: 'center'}}>{header}</h2> }
                 <div style={{...themeStyles.container, ...listStyles.container, ...styles.container}}>
                     {items.map( ( item, index ) => 
                         <div key={index}>
-                            <div style={{...listStyles.item, ...styles.item}}>
+                            <div onClick={() => clickHandler(item)} className={clickable ? "pointer transition-all-short hovered-transparency" : ''}  style={{...listStyles.item, ...styles.item}}>
                                 {renderItem( item )}
                                 {horizontal && <Divider vertical />}
                             </div>

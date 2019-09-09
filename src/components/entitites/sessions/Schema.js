@@ -52,7 +52,12 @@ const schema = [
     {
         name: 'name',
         label: 'NOMBRE',
-        type:'input'
+        type:'autocomplete',
+        props: {
+            requestPath: '/sessions',
+            displayFormatter: (item) => item.name,
+            valueSelector: (item) => item.name
+        }
     },
     {
         name: 'location',
