@@ -52,13 +52,9 @@ const schema = [
     {
         name: 'name',
         label: 'NOMBRE',
-        type:'autocomplete',
-        props: {
-            requestPath: '/sessions',
-            displayFormatter: (item) => item.name,
-            valueSelector: (item) => item.name
-        }
-    },
+        defaultValue: '',
+        type: 'input'
+    },    
     {
         name: 'location',
         label: 'LOCALIDAD',

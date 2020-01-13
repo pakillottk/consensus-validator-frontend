@@ -35,7 +35,18 @@ const modifiedSchema = [
             return moment( date )
         }
     }
-]
+].filter(field => field.name !== "name")
+
+modifiedSchema.unshift({
+    name: 'name',
+    label: 'NOMBRE',
+    type:'autocomplete',
+    props: {
+        requestPath: '/sessions',
+        displayFormatter: (item) => item.name,
+        valueSelector: (item) => item.name
+    }
+})
 
 class SessionFilters extends React.Component {
     constructor( props ) {
