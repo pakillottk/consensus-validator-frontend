@@ -38,7 +38,7 @@ export default (ticketData, props) => {
             {/*SALE DATA*/}
             <div style={{position:'absolute', padding:'0.2cm',top:'0.25in', left:'5.2cm', width:'7.1cm', height:'2.34cm'}}>
                 <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ moment(ticketData.created_at).format( 'DD/MM/YYYY HH:mm' ) }</div>
-                <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ ticketData.name }</div>
+                <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ ticketData.name } #{ ticketData.id }</div>                
             </div>
 
             {/*SESSION AND TYPE DATA*/}

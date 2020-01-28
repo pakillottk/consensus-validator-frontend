@@ -37,6 +37,8 @@ export default (ticketData, props) => {
             <div className="page-column ticket-user-data">
                 <h3> DATOS DE VENTA </h3>
                 <p> { ticketData.code.name } </p>
+                {/* TODO(pgm) Not for now. Should be in production, but need further testing */}
+                {/* <p> { ticketData.code.name } #{ ticketData.id } </p> */}
                 <p> { moment(ticketData.created_at).format( 'DD/MM/YYYY HH:mm' ) } </p>            
             </div>
             </div>
