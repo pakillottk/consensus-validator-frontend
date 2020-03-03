@@ -16,7 +16,7 @@ class RecintSelector extends React.Component {
             recint => {
                 options.push({
                     value: recint.id,
-                    text: recint.recint
+                    text: `${recint.recint} (${recint.location})`
                 })
             }
         );
