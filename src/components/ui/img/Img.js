@@ -54,7 +54,7 @@ class Img extends React.Component {
         const imgStyle = this.computeStyles( size, bordered, theme )
         return(
             <div style={{...imgStyle, ...styles}}>
-                <img alt={alt} className={ rounded ? 'circle' : '' } style={{ width:'100%', height:'100%' }} src={src} />
+                <img alt={alt} className={ rounded ? 'circle' : '' } style={{ width:'100%'/*, height:'100%'*/ }} src={src} />
             </div>
         );
     }
