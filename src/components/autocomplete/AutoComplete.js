@@ -125,7 +125,7 @@ class AutoComplete extends React.Component
     {
         const { name, full, placeholder, disabled, label, displayFormatter, inputFormatter } = this.props
 
-        const filter= inputFormatter ? inputFormatter(this.state.filter) : this.state.filter
+        const filter = inputFormatter ? inputFormatter(this.state.filter) : this.state.filter
         return(
             <div className={disabled ? 'disabled' : ''} onBlur={() => setTimeout( ()=> this.setState({results:[]}), 200 )} style={{position:'relative'}}>
                 {label && <Label>{label}</Label>}

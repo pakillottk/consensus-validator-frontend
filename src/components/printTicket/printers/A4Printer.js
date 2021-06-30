@@ -5,6 +5,11 @@ import Currency from 'react-currency-formatter';
 import ApplyComission from '../../../entities/comissions/ApplyComission';
 import moment from 'moment';
 
+
+const COVID_START_DATE = moment(new Date(2021, 5, 30, 0, 0, 0, 0))
+const COVID_END_DATE = moment(new Date(2021, 11, 31, 23, 59, 59, 0))
+
+
 export default (ticketData, props) => {
     const { types, company, session, comissionsByUser } = props
     const type = types.get( ticketData.type_id )
@@ -136,6 +141,13 @@ export default (ticketData, props) => {
                 <p>
                 - Todos los asistentes al evento, independientemente de la edad, deben ser poseedores de una entrada válida.
                 </p>
+                {
+                    moment(ticketData.created_at).isAfter(COVID_START_DATE) && 
+                    moment(ticketData.created_at).isBefore(COVID_END_DATE) && 
+                    <p>
+                    - Como medida preventiva COVID, el promotor cumplirá con todas las medidas restrictivas que estuvieran vigentes en el día del evento
+                    </p>
+                }
             </div>
             </div>
 

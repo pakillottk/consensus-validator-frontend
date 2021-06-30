@@ -57,9 +57,7 @@ export default (ticketData, props) => {
 
             {/*BARCODE*/}
             <div style={{position:'absolute', top:'0.15in', right:'0cm', width:'0.75cm', height:'6cm'}}>
-                <div 
-                    style={{transform:"translate(0.15in, 2.8cm) rotate(-90deg)"}}
-                >
+                <div style={{transform:"translate(0.15in, 2.8cm) rotate(-90deg)"}}>
                     <svg id={ ticketData.id } width='1' height='50' className="barcode" />
                 </div>
             </div>
