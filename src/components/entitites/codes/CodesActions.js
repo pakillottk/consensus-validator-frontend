@@ -151,7 +151,7 @@ class CodesActions extends React.Component {
                         > 
                             EXPORTAR CSV 
                         </CSVLink>
-                        {/* <ConfirmModal 
+                        <ConfirmModal 
                             open={this.state.openConfirm}
                             title="Confirmar eliminación"
                             message="¿Seguro que desea eliminar? Esta acción no podra deshacerse."
@@ -164,7 +164,7 @@ class CodesActions extends React.Component {
                             onClick={() => this.switchConfirmDialog( true )}
                         >
                             ELIMINAR
-                        </Button>              */}
+                        </Button>             
                     </div>       
                 </Segment>                
             </div>

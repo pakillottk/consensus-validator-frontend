@@ -80,13 +80,13 @@ class SalesActions extends React.Component {
                             onCancel={() => this.switchConfirmDialog( false )}
                         />
                         { enableRefunds && <Button disabled={salesCount === 0} context="relevant" onClick={() => this.refundSale()}>DEVOLVER</Button>}
-                        {/* <AdminButton 
+                        <AdminButton 
                             disabled={salesCount === 0}
                             context='negative' 
                             onClick={() => this.switchConfirmDialog( true )}
                         >
                             ELIMINAR
-                        </AdminButton>  */}
+                        </AdminButton> 
                     </div>                         
                 </Segment>                
             </div>
