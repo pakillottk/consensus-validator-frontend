@@ -6,7 +6,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "base64-img": "^1.0.4",
-    "chart.js": "^2.7.2",
+    "chart.js": "^2.9.4",
     "history": "^4.7.2",
     "immutable": "^3.8.2",
     "jsbarcode": "^3.8.0",
