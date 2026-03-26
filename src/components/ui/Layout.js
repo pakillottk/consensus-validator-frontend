@@ -16,7 +16,8 @@ class Layout extends React.Component {
     } 
 
     render() {
-        if( window.location.pathname === '/' ){
+        const pathname = this.props.pathname || window.location.pathname;
+        if( pathname === '/' ){
             return this.props.children
         }
         const navWidth = this.computeNavWidth();

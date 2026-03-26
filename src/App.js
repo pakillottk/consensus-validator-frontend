@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import { Route } from 'react-router'
-import { ConnectedRouter } from 'react-router-redux'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux'
-import { store, history } from './redux/store'
+import { store } from './redux/store'
 
 import ThemeStyles from './components/ui/ThemeStyles'
 import UIThemeProvider from './components/ui/UIThemeProvider'
@@ -27,35 +26,60 @@ import AnalyzerPage from './pages/AnalyzerPage'
 import SummaryPage from './pages/SummaryPage'
 
 import UISetup from './pages/UISetup'
+import LegacyRouteAdapter from './router/LegacyRouteAdapter';
 
 import { Any, Seller, Supervisor, Super, Admin } from './components/auth/authLevels'
+
+const AnySessionsPage = Any(SessionsPage);
+const AnySessionPage = Any(SessionPage);
+const AnyRecintStateMonitorPage = Any(RecintStateMonitorPage);
+const SuperRecintsPage = Super(RecintsPage);
+const SuperRecintEditorPage = Super(RecintEditorPage);
+const SuperCompaniesPage = Super(CompaniesPage);
+const SuperUsersPage = Super(UsersPage);
+const AdminSessionAdminPage = Admin(SessionAdminPage);
+const AdminAnalyzerPage = Admin(AnalyzerPage);
+const SupervisorMonitorPage = Supervisor(MonitorPage);
+const SellerTicketOfficePage = Seller(TicketOfficePage);
+const SellerSummaryPage = Seller(SummaryPage);
+
+const RoutedLayout = ({ children }) => {
+  const location = useLocation();
+  return (
+    <Layout Navigation={Navigation} pathname={location.pathname}>
+      {children}
+    </Layout>
+  );
+};
 
 class App extends Component {
   render() {
     return (
       <Provider store={store}>
         <UIThemeProvider theme={ThemeStyles}>
-          <ConnectedRouter history={history}>
+          <BrowserRouter>
             <div>
-                <Layout Navigation={Navigation}>
-                  <Route exact path='/ui' component={UISetup} />
-                  <Route path='/' component={LoginGuard} />
-                  <Route exact path="/" component={LoginPage} />
-                  <Route exact path="/recintos" component={Super(RecintsPage)} />
-                  <Route exact path="/recintos/:id" component={Super(RecintEditorPage)} />
-                  <Route exact path="/sesiones" component={Any(SessionsPage)} />
-                  <Route exact path="/sesiones/:id" component={Any(SessionPage)} />
-                  <Route exact path="/sesiones/:id/administrar" component={Admin(SessionAdminPage)} />
-                  <Route exact path="/sesiones/:id/taquilla" component={Seller(TicketOfficePage)} />
-                  <Route exact path="/sesiones/:id/recinto" component={Any(RecintStateMonitorPage)} />
-                  <Route exact path="/sesiones/:id/monitor" component={Supervisor(MonitorPage)} />
-                  <Route exact path="/sesiones/:id/analizador" component={Admin(AnalyzerPage)} />
-                  <Route exact path="/resumen" component={Seller(SummaryPage)} />
-                  <Route exact path="/companias" component={Super(CompaniesPage)} />
-                  <Route exact path="/usuarios" component={Super(UsersPage)} />
-                </Layout>
+              <LegacyRouteAdapter Component={LoginGuard} />
+              <RoutedLayout>
+                <Routes>
+                  <Route path='/ui' element={<LegacyRouteAdapter Component={UISetup} />} />
+                  <Route path='/' element={<LegacyRouteAdapter Component={LoginPage} />} />
+                  <Route path='/recintos' element={<LegacyRouteAdapter Component={SuperRecintsPage} />} />
+                  <Route path='/recintos/:id' element={<LegacyRouteAdapter Component={SuperRecintEditorPage} />} />
+                  <Route path='/sesiones' element={<LegacyRouteAdapter Component={AnySessionsPage} />} />
+                  <Route path='/sesiones/:id' element={<LegacyRouteAdapter Component={AnySessionPage} />} />
+                  <Route path='/sesiones/:id/administrar' element={<LegacyRouteAdapter Component={AdminSessionAdminPage} />} />
+                  <Route path='/sesiones/:id/taquilla' element={<LegacyRouteAdapter Component={SellerTicketOfficePage} />} />
+                  <Route path='/sesiones/:id/recinto' element={<LegacyRouteAdapter Component={AnyRecintStateMonitorPage} />} />
+                  <Route path='/sesiones/:id/monitor' element={<LegacyRouteAdapter Component={SupervisorMonitorPage} />} />
+                  <Route path='/sesiones/:id/analizador' element={<LegacyRouteAdapter Component={AdminAnalyzerPage} />} />
+                  <Route path='/resumen' element={<LegacyRouteAdapter Component={SellerSummaryPage} />} />
+                  <Route path='/companias' element={<LegacyRouteAdapter Component={SuperCompaniesPage} />} />
+                  <Route path='/usuarios' element={<LegacyRouteAdapter Component={SuperUsersPage} />} />
+                </Routes>
+              </RoutedLayout>
             </div>
-          </ConnectedRouter>
+          </BrowserRouter>
         </UIThemeProvider>
       </Provider>
     );

@@ -1,22 +1,18 @@
-import crypto from 'crypto';
+import CryptoJS from 'crypto-js';
 import { env } from '../../env';
 
 class CryptoService {
     constructor() {
-        this.alg = env.crypto.alg;
         this.passphrase = env.crypto.passphrase;
     }
 
     encrypt( data ) {
-        const cipher = crypto.createCipher( this.alg, this.passphrase );
-        const crypted = cipher.update( data, 'utf8', 'hex' );
-        return crypted + cipher.final( 'hex' );
+        return CryptoJS.AES.encrypt(data, this.passphrase).toString();
     }
 
     decrypt( data ) {
-        const decipher = crypto.createDecipher( this.alg, this.passphrase );
-        const decrypted = decipher.update( data, 'hex', 'utf8' );
-        return decrypted + decipher.final( 'utf8' );
+        const bytes = CryptoJS.AES.decrypt(data, this.passphrase);
+        return bytes.toString(CryptoJS.enc.Utf8);
     }
 }
 
