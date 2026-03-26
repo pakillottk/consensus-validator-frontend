@@ -4,6 +4,24 @@ import Segment from '../ui/segment/Segment'
 
 const Authorization = ( allowedRoles ) => ( WrappedComponent, silent, UnauthComponent ) => {
     class WithAuth extends React.Component {
+        redirectToLoginIfUnauthenticated( props = this.props ) {
+            const { role, history, location } = props;
+            if( role === null && history && location && location.pathname !== '/' ) {
+                history.replace( '/' );
+                return true;
+            }
+
+            return false;
+        }
+
+        componentDidMount() {
+            this.redirectToLoginIfUnauthenticated();
+        }
+
+        componentDidUpdate() {
+            this.redirectToLoginIfUnauthenticated();
+        }
+
         checkRole( role ) {
             if( role ) {
                 if( allowedRoles === '*' ) {
@@ -18,6 +36,9 @@ const Authorization = ( allowedRoles ) => ( WrappedComponent, silent, UnauthComp
 
         render() {
             const { role } = this.props;
+            if( role === null ) {
+                return null;
+            }
 
             if( this.checkRole( role ) ) {
                 return <WrappedComponent {...this.props} />

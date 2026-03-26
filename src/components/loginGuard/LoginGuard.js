@@ -55,6 +55,10 @@ class LoginGuard extends React.Component {
 
         if( this.props.location.pathname !== '/' ) {
             this.props.history.replace( '/' );
+            // Fallback for edge cases where router navigation is blocked by stale tree state.
+            if( window.location.pathname !== '/' ) {
+                window.location.replace( '/' );
+            }
         }
     }
 
