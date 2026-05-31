@@ -3,7 +3,7 @@ import React from 'react'
 import API from '../../../API/API'
 import Currency from 'react-currency-formatter';
 import ApplyComission from '../../../entities/comissions/ApplyComission';
-import moment from 'moment'
+import moment from '../../../locale'
 
 export default (ticketData, props) => {
     const { types, company, session, comissionsByUser } = props
@@ -45,7 +45,7 @@ export default (ticketData, props) => {
             <div style={{position:'absolute', width:'9cm', height:'2.45cm', top:'0.75in', left:'2.7cm'}}>
                 <div style={{color:'black', fontWeight:'bold', fontSize:'11pt', textAlign:'center'}}>{ session.name }</div>
                 <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>
-                    { moment(session.date).format( 'DD MMMM YYYY HH:mm' ) } H.
+                    { moment(session.date).locale('es').format( 'DD MMMM YYYY HH:mm' ) } H.
                 </div>
                 <div style={{color:'black', fontSize:'9pt', textAlign:'center'}}>{ session.recint } ({ session.location })</div>
                 <div style={{color:'black', fontWeight:'bold', fontSize:'10pt', textAlign:'center'}}>{ ticketData.type }</div>

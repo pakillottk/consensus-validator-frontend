@@ -1,4 +1,5 @@
 import './polyfills/process';
+import './locale';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import 'chart.js/auto';

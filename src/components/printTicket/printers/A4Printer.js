@@ -3,7 +3,7 @@ import React from 'react'
 import API from '../../../API/API'
 import Currency from 'react-currency-formatter';
 import ApplyComission from '../../../entities/comissions/ApplyComission';
-import moment from 'moment';
+import moment from '../../../locale';
 
 
 const COVID_START_DATE = moment(new Date(2021, 5, 30, 0, 0, 0, 0))
@@ -58,7 +58,7 @@ export default (ticketData, props) => {
                 <h2 style={{fontSize:'18pt'}}>{ session.recint } </h2>
                 <h3>{ session.location }</h3>
                 <p className="ticket-date">
-                    { moment(session.date).format( 'DD MMMM YYYY' ) }
+                    { moment(session.date).locale('es').format( 'DD MMMM YYYY' ) }
                 </p>
                 <p className="ticket-date">
                     { moment(session.date).format( 'HH:mm' ) } H.
